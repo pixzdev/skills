@@ -1,7 +1,7 @@
 id: pixz.core.planning
 name: Planning
 category: core
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Decomposes objectives into verifiable, sequenced steps with dependencies
   and exit criteria.

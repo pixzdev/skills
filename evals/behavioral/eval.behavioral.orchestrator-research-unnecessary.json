@@ -1,0 +1,13 @@
+{
+  "id": "eval.behavioral.orchestrator-research-unnecessary",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "task where research would be unnecessary overhead trivial config",
+  "expected_routing": "minimal, no research",
+  "expected_challenge": "none",
+  "risk": "low",
+  "should_select": [],
+  "should_not_select": [
+    "pixz.ai.rag"
+  ],
+  "verifies": "avoids research overhead"
+}

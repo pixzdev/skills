@@ -1,7 +1,7 @@
 id: pixz.core.orchestrator
 name: Orchestrator
 category: core
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Meta-coordination layer that routes work to the right skills, agents
   and tools.
@@ -23,7 +23,6 @@ aggregates:
 - pixz.core.quality-gate
 optional:
 - pixz.core.epistemic-challenger
-- pixz.core.change-safety
 - pixz.quality.anti-ai-slop
 conflicts: []
 compatible_runtimes:

@@ -1,7 +1,7 @@
 ---
 name: Delegation & Handoff
 description: Structured delegation with explicit inputs, constraints, success criteria and structured returns.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.delegation-handoff
 category: core
 triggers: [delegate, handoff, subagent, dispatch task]

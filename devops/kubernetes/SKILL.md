@@ -1,7 +1,7 @@
 ---
 name: Kubernetes
 description: Declarative Kubernetes delivery with rollout, health-check and failure-mode discipline.
-version: 1.0.0
+version: 1.0.1
 id: pixz.devops.kubernetes
 category: devops
 triggers: [kubernetes, k8s, helm, deployment, pod, rollout]

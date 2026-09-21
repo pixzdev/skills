@@ -1,39 +1,47 @@
-# PIXZ.DEV Universal Agent Skills Ecosystem
+# PIXZ.DEV Skills — Map for LLMs
 
-> Portable, dependency-aware skills for Claude / OpenClaw / OpenCode / Hermes. Root registry is AGENTS.md; machine registry is registry.json.
+> 28 portable skills for Claude, OpenClaw, OpenCode, Hermes. Source ≠ install.
 
-## Entry Points
-- Registry (agent): https://github.com/pixzdev/skills/blob/main/AGENTS.md
-- Registry (machine): https://github.com/pixzdev/skills/blob/main/registry.json
-- Overview: https://github.com/pixzdev/skills/blob/main/README.md
-- Schemas: https://github.com/pixzdev/skills/blob/main/schemas/skill.schema.json
+## Identity
+- Repo: https://github.com/pixzdev/skills
+- Version: 1.0.1 (VERSION file; registry.json)
+- Entry: AGENTS.md (agent registry) / README.md (human) / registry.json (machine)
 
-## Install
-- Stable: `git clone --branch v1.0.0 https://github.com/pixzdev/skills.git`
-- Resolve: `python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable`
-- Validate: `python scripts/validate.py && python scripts/check-cycles.py`
+## Install (not clone)
+- Matrix: docs/install/README.md
+- Agent prompt (copy-paste): docs/install-as-skill.md
+- Full runtime-adaptive prompt: docs/prompts/install-skill-agent.md
+- CLI: npx skills add pixzdev/skills --skill <folder> (skills.sh, VERIFIED)
+- Claude: ~/.claude/skills/ or .claude/skills/ (VERIFIED)
+- OpenClaw: openclaw skills install (VERIFIED)
+- OpenCode: .opencode/skill/ (VERIFIED)
+- Hermes: ~/.hermes/skills/ (VERIFIED)
 
-## Skills (28)
-- Core (13): orchestrator, planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-reasoning, epistemic-challenger, verification, change-safety, replanning, quality-gate
-- Quality: anti-ai-slop
-- Engineering: api-design, system-design
-- Security: review, threat-modeling
-- Design: uiux, design-system
-- Frontend: react, accessibility
-- Motion: gsap, remotion
-- Devops: docker, kubernetes
-- AI: rag, agent-design
+## Registry / Discovery
+- AGENTS.md (projection) ; registry.json (source) ; */AGENTS.md (nav)
+- Schemas: schemas/skill.schema.json, registry.schema.json, workflow.schema.json, eval.schema.json
+- Discovery: scan AGENTS.md trigger table → registry.json → <path>/SKILL.md
 
-## Discovery
-Scan AGENTS.md trigger table → resolve dependencies → follow that skill's SKILL.md methodology → emit structured output (findings/assumptions/unknowns/evidence/decisions/verification) → quality-gate before ship.
+## Architecture
+- docs/architecture.md (core → adapter, workflow state vs methodological)
+- docs/dependency-model.md (requires/aggregates/optional opt-in/conflicts, limits 15/6/8)
+- docs/architecture/routing.md (task→skill routing, under/over, circular safety mitigation)
+- docs/taxonomy.md (7 criteria, merged concepts)
+- docs/versioning.md (latest/stable VERIFIED, pinned future)
 
-## Versioning
-SemVer per skill + ecosystem VERSION. Channels: latest / stable / pinned. IDs stable: pixz.<domain>.<name>.
+## Limitations (honest)
+- pinned channel: DOCUMENTED ONLY (no pixz.lock)
+- behavioral eval: PARTIALLY VERIFIED (heuristic smoke)
+- generic runtime: PARTIALLY VERIFIED (spec, no CI smoke)
+- needs npx (Node 18+) or manual cp -r
 
-## Docs
-- Architecture: docs/architecture.md
-- Taxonomy: docs/taxonomy.md
-- Dependency model: docs/dependency-model.md
-- Versioning: docs/versioning.md
-- Adapters: adapters/README.md
-- Evals: evals/README.md
+## Verification
+- docs/evaluation.md (4 layers: structural / documentary / behavioral / integration)
+- Scripts: scripts/validate.py, check-cycles.py, resolve.py, integration-smoke.sh
+- Evals: evals/cases/, evals/behavioral/
+
+## Getting Started
+- docs/getting-started.md
+- examples/basic-usage.md, orchestrated-task.md, custom-skill.md
+- docs/development/creating-a-skill.md, testing.md
+- docs/troubleshooting.md

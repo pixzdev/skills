@@ -1,7 +1,7 @@
 ---
 name: Agent Design
 description: Designs tool-enabled agents with bounded autonomy, verification and escalation.
-version: 1.0.0
+version: 1.0.1
 id: pixz.ai.agent-design
 category: ai
 triggers: [agent design, tool calling, orchestration, autonomous agent, tool use]

@@ -1,7 +1,7 @@
 ---
 name: Epistemic Challenger
 description: Adaptive challenger that stress-tests claims by seeking disconfirming evidence and failure modes.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.epistemic-challenger
 category: core
 triggers: [challenge, counterargument, how could this be wrong, falsify, disconfirm]

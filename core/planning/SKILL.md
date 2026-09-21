@@ -1,7 +1,7 @@
 ---
 name: Planning
 description: Decomposes objectives into verifiable, sequenced steps with dependencies and exit criteria.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.planning
 category: core
 triggers: [plan, roadmap, break down task, milestone, decompose]

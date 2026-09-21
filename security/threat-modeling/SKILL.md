@@ -1,7 +1,7 @@
 ---
 name: Threat Modeling
 description: Systematic threat enumeration, impact scoring and mitigation mapping — STRIDE-based.
-version: 1.0.0
+version: 1.0.1
 id: pixz.security.threat-modeling
 category: security
 triggers: [threat model, STRIDE, attack surface, abuse case, DFD]

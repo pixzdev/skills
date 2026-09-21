@@ -1,0 +1,17 @@
+{
+  "id": "eval.behavioral.orchestrator-ui-design",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "UI design task for dashboard",
+  "expected_routing": "full with uiux+design-system+anti-slop+accessibility",
+  "expected_challenge": "low",
+  "risk": "medium",
+  "should_select": [
+    "pixz.design.uiux",
+    "pixz.design.design-system",
+    "pixz.quality.anti-ai-slop"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes"
+  ],
+  "verifies": "domain routing"
+}

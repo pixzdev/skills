@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-long-running",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "long-running multi-agent task with hand-offs",
+  "expected_routing": "orchestrator + workflow-continuity + delegation-handoff",
+  "expected_challenge": "medium",
+  "risk": "medium",
+  "should_select": [
+    "pixz.core.workflow-continuity",
+    "pixz.core.delegation-handoff"
+  ],
+  "should_not_select": [],
+  "verifies": "handoff contract and iteration cap"
+}

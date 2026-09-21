@@ -1,7 +1,7 @@
 ---
 name: System Design
 description: Structures system tradeoffs, constraints, failure domains and verification for architecture decisions.
-version: 1.0.0
+version: 1.0.1
 id: pixz.engineering.system-design
 category: engineering
 triggers: [system design, architecture, scalability, tradeoffs, failure modes]

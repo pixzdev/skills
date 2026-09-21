@@ -1,7 +1,7 @@
 ---
 name: Verification
 description: Evidence-based verification — inspection, regression, consistency and impact analysis before shipping.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.verification
 category: core
 triggers: [verify, inspect, validate, check correctness, regression, impact analysis]

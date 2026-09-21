@@ -66,4 +66,4 @@ Resolver validates `compatible_runtimes` before suggesting install path.
 
 ## Limits
 
-Adapters enforce from `registry.json#limits`: `max_skill_chain_depth=12`, `max_orchestration_depth=6`, `max_iterations=8`.
+Adapters enforce from `registry.json#limits`: `max_skill_chain_depth=15`, `max_orchestration_depth=6`, `max_iterations=8`.

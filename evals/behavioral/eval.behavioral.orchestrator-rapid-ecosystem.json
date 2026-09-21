@@ -1,0 +1,13 @@
+{
+  "id": "eval.behavioral.orchestrator-rapid-ecosystem",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "rapidly changing ecosystem dependency update",
+  "expected_routing": "capability-discovery + research (official docs first) + verification",
+  "expected_challenge": "medium",
+  "risk": "medium",
+  "should_select": [
+    "pixz.core.capability-discovery"
+  ],
+  "should_not_select": [],
+  "verifies": "freshness check"
+}

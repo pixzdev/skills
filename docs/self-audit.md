@@ -7,7 +7,7 @@
 - Progressive disclosure budget (~500 chars per skill frontmatter, ~97 chars overhead per OpenClaw) is acceptable for 28 skills. Assumption: ecosystem stays ~30 skills; beyond 50 would breach token budget — guard via taxonomy gate in CONTRIBUTING.
 - `metadata.yaml` + `registry.json` duplication is necessary: machine validation vs human discovery. Chose single source factory (generator) to keep sync — mitigated by `scripts/validate.py` cross-check.
 - Runtimes interpret `SKILL.md` frontmatter similarly (name/description). Research showed variance: Claude uses YAML frontmatter always-visible; OpenClaw respects allowlists but still reads same file. Assumed minimal translation suffices — documented in `adapters/README.md` compatibility table.
-- `max_skill_chain_depth=12` sufficient — current max chain 11 (agent-design → orchestrator graph).
+- `max_skill_chain_depth=15` sufficient — current max chain 11 (agent-design → orchestrator graph).
 
 ## 2. What could be wrong?
 - Resolver currently expands `optional` deterministically (include if present & compatible). Could over-install optional where user wanted minimal. Mitigation: resolver keeps optional soft; future `--no-optional` flag.

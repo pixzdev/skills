@@ -1,7 +1,7 @@
 ---
 name: Workflow Continuity
 description: Maintains, persists and propagates workflow state across parent and child agents.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.workflow-continuity
 category: core
 triggers: [workflow, continue, handoff, persist state, workflow state, iteration state]

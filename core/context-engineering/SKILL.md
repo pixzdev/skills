@@ -1,7 +1,7 @@
 ---
 name: Context Engineering
 description: Systematic acquisition, validation, sufficiency-checking and preservation of task context.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.context-engineering
 category: core
 triggers: [context, requirements, what do we know, gather context, context sufficiency]

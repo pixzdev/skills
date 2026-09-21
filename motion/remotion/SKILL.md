@@ -1,7 +1,7 @@
 ---
 name: Remotion
 description: Declarative video composition with timeline verification and render-pipeline discipline.
-version: 1.0.0
+version: 1.0.1
 id: pixz.motion.remotion
 category: motion
 triggers: [remotion, programmatic video, react video, timeline render]

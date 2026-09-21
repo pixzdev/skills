@@ -1,7 +1,7 @@
 ---
 name: Replanning
 description: Structured replanning and escalation when verification fails or constraints change.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.replanning
 category: core
 triggers: [replan, pivot, strategy failed, alternative approach, escalation]

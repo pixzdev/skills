@@ -1,7 +1,7 @@
 ---
 name: API Design
 description: Methodology for consistent, versioned, secure and observable API contracts.
-version: 1.0.0
+version: 1.0.1
 id: pixz.engineering.api-design
 category: engineering
 triggers: [api design, rest, graphql, openapi, endpoint, versioning]

@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-typo-docs",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "simple documentation typo",
+  "expected_routing": "minimal, no orchestrator, no research, inspection only",
+  "expected_challenge": "none",
+  "risk": "low",
+  "should_select": [],
+  "should_not_select": [
+    "pixz.core.orchestrator",
+    "pixz.ai.agent-design"
+  ],
+  "verifies": "avoids over-orchestration for typo"
+}

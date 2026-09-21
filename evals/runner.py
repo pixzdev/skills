@@ -91,11 +91,20 @@ def check_case(case, root):
         return False, "; ".join(reasons)
 
 def main():
-    p=argparse.ArgumentParser()
+    p=argparse.ArgumentParser(description="Documentary validation (layer 2) — heuristic keyword checks, not behavioral proof")
     p.add_argument("--skill", help="filter by skill id")
     p.add_argument("--category", help="filter by category")
+    p.add_argument("--layer", choices=["doc","behavioral","all"], default="doc", help="doc = evals/cases (layer 2); behavioral = evals/behavioral; all = both")
     args=p.parse_args()
-    cases=load_cases(args.skill, args.category)
+    if args.layer in ("doc","all"):
+        cases=load_cases(args.skill, args.category)
+    else:
+        cases=[]
+    if args.layer in ("behavioral","all"):
+        # behavioral run delegated
+        import subprocess
+        print("--- behavioral layer (via evals/behavioral/runner.py) ---")
+        subprocess.run(["python3", str(ROOT/"evals/behavioral/runner.py")])
     if not cases:
         print("No cases matched filter. Available cases:")
         for c in sorted((ROOT/"evals/cases").glob("*")):

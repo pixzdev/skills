@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-research-risk",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "task where insufficient research creates significant risk production auth",
+  "expected_routing": "research with citation discipline + RAG grounding + challenger",
+  "expected_challenge": "high",
+  "risk": "high",
+  "should_select": [
+    "pixz.ai.rag",
+    "pixz.core.epistemic-challenger"
+  ],
+  "should_not_select": [],
+  "verifies": "grounding and falsification"
+}

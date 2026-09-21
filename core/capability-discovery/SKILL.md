@@ -1,7 +1,7 @@
 ---
 name: Capability Discovery
 description: Discovers relevant skills, agents, tools, MCP servers and libraries before selecting.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.capability-discovery
 category: core
 triggers: [discover, what can I use, available tools, find skill, search capability]

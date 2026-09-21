@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-large-unfamiliar",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "large unfamiliar repository first task",
+  "expected_routing": "environment-awareness + capability-discovery + context-engineering",
+  "expected_challenge": "medium",
+  "risk": "medium",
+  "should_select": [
+    "pixz.core.environment-awareness",
+    "pixz.core.capability-discovery"
+  ],
+  "should_not_select": [],
+  "verifies": "repo scan"
+}

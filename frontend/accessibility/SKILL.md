@@ -1,7 +1,7 @@
 ---
 name: Accessibility
 description: WCAG-grounded auditing and remediation — perceivable, operable, understandable, robust.
-version: 1.0.0
+version: 1.0.1
 id: pixz.frontend.accessibility
 category: frontend
 triggers: [a11y, accessibility, wcag, aria, screen reader, keyboard nav]

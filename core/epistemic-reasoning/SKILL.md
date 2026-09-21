@@ -1,7 +1,7 @@
 ---
 name: Epistemic Reasoning
 description: Disciplined reasoning that separates fact from inference, tracks assumptions, and calibrates confidence.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.epistemic-reasoning
 category: core
 triggers: [reason, evidence, assumption, confidence, uncertainty, argumentation]

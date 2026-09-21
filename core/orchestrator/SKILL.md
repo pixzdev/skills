@@ -1,7 +1,7 @@
 ---
 name: Orchestrator
 description: Meta-coordination layer that routes work to the right skills, agents and tools with accountability and verification.
-version: 1.0.0
+version: 1.0.1
 id: pixz.core.orchestrator
 category: core
 triggers: [orchestrate, coordinate, delegate, complex task, multi-step, route work]
@@ -77,7 +77,7 @@ Ask user only for information that cannot be discovered locally.
 
 ## Dependencies
 - **aggregates (mandatory when installed):** pixz.core.planning, pixz.core.context-engineering, pixz.core.environment-awareness, pixz.core.capability-discovery, pixz.core.workflow-continuity, pixz.core.epistemic-reasoning, pixz.core.verification, pixz.core.quality-gate
-- **optional:** pixz.core.epistemic-challenger, pixz.core.change-safety, pixz.quality.anti-ai-slop
+- **optional:** pixz.core.epistemic-challenger, pixz.quality.anti-ai-slop
 - **requires:** none (top-level composition). Resolver recursively expands aggregates' `requires`.
 - **conflicts:** none (orchestrator must not conflict with its aggregates)
 

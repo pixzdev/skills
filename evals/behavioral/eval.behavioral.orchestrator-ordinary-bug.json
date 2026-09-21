@@ -1,0 +1,15 @@
+{
+  "id": "eval.behavioral.orchestrator-ordinary-bug",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "ordinary bug single file fix",
+  "expected_routing": "capability-discovery + verification, no full orchestrator",
+  "expected_challenge": "none",
+  "risk": "low",
+  "should_select": [
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.core.orchestrator"
+  ],
+  "verifies": "minimal verification"
+}

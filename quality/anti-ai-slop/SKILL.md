@@ -1,7 +1,7 @@
 ---
 name: Anti-AI Slop
 description: Detects and challenges generic, decorative, boilerplate or hallucinated artifacts in design, code and docs.
-version: 1.0.0
+version: 1.0.1
 id: pixz.quality.anti-ai-slop
 category: quality
 triggers: [anti slop, generic design, boilerplate, AI slop, generic SaaS, template]

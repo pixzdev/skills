@@ -1,7 +1,7 @@
 ---
 name: GSAP Motion
 description: GSAP timeline and ScrollTrigger methodology with performance and accessibility constraints.
-version: 1.0.0
+version: 1.0.1
 id: pixz.motion.gsap
 category: motion
 triggers: [gsap, scrolltrigger, tween, timeline animation, motion design]

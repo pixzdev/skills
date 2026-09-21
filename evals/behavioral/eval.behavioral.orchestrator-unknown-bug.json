@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-unknown-bug",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "unknown repository bug with no context",
+  "expected_routing": "full discover: context-engineering + environment-awareness + capability-discovery + verification",
+  "expected_challenge": "medium",
+  "risk": "medium",
+  "should_select": [
+    "pixz.core.context-engineering",
+    "pixz.core.environment-awareness"
+  ],
+  "should_not_select": [],
+  "verifies": "unknown requires discovery"
+}

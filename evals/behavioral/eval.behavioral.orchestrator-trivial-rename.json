@@ -1,0 +1,17 @@
+{
+  "id": "eval.behavioral.orchestrator-trivial-rename",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "trivial file rename",
+  "expected_routing": "minimal (UNDERSTAND\u2192EXECUTE\u2192VERIFY), 0-1 skill, no orchestrator/full loop",
+  "expected_challenge": "none",
+  "risk": "low",
+  "should_select": [
+    "none or environment-awareness"
+  ],
+  "should_not_select": [
+    "orchestrator",
+    "security.review",
+    "epistemic-challenger"
+  ],
+  "verifies": "complexity-aware avoids over-orchestration"
+}

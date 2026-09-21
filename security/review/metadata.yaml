@@ -1,7 +1,7 @@
 id: pixz.security.review
 name: Security Review
 category: security
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Checklist-driven security review covering auth, authz, input, secrets,
   deps and architecture.

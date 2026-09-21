@@ -1,7 +1,7 @@
 id: pixz.quality.anti-ai-slop
 name: Anti-AI Slop
 category: quality
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Detects and challenges generic, decorative, boilerplate or hallucinated
   artifacts in design, code and docs.

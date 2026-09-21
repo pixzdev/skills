@@ -1,7 +1,7 @@
 ---
 name: Docker & Containers
 description: Reproducible container construction — layering, supply-chain and runtime verification.
-version: 1.0.0
+version: 1.0.1
 id: pixz.devops.docker
 category: devops
 triggers: [docker, container, dockerfile, image, layer]

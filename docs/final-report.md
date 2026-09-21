@@ -90,7 +90,7 @@ Avoids 30–40 micro-skills; 28 is smallest coherent that covers critical paths.
 - `optional` used sparingly (orchestrator→challenger/change-safety/anti-slop).
 - `conflicts` none needed in v1 — reserved.
 - Resolver flow: expand aggregates→requires→optional (compatible) → conflict check → runtime check → version check → cycle DFS → limits → topo-sort.
-- Limits: `max_skill_chain_depth=12` (actual max 11), `max_orchestration_depth=6`, `max_iterations=8`.
+- Limits: `max_skill_chain_depth=15` (actual max 11), `max_orchestration_depth=6`, `max_iterations=8`.
 
 ## 6. Runtime Compatibility
 

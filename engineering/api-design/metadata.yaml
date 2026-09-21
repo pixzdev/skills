@@ -1,7 +1,7 @@
 id: pixz.engineering.api-design
 name: API Design
 category: engineering
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Methodology for consistent, versioned, secure and observable API contracts.
 triggers:

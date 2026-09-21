@@ -1,7 +1,7 @@
 id: pixz.core.verification
 name: Verification
 category: core
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: 'Evidence-based verification: inspection, regression, consistency and
   impact analysis before shipping.'

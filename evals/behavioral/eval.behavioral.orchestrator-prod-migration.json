@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-prod-migration",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "production migration",
+  "expected_routing": "orchestrator+planning+change-safety+verification+quality-gate",
+  "expected_challenge": "high",
+  "risk": "high",
+  "should_select": [
+    "pixz.core.change-safety",
+    "pixz.core.quality-gate"
+  ],
+  "should_not_select": [],
+  "verifies": "irreversible gate"
+}

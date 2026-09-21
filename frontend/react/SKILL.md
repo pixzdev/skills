@@ -1,7 +1,7 @@
 ---
 name: React Engineering
 description: React/Next.js methodology — composition, state, boundaries, performance and verification.
-version: 1.0.0
+version: 1.0.1
 id: pixz.frontend.react
 category: frontend
 triggers: [react, next.js, component, hooks, composition]

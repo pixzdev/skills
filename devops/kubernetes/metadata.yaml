@@ -1,7 +1,7 @@
 id: pixz.devops.kubernetes
 name: Kubernetes
 category: devops
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Declarative Kubernetes delivery with rollout, health-check and failure-mode
   discipline.

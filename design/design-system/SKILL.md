@@ -1,7 +1,7 @@
 ---
 name: Design System
 description: Defines and enforces tokens, components, patterns and governance for consistent UIs.
-version: 1.0.0
+version: 1.0.1
 id: pixz.design.design-system
 category: design
 triggers: [design system, tokens, components, consistency, pattern]

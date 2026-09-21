@@ -1,7 +1,7 @@
 ---
 name: UI/UX Design
 description: Human-centered interface methodology — flows, hierarchy, affordance and usability verification.
-version: 1.0.0
+version: 1.0.1
 id: pixz.design.uiux
 category: design
 triggers: [ui design, ux review, interaction design, usability, interface]

@@ -1,0 +1,13 @@
+{
+  "id": "eval.behavioral.orchestrator-incomplete-requirements",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "incomplete requirements for new feature",
+  "expected_routing": "context-engineering sufficiency check, ask user last",
+  "expected_challenge": "medium",
+  "risk": "medium",
+  "should_select": [
+    "pixz.core.context-engineering"
+  ],
+  "should_not_select": [],
+  "verifies": "sufficiency gate"
+}

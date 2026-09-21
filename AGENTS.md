@@ -1,154 +1,152 @@
-# AGENTS.md — PIXZ.DEV Skills Ecosystem (Root Registry)
+# AGENTS.md — PIXZ.DEV Skills (Agent Guide)
 
-> **Canonical entry point for agent-driven discovery.** This file is both human-readable and machine-parseable. It delegates to hierarchical registries without duplicating truth.
-> Machine source of truth: [`registry.json`](./registry.json) validated by [`schemas/registry.schema.json`](./schemas/registry.schema.json). Agent execution contracts: [`schemas/skill.schema.json`](./schemas/skill.schema.json).
+> **Canonical for agents.** Source of truth for discovery, workflow, skill/registry conventions, validation, and contribution. Human overview is `README.md`; this file is operational.
 
-## How to Install / Discover
+## Purpose
 
-```bash
-# Stable (production) — pin a known-good version
-git clone --branch v1.0.0 https://github.com/pixzdev/skills.git
-# or: git clone https://github.com/pixzdev/skills.git && git checkout v1.0.0
+Portable skills that answer: *what skill for this task, what does it require, which runtime can run it, how is it verified/challenged?* See `README.md#why` for narrative; this file tells you how to work in this repo.
 
-# Latest (development)
-git clone https://github.com/pixzdev/skills.git
+## Architecture (source of truth)
 
-# Hierarchical discovery
-cat AGENTS.md                 # this file — full index
-cat core/AGENTS.md            # core capabilities
-cat engineering/AGENTS.md     # engineering domain
-cat design/AGENTS.md          # design domain
-# etc.
+- **Core:** `SKILL.md` + `metadata.yaml` per skill, validated by `schemas/skill.schema.json`
+- **Registry:** `registry.json` is **machine source** (validated by `schemas/registry.schema.json`); `AGENTS.md` (this file) is its human/agent projection; `*/AGENTS.md` are navigation only.
+- **Workflow state:** `schemas/workflow.schema.json` (11 runtime phases: `DEFINE`, `DISCOVER`, `RESEARCH`, `PLAN`, `EXECUTE`, `INSPECT`, `CHALLENGE`, `VERIFY`, `REPLAN`, `IMPROVE`, `SHIP`). Methodological `NORMALIZE`/`ARCHITECT` map to `PLAN`; `IMPLEMENT` maps to `EXECUTE`. `REINITIATE` is a policy (restart from `DEFINE`), not a state — see `docs/architecture.md`.
+- **Adapter:** `adapters/` are thin translators; core methodology never forks per runtime.
 
-# Automated resolution with validation
-python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
-python scripts/validate.py
-python scripts/check-cycles.py
-```
+## Workflow — How Agents Work Here
 
-> **Discovery rule for agents:** Start here. Do not search the repo blindly. This file lists stable IDs, triggers, dependencies and runtime compatibility. Hierarchical `*/AGENTS.md` files improve navigation — they never introduce conflicting metadata.
-
-## Operating Loop
-
+Follow:
 ```
 UNDERSTAND → DISCOVER → PLAN → EXECUTE → INSPECT → CHALLENGE → VERIFY → REPLAN → IMPROVE → VERIFY → SHIP
 ```
+- **Complexity-aware:** trivial rename → `UNDERSTAND→EXECUTE→VERIFY` (no orchestrator). High risk×uncertainty×impact → full loop with challenger + quality-gate. See `docs/architecture/routing.md`.
+- **Context protocol:** `workflow state → repo/local → tools/MCP → docs → external research (official first) → user last`
+- **Environment first:** inspect OS/runtime/framework/package-manager/git (`pixz.core.environment-awareness`) before assuming `npm` vs `pnpm`, `Next.js` vs `Vite`.
 
-## Capability Map — 28 Skills, 5 Schemas, 4 Adapters
+## Skill Conventions
 
-### Core (mandatory via orchestrator aggregates)
+- **Folder:** `<domain>/<name>/SKILL.md` + `metadata.yaml` (required). `name` in frontmatter **should be kebab-case slug matching folder** for `npx skills` CLI compat (`orchestrator`, not `Orchestrator`). Currently titles are human-case but folder slug is used for CLI `--skill <folder>`.
+- **Frontmatter:** `---` with `name` and `description` (progressive disclosure budget; frontmatter always visible).
+- **Contract (all):** Purpose, Triggers, When to use / NOT, Inputs, Required context, Methodology (operational steps), Dependencies, Tools, Constraints/Failure, Verification, Example, Structured output. Long rationale → `docs/`.
+- **ID:** stable `pixz.<domain>.<name>` — never filename.
+
+## Registry Conventions
+
+- **Single source:** `registry.json`. Do not edit this projection (`AGENTS.md` trigger table) without editing `registry.json` + `metadata.yaml`; run `python scripts/validate.py` to catch drift.
+- **Generated files:** `registry.json` is **not** generated from a separate builder here; it's manually maintained but cross-checked by `scripts/validate.py` (registry ↔ metadata ↔ filesystem ↔ schemas). If you add a skill, update both `metadata.yaml` and `registry.json`.
+- **Do not edit `registry.json` without validating.**
+
+## Validation / Test Commands
+
+```bash
+python scripts/validate.py                  # layer 1: registry/metadata/schemas/cycles
+python scripts/check-cycles.py              # layer 1: no cycles
+python evals/runner.py                      # layer 2: doc validation heuristic (15 cases)
+python evals/behavioral/runner.py           # layer 3: routing smoke (4 scenarios)
+bash scripts/integration-smoke.sh           # layer 4: installer → discovery → invocation (where CLI available)
+python scripts/resolve.py --install pixz.core.orchestrator --runtime claude
+python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 12 nodes
+```
+
+All must pass before tagging `v*.*.*`.
+
+## Documentation Rules
+
+- **SKILL.md** = instructions at invocation time (operational, concise)
+- **`docs/`** = human explanation, architecture, install, troubleshooting, evaluation
+- Do not duplicate whole README into this file; do not inflate SKILL.md with docs.
+
+Structure: `docs/getting-started.md`, `docs/install/README.md` (+ `skills-sh.md`, `claude-code.md`, `openclaw.md`, `opencode.md`, `hermes.md`, `generic.md`), `docs/architecture.md`, `docs/architecture/routing.md`, `docs/evaluation.md`, `docs/development/*`, `docs/troubleshooting.md`, `docs/install-as-skill.md`, `docs/prompts/install-skill-agent.md`.
+
+## Dependency Rules
+
+- `requires` hard, `aggregates` mandatory when parent installed, `optional` **opt-in** via `--with-optional`, `conflicts` mutual exclusion. See `docs/dependency-model.md`.
+- Resolver is `scripts/resolve.py` — deterministic, cycle-DFS, runtime/version gates, depth caps (`max_skill_chain_depth=15`, `max_orchestration_depth=6`, `max_iterations=8` from `registry.json#limits`).
+- Do not add `conflicts` without justification; do not make `requires` optional to game the graph.
+
+## Contribution Rules
+
+See `CONTRIBUTING.md`. New skill must pass seven standalone criteria (distinct objective, methodology, triggers, I/O, failure, independent value) and `scripts/validate.py` + `scripts/check-cycles.py`. Do not create a skill when a protocol/policy/doc suffices.
+
+## Anti-AI-Slop Rules
+
+- No generic SaaS glassmorphism, template grids, meaningless gradients/animations, filler copy — see `pixz.quality.anti-ai-slop/SKILL.md`
+- No boilerplate comments, fake evidence, citation dumping, invented capabilities
+- No badge wall, no `🚀 Revolutionary` without evidence
+- Every claim in docs → evidence label: **OBSERVED** (repo/file), **VERIFIED** (official docs + CLI/ls output), **PARTIALLY VERIFIED**, **DOCUMENTED ONLY**, **UNKNOWN**
+- Repo must not exhibit the problems its skills prevent — see `docs/troubleshooting.md`
+
+## How to Avoid Modifying Generated Artifacts Incorrectly
+
+- `registry.json` ↔ `*/metadata.yaml` ↔ `*/SKILL.md` ↔ `schemas/*` must stay consistent — `scripts/validate.py` is the gate.
+- Do not hand-edit `registry.json` skills without creating the matching `metadata.yaml` + `SKILL.md` and running validation.
+- `docs/` may contain generated sections; check file header for source.
+
+## Discovery — Capability Map (projection of `registry.json`)
+
+> **Install ≠ clone.** `git clone` gives source; install registers in `<runtime>/skills/`. See `docs/install/README.md` matrix.
+
+**Core (mandatory via orchestrator — 10 nodes, 12 with `--with-optional`):**
 
 | ID | Name | Path | Triggers | Requires |
 |----|------|------|----------|----------|
 | `pixz.core.orchestrator` | Orchestrator | `core/orchestrator/` | orchestrate, coordinate, delegate, complex task | — (aggregates 8) |
-| `pixz.core.planning` | Planning | `core/planning/` | plan, roadmap, break down | context-engineering |
-| `pixz.core.context-engineering` | Context Engineering | `core/context-engineering/` | context, requirements, gather context | — |
-| `pixz.core.environment-awareness` | Environment Awareness | `core/environment-awareness/` | environment, stack detection, package manager | — |
-| `pixz.core.capability-discovery` | Capability Discovery | `core/capability-discovery/` | discover, available tools, find skill | — |
-| `pixz.core.workflow-continuity` | Workflow Continuity | `core/workflow-continuity/` | workflow, handoff, persist state | context-engineering |
-| `pixz.core.delegation-handoff` | Delegation & Handoff | `core/delegation-handoff/` | delegate, handoff, subagent | workflow-continuity, context-engineering |
-| `pixz.core.epistemic-reasoning` | Epistemic Reasoning | `core/epistemic-reasoning/` | reason, evidence, assumption, confidence | context-engineering |
-| `pixz.core.epistemic-challenger` | Epistemic Challenger | `core/epistemic-challenger/` | challenge, how could this be wrong, falsify | epistemic-reasoning |
-| `pixz.core.verification` | Verification | `core/verification/` | verify, inspect, validate | epistemic-reasoning |
-| `pixz.core.change-safety` | Change Safety | `core/change-safety/` | safe change, reversible, scope control | environment-awareness |
-| `pixz.core.replanning` | Replanning | `core/replanning/` | replan, pivot, strategy failed | planning, verification |
-| `pixz.core.quality-gate` | Quality Gate | `core/quality-gate/` | quality gate, ship check, release gate | verification, change-safety |
+| `pixz.core.planning` | Planning | `core/planning/` | plan, roadmap | context-engineering |
+| `pixz.core.context-engineering` | Context Engineering | `core/context-engineering/` | context, requirements | — |
+| `pixz.core.environment-awareness` | Environment Awareness | `core/environment-awareness/` | environment, stack detection | — |
+| `pixz.core.capability-discovery` | Capability Discovery | `core/capability-discovery/` | discover, available tools | — |
+| `pixz.core.workflow-continuity` | Workflow Continuity | `core/workflow-continuity/` | workflow, handoff | context-engineering |
+| `pixz.core.delegation-handoff` | Delegation & Handoff | `core/delegation-handoff/` | delegate, handoff | workflow-continuity, context-engineering |
+| `pixz.core.epistemic-reasoning` | Epistemic Reasoning | `core/epistemic-reasoning/` | reason, evidence, confidence | context-engineering |
+| `pixz.core.epistemic-challenger` | Epistemic Challenger | `core/epistemic-challenger/` | challenge, falsify | epistemic-reasoning |
+| `pixz.core.verification` | Verification | `core/verification/` | verify, inspect | epistemic-reasoning |
+| `pixz.core.change-safety` | Change Safety | `core/change-safety/` | safe change, reversible | environment-awareness |
+| `pixz.core.replanning` | Replanning | `core/replanning/` | replan, pivot | planning, verification |
+| `pixz.core.quality-gate` | Quality Gate | `core/quality-gate/` | quality gate, ship check | verification, change-safety |
 
-> `orchestrator` aggregates: planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, epistemic-reasoning, verification, quality-gate. Installing orchestrator resolves them and their transitive `requires`. Optional: epistemic-challenger, change-safety, anti-ai-slop.
+`orchestrator` aggregates: planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, epistemic-reasoning, verification, quality-gate — mandatory (10). Optional (opt-in): epistemic-challenger, anti-ai-slop.
 
-### Quality
+**Quality / Domain:**
 
-| ID | Name | Path | Triggers | Requires |
-|----|------|------|----------|----------|
-| `pixz.quality.anti-ai-slop` | Anti-AI Slop | `quality/anti-ai-slop/` | anti slop, generic design, boilerplate | verification |
+| ID | Path | Triggers |
+|----|------|----------|
+| `pixz.quality.anti-ai-slop` | `quality/anti-ai-slop/` | anti slop, boilerplate |
+| `pixz.engineering.api-design` | `engineering/api-design/` | api design, openapi |
+| `pixz.engineering.system-design` | `engineering/system-design/` | system design |
+| `pixz.security.review` | `security/review/` | security review |
+| `pixz.security.threat-modeling` | `security/threat-modeling/` | threat model, STRIDE |
+| `pixz.design.uiux` | `design/uiux/` | ui design, ux review |
+| `pixz.design.design-system` | `design/design-system/` | design system, tokens |
+| `pixz.frontend.react` | `frontend/react/` | react, next.js |
+| `pixz.frontend.accessibility` | `frontend/accessibility/` | a11y, wcag |
+| `pixz.motion.gsap` | `motion/gsap/` | gsap, scrolltrigger |
+| `pixz.motion.remotion` | `motion/remotion/` | remotion |
+| `pixz.devops.docker` | `devops/docker/` | docker |
+| `pixz.devops.kubernetes` | `devops/kubernetes/` | k8s, helm |
+| `pixz.ai.rag` | `ai/rag/` | rag, retrieval |
+| `pixz.ai.agent-design` | `ai/agent-design/` | agent design |
 
-### Domain / Niche
+Runtime compat for all: `claude, openclaw, opencode, hermes, codex, generic` — see `docs/install/README.md` for VERIFIED vs PARTIALLY classification.
 
-| ID | Name | Path | Triggers | Requires |
-|----|------|------|----------|----------|
-| `pixz.engineering.api-design` | API Design | `engineering/api-design/` | api design, rest, openapi | context-engineering |
-| `pixz.engineering.system-design` | System Design | `engineering/system-design/` | system design, architecture | planning, epistemic-reasoning |
-| `pixz.security.review` | Security Review | `security/review/` | security review, audit | verification |
-| `pixz.security.threat-modeling` | Threat Modeling | `security/threat-modeling/` | threat model, STRIDE | context-engineering, epistemic-reasoning |
-| `pixz.design.uiux` | UI/UX Design | `design/uiux/` | ui design, ux review | context-engineering |
-| `pixz.design.design-system` | Design System | `design/design-system/` | design system, tokens | design.uiux |
-| `pixz.frontend.react` | React Engineering | `frontend/react/` | react, next.js, hooks | environment-awareness |
-| `pixz.frontend.accessibility` | Accessibility | `frontend/accessibility/` | a11y, wcag, aria | design.uiux |
-| `pixz.motion.gsap` | GSAP Motion | `motion/gsap/` | gsap, scrolltrigger | environment-awareness |
-| `pixz.motion.remotion` | Remotion | `motion/remotion/` | remotion, programmatic video | environment-awareness |
-| `pixz.devops.docker` | Docker & Containers | `devops/docker/` | docker, container | environment-awareness |
-| `pixz.devops.kubernetes` | Kubernetes | `devops/kubernetes/` | kubernetes, k8s, helm | docker |
-| `pixz.ai.rag` | RAG Systems | `ai/rag/` | rag, retrieval, grounding | epistemic-reasoning, verification |
-| `pixz.ai.agent-design` | Agent Design | `ai/agent-design/` | agent design, tool calling | orchestrator, change-safety |
+## Installation (not clone) — where skills land
 
-## Runtime Compatibility
+See matrix `docs/install/README.md`. Summary: skills.sh `npx skills add` auto-picks `~/.claude/skills` / `.opencode/skill` / `.agents/skills`; Claude `~/.claude/skills/` or `.claude/skills/`; OpenClaw `skills/` / `~/.openclaw/skills/` / `openclaw skills list`; OpenCode `.opencode/skill/` (singular) + compat; Hermes `~/.hermes/skills/` or `skills/`; Generic `.agents/skills/`.
 
-All 28 skills declare `compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]`.
-
-- **Claude / Claude Code:** `SKILL.md` frontmatter (`name`, `description`) progressive disclosure; install to `.claude/skills/` or project root; import via `@AGENTS.md` inside `CLAUDE.md`.
-- **OpenClaw:** install to `<workspace>/skills/` or `~/.openclaw/skills/`; `agents.entries.*.skills` allowlist is final (non-merging).
-- **OpenCode / Hermes / generic:** generic `SKILL.md` — adapter translates paths. See `adapters/`.
-
-Compatibility differences are documented in `adapters/README.md` — core methodology stays runtime-agnostic.
-
-## Dependency Model
-
-- `requires` — hard; missing → install fails
-- `aggregates` — orchestrator composition (recursive)
-- `optional` — best-effort if compatible & non-conflicting
-- `conflicts` — mutual exclusion
-
-Resolver: `scripts/resolve.py` (topo-sort + cycle DFS + runtime/version gates). Limits: `max_skill_chain_depth=12`, `max_orchestration_depth=6`, `max_iterations=8` (from `registry.json`).
-
-## Skill Contract (every SKILL.md)
-
-Purpose · Triggers · When to use / when NOT · Inputs · Required context · Methodology · Outputs · Dependencies · Tools · Failure conditions · Verification · Example · Structured output
-
-Tools selected by task-fit, cost, freshness, reversibility and risk — not by availability.
-
-## Protocols & Policies
-
-- **Protocols:** Context, Workflow Propagation, Argumentation, Escalation Ladder — see `docs/architecture.md`, `schemas/workflow.schema.json`.
-- **Policies:** Scope Control, Simplicity, Change Safety, Anti-AI Slop — globally enforced.
-
-## Evaluation
-
-Each skill has `metadata.yaml` + `SKILL.md`. Central evals: `evals/cases/*.yaml` (trigger/method/output/failure/verification/scope/hallucination/consistency). Run `python evals/runner.py`.
-
-## Hierarchical Registries
-
-- `core/AGENTS.md`, `engineering/AGENTS.md`, `security/AGENTS.md`, `design/AGENTS.md`, `frontend/AGENTS.md`, `motion/AGENTS.md`, `devops/AGENTS.md`, `ai/AGENTS.md`, `quality/AGENTS.md`
-
-Each delegates here for truth; they add domain navigation, examples and boundary notes.
+For agent copy-paste: `docs/install-as-skill.md` (short) and `docs/prompts/install-skill-agent.md` (runtime-adaptive full with verification report).
 
 ## Versioning
 
-- **IDs stable:** `pixz.<domain>.<name>`
-- **Channels:** `latest` (HEAD main), `stable` (latest `v*.*.*` tag that passed quality-gate), `pinned` (exact SemVer / git SHA)
-- **File:** `VERSION` at root; per-skill `version` in `metadata.yaml`
+`VERSION` 1.0.1 repo; `metadata.yaml:version` per skill; `latest` (main HEAD) / `stable` (latest `v*.*.*` tag) / `pinned` (future — no `pixz.lock` yet, see `docs/versioning.md`).
 
-## Agent Instructions
+## Verification (layers)
 
-1. **Discover** via this file before any tool search.
-2. **Environment-awareness first:** inspect OS/runtime/framework/package-manager/git before assuming.
-3. **Capability-discovery second:** only after discovery should you select.
-4. **Complexity-aware:** do not invoke full orchestration for trivial reversible tasks.
-5. **Preserve workflow state** per `schemas/workflow.schema.json` and handoff via `delegation-handoff`.
-6. **Cite sources** for research; distinguish `FACT` vs `INFERENCE` vs `ASSUMPTION` vs `UNKNOWN`.
+1 `validate.py` + `check-cycles.py`  2 `evals/runner.py`  3 `evals/behavioral/runner.py`  4 `scripts/integration-smoke.sh` — never present 1–2 as 3–4.
 
-## Research Grounding
+## Portability Classification (keep honest)
 
-Conventions researched from official docs / repos:
-- Claude Skills progressive disclosure (anthropic: `SKILL.md` + `name/description` frontmatter, `scripts/references/assets`)
-- AGENTS.md open standard (Agentic AI Foundation / Linux Foundation) — cascading hierarchy, `AGENTS.override.md` optional
-- OpenClaw skill loading order, allowlists, workshop skills
-- OpenCode / Hermes generic SKILL.md
-- `llms.txt` for LLM-friendly index (see `llms.txt`)
+- **Native portable** — same `SKILL.md` works with no adapter (all runtimes here)
+- **Adapter-compatible** — path translation only (our adapters)
+- **Documentation-compatible** — understood but not auto-installable
+- **Unsupported** — no verified path (don't claim)
 
-## Quick Triggers Index
-
-> “What capability do I need?” → scan *Triggers* table above. Resolver answers: dependencies, runtime, context, verification, challenge routing.
-
----
-
-*This registry is validated by `scripts/validate.py` — do not edit skills without re-validating. See `CONTRIBUTING.md` for taxonomy rules.*
+Do not call everything “universal”.

@@ -1,0 +1,14 @@
+{
+  "id": "eval.behavioral.orchestrator-contradictory-reports",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "contradictory agent reports with conflicting evidence",
+  "expected_routing": "epistemic-reasoning + epistemic-challenger + verification",
+  "expected_challenge": "high",
+  "risk": "high",
+  "should_select": [
+    "pixz.core.epistemic-reasoning",
+    "pixz.core.epistemic-challenger"
+  ],
+  "should_not_select": [],
+  "verifies": "source fidelity and falsification"
+}

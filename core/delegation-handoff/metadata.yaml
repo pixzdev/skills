@@ -1,7 +1,7 @@
 id: pixz.core.delegation-handoff
 name: Delegation & Handoff
 category: core
-version: 1.0.0
+version: 1.0.1
 status: stable
 description: Structured delegation with explicit inputs, constraints, success criteria
   and structured returns.
