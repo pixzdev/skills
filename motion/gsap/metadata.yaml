@@ -1,0 +1,33 @@
+id: pixz.motion.gsap
+name: GSAP Motion
+category: motion
+version: 1.0.0
+status: stable
+description: GSAP timeline and ScrollTrigger methodology with performance and accessibility
+  constraints.
+triggers:
+- gsap
+- scrolltrigger
+- tween
+- timeline animation
+requires:
+- pixz.core.environment-awareness
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

@@ -1,0 +1,27 @@
+{
+  "id": "eval.orchestrator.trigger-01",
+  "skill_id": "pixz.core.orchestrator",
+  "description": "Orchestrator triggers on complex multi-step task",
+  "category": "trigger",
+  "input": {
+    "prompt": "Orchestrate a rate-limited public API for our Next.js monorepo with auth, tests and docs",
+    "runtime": "claude"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "DISCOVER",
+      "PLAN",
+      "DELEGATE",
+      "VERIFY"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "orchestrator does not embed skill HOW"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

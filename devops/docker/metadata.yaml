@@ -1,0 +1,33 @@
+id: pixz.devops.docker
+name: Docker & Containers
+category: devops
+version: 1.0.0
+status: stable
+description: Reproducible container construction, layering, supply-chain and runtime
+  verification.
+triggers:
+- docker
+- container
+- dockerfile
+- image
+requires:
+- pixz.core.environment-awareness
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

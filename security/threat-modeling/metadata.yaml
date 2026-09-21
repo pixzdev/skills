@@ -1,0 +1,33 @@
+id: pixz.security.threat-modeling
+name: Threat Modeling
+category: security
+version: 1.0.0
+status: stable
+description: Systematic threat enumeration, impact scoring and mitigation mapping.
+triggers:
+- threat model
+- STRIDE
+- attack surface
+- abuse case
+requires:
+- pixz.core.context-engineering
+- pixz.core.epistemic-reasoning
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

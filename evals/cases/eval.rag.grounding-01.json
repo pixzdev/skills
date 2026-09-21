@@ -1,0 +1,26 @@
+{
+  "id": "eval.rag.grounding-01",
+  "skill_id": "pixz.ai.rag",
+  "description": "RAG requires citation per factual sentence and UNKNOWN handling",
+  "category": "hallucination",
+  "input": {
+    "prompt": "Answer from knowledge base about pricing",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "cite",
+      "grounding",
+      "UNKNOWN"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "hallucination resistance"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

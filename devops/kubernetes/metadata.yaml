@@ -1,0 +1,34 @@
+id: pixz.devops.kubernetes
+name: Kubernetes
+category: devops
+version: 1.0.0
+status: stable
+description: Declarative Kubernetes delivery with rollout, health-check and failure-mode
+  discipline.
+triggers:
+- kubernetes
+- k8s
+- helm
+- deployment
+- pod
+requires:
+- pixz.devops.docker
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

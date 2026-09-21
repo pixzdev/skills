@@ -1,0 +1,22 @@
+id: pixz.agent.orchestrator
+name: Orchestrator Agent
+role: meta-coordinator
+description: Primary agent that coordinates the full UNDERSTAND→SHIP loop, routes to specialist agents/skills, inspects handoffs and owns ship decision.
+compatible_runtimes: [claude, openclaw, opencode, hermes]
+skills:
+  - pixz.core.orchestrator
+limits:
+  max_orchestration_depth: 6
+  max_iterations: 8
+  max_skill_chain_depth: 12
+responsibilities:
+  - Understand & Define (scope, stop conditions)
+  - Discover (environment, capabilities)
+  - Plan & Route (WHEN/WHO/WHAT/WHY)
+  - Delegate & Coordinate (structured handoffs)
+  - Inspect & Challenge (risk-scaled)
+  - Verify → Replan → Improve → Ship
+inputs: [objective, constraints, workflow_state]
+outputs: [plan, delegations, inspection_results, verification_report, gate_verdict]
+escalation_ladder: [retry, inspect, alternate, research, specialist, challenge, parent, user]
+observability: schemas/workflow.schema.json

@@ -1,0 +1,28 @@
+{
+  "id": "eval.verification.evidence-01",
+  "skill_id": "pixz.core.verification",
+  "description": "Verification demands evidence not just pass claims",
+  "category": "verification",
+  "input": {
+    "prompt": "Verify change before ship",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "evidence",
+      "regression",
+      "residual_risks"
+    ],
+    "must_not_contain": [
+      "proof of universal correctness"
+    ],
+    "verifies": [
+      "evidence-based gate"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

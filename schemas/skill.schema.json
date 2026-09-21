@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pixz.dev/schemas/skill.schema.json",
+  "title": "PIXZ Skill Metadata",
+  "description": "Portable skill contract — runtime-agnostic core, validated before registry and resolver.",
+  "type": "object",
+  "required": ["id", "name", "category", "version", "description", "status", "triggers", "compatible_runtimes"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^pixz\\.[a-z0-9-]+\\.[a-z0-9-]+$",
+      "description": "Stable namespaced ID, never derived from filename."
+    },
+    "name": { "type": "string", "minLength": 2 },
+    "category": {
+      "type": "string",
+      "enum": ["core","quality","engineering","security","pentesting","frontend","backend","devops","mobile","ai","data","design","graphics","motion","media","automation","documentation"]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-z0-9.-]+)?$",
+      "description": "SemVer. Resolver supports latest/stable/pinned."
+    },
+    "status": { "type": "string", "enum": ["draft","experimental","stable","deprecated"] },
+    "description": { "type": "string", "minLength": 10, "maxLength": 500 },
+    "triggers": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "requires": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^pixz\\.[a-z0-9-]+\\.[a-z0-9-]+$" },
+      "description": "Hard dependencies — resolver fails if missing/incompatible."
+    },
+    "aggregates": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^pixz\\.[a-z0-9-]+\\.[a-z0-9-]+$" },
+      "description": "Orchestrator composition — installed when parent is installed; recursively resolves their requires."
+    },
+    "optional": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^pixz\\.[a-z0-9-]+\\.[a-z0-9-]+$" }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^pixz\\.[a-z0-9-]+\\.[a-z0-9-]+$" }
+    },
+    "compatible_runtimes": {
+      "type": "array",
+      "items": { "type": "string", "enum": ["claude","openclaw","opencode","hermes","codex","cursor","generic"] },
+      "minItems": 1
+    },
+    "inputs": { "type": "array", "items": { "type": "string" } },
+    "outputs": { "type": "array", "items": { "type": "string" } },
+    "tools": { "type": "array", "items": { "type": "string" } },
+    "path": { "type": "string", "description": "Canonical repo path, e.g. core/orchestrator" },
+    "replaces": { "type": "string" },
+    "deprecated_reason": { "type": "string" }
+  },
+  "additionalProperties": false
+}

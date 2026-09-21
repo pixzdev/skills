@@ -1,0 +1,33 @@
+id: pixz.core.epistemic-challenger
+name: Epistemic Challenger
+category: core
+version: 1.0.0
+status: stable
+description: Adaptive challenger that stress-tests claims by seeking disconfirming
+  evidence and failure modes.
+triggers:
+- challenge
+- counterargument
+- how could this be wrong
+- falsify
+requires:
+- pixz.core.epistemic-reasoning
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

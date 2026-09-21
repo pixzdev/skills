@@ -1,0 +1,44 @@
+id: pixz.core.orchestrator
+name: Orchestrator
+category: core
+version: 1.0.0
+status: stable
+description: Meta-coordination layer that routes work to the right skills, agents
+  and tools.
+triggers:
+- orchestrate
+- coordinate
+- delegate
+- complex task
+- multi-step
+requires: []
+aggregates:
+- pixz.core.planning
+- pixz.core.context-engineering
+- pixz.core.environment-awareness
+- pixz.core.capability-discovery
+- pixz.core.workflow-continuity
+- pixz.core.epistemic-reasoning
+- pixz.core.verification
+- pixz.core.quality-gate
+optional:
+- pixz.core.epistemic-challenger
+- pixz.core.change-safety
+- pixz.quality.anti-ai-slop
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

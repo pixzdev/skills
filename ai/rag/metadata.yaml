@@ -1,0 +1,35 @@
+id: pixz.ai.rag
+name: RAG Systems
+category: ai
+version: 1.0.0
+status: stable
+description: 'Grounded retrieval-augmented generation: chunking, grounding, citation
+  discipline and eval.'
+triggers:
+- rag
+- retrieval
+- vector
+- grounding
+- knowledge base
+requires:
+- pixz.core.epistemic-reasoning
+- pixz.core.verification
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

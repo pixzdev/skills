@@ -1,0 +1,34 @@
+id: pixz.frontend.react
+name: React Engineering
+category: frontend
+version: 1.0.0
+status: stable
+description: 'React/Next.js methodology: composition, state, boundaries, performance
+  and verification.'
+triggers:
+- react
+- next.js
+- component
+- hooks
+- react patterns
+requires:
+- pixz.core.environment-awareness
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

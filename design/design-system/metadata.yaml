@@ -1,0 +1,33 @@
+id: pixz.design.design-system
+name: Design System
+category: design
+version: 1.0.0
+status: stable
+description: Defines and enforces tokens, components, patterns and governance for
+  consistent UIs.
+triggers:
+- design system
+- tokens
+- components
+- consistency
+requires:
+- pixz.design.uiux
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

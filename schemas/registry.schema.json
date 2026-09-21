@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pixz.dev/schemas/registry.schema.json",
+  "title": "PIXZ Registry",
+  "description": "Root and hierarchical registries — machine-readable index for discovery and resolution.",
+  "type": "object",
+  "required": ["version", "skills"],
+  "properties": {
+    "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+" },
+    "channel": { "type": "string", "enum": ["latest","stable","pinned"], "default": "stable" },
+    "skills": {
+      "type": "array",
+      "items": { "$ref": "./skill.schema.json" }
+    },
+    "protocols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id","name","description"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "path": { "type": "string" }
+        }
+      }
+    },
+    "policies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id","name","description"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "enforces": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "max_skill_chain_depth": { "type": "integer", "minimum": 1, "default": 12 },
+        "max_orchestration_depth": { "type": "integer", "minimum": 1, "default": 6 },
+        "max_iterations": { "type": "integer", "minimum": 1, "default": 8 }
+      }
+    }
+  }
+}

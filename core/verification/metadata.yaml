@@ -1,0 +1,33 @@
+id: pixz.core.verification
+name: Verification
+category: core
+version: 1.0.0
+status: stable
+description: 'Evidence-based verification: inspection, regression, consistency and
+  impact analysis before shipping.'
+triggers:
+- verify
+- inspect
+- validate
+- check correctness
+requires:
+- pixz.core.epistemic-reasoning
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

@@ -1,0 +1,34 @@
+id: pixz.core.delegation-handoff
+name: Delegation & Handoff
+category: core
+version: 1.0.0
+status: stable
+description: Structured delegation with explicit inputs, constraints, success criteria
+  and structured returns.
+triggers:
+- delegate
+- handoff
+- subagent
+- dispatch task
+requires:
+- pixz.core.workflow-continuity
+- pixz.core.context-engineering
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

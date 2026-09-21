@@ -1,0 +1,6 @@
+{
+  "name": "pixz-skills",
+  "source": "github:pixzdev/skills",
+  "skills": "registry.json",
+  "install": "openclaw skills install github:pixzdev/skills"
+}

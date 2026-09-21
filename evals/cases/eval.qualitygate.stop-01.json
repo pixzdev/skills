@@ -1,0 +1,26 @@
+{
+  "id": "eval.qualitygate.stop-01",
+  "skill_id": "pixz.core.quality-gate",
+  "description": "Quality gate checks diminishing returns and residual unknowns",
+  "category": "method",
+  "input": {
+    "prompt": "Can we ship this feature?",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "stop conditions",
+      "diminishing returns",
+      "residual"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "ship decision not just tests"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

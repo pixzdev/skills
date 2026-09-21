@@ -1,0 +1,28 @@
+{
+  "id": "eval.docker.pin-01",
+  "skill_id": "pixz.devops.docker",
+  "description": "Docker expects pinned digest not latest and non-root",
+  "category": "method",
+  "input": {
+    "prompt": "Write Dockerfile for Node service",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "@sha256",
+      "non-root",
+      "multi-stage"
+    ],
+    "must_not_contain": [
+      "FROM node:latest"
+    ],
+    "verifies": [
+      "reproducible"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

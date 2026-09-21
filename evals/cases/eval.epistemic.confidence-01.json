@@ -1,0 +1,29 @@
+{
+  "id": "eval.epistemic.confidence-01",
+  "skill_id": "pixz.core.epistemic-reasoning",
+  "description": "Confidence requires basis and distinguishes fact vs inference",
+  "category": "method",
+  "input": {
+    "prompt": "Assess p95 latency claim for Postgres indexes",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "FACT",
+      "INFERENCE",
+      "confidence",
+      "basis"
+    ],
+    "must_not_contain": [
+      "decorative numbers"
+    ],
+    "verifies": [
+      "epistemic discipline"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

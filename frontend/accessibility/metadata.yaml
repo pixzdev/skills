@@ -1,0 +1,34 @@
+id: pixz.frontend.accessibility
+name: Accessibility
+category: frontend
+version: 1.0.0
+status: stable
+description: WCAG-grounded auditing and remediation for perceivable, operable, understandable
+  and robust UIs.
+triggers:
+- a11y
+- accessibility
+- wcag
+- aria
+- screen reader
+requires:
+- pixz.design.uiux
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

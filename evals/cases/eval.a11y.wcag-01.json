@@ -1,0 +1,27 @@
+{
+  "id": "eval.a11y.wcag-01",
+  "skill_id": "pixz.frontend.accessibility",
+  "description": "Accessibility references WCAG AA contrast and keyboard",
+  "category": "method",
+  "input": {
+    "prompt": "Audit component for a11y",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "WCAG",
+      "contrast",
+      "keyboard",
+      "screen-reader"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "POUR"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

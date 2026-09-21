@@ -1,0 +1,34 @@
+id: pixz.engineering.api-design
+name: API Design
+category: engineering
+version: 1.0.0
+status: stable
+description: Methodology for consistent, versioned, secure and observable API contracts.
+triggers:
+- api design
+- rest
+- graphql
+- openapi
+- endpoint
+requires:
+- pixz.core.context-engineering
+aggregates: []
+optional:
+- pixz.security.review
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

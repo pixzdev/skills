@@ -1,0 +1,39 @@
+# PIXZ.DEV Universal Agent Skills Ecosystem
+
+> Portable, dependency-aware skills for Claude / OpenClaw / OpenCode / Hermes. Root registry is AGENTS.md; machine registry is registry.json.
+
+## Entry Points
+- Registry (agent): https://github.com/pixzdev/skills/blob/main/AGENTS.md
+- Registry (machine): https://github.com/pixzdev/skills/blob/main/registry.json
+- Overview: https://github.com/pixzdev/skills/blob/main/README.md
+- Schemas: https://github.com/pixzdev/skills/blob/main/schemas/skill.schema.json
+
+## Install
+- Stable: `git clone --branch v1.0.0 https://github.com/pixzdev/skills.git`
+- Resolve: `python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable`
+- Validate: `python scripts/validate.py && python scripts/check-cycles.py`
+
+## Skills (28)
+- Core (13): orchestrator, planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-reasoning, epistemic-challenger, verification, change-safety, replanning, quality-gate
+- Quality: anti-ai-slop
+- Engineering: api-design, system-design
+- Security: review, threat-modeling
+- Design: uiux, design-system
+- Frontend: react, accessibility
+- Motion: gsap, remotion
+- Devops: docker, kubernetes
+- AI: rag, agent-design
+
+## Discovery
+Scan AGENTS.md trigger table → resolve dependencies → follow that skill's SKILL.md methodology → emit structured output (findings/assumptions/unknowns/evidence/decisions/verification) → quality-gate before ship.
+
+## Versioning
+SemVer per skill + ecosystem VERSION. Channels: latest / stable / pinned. IDs stable: pixz.<domain>.<name>.
+
+## Docs
+- Architecture: docs/architecture.md
+- Taxonomy: docs/taxonomy.md
+- Dependency model: docs/dependency-model.md
+- Versioning: docs/versioning.md
+- Adapters: adapters/README.md
+- Evals: evals/README.md

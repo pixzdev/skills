@@ -1,0 +1,33 @@
+id: pixz.ai.agent-design
+name: Agent Design
+category: ai
+version: 1.0.0
+status: stable
+description: Designs tool-enabled agents with bounded autonomy, verification and escalation.
+triggers:
+- agent design
+- tool calling
+- orchestration
+- autonomous agent
+requires:
+- pixz.core.orchestrator
+- pixz.core.change-safety
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

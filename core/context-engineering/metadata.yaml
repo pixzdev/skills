@@ -1,0 +1,32 @@
+id: pixz.core.context-engineering
+name: Context Engineering
+category: core
+version: 1.0.0
+status: stable
+description: Systematic acquisition, validation, sufficiency-checking and preservation
+  of task context.
+triggers:
+- context
+- requirements
+- what do we know
+- gather context
+requires: []
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

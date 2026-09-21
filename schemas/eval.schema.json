@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pixz.dev/schemas/eval.schema.json",
+  "title": "PIXZ Skill Evaluation Case",
+  "description": "Evaluation harness for trigger accuracy, method adherence, output quality and safety.",
+  "type": "object",
+  "required": ["id", "skill_id", "description", "expect"],
+  "properties": {
+    "id": { "type": "string", "pattern": "^eval\\.[a-z0-9.-]+$" },
+    "skill_id": { "type": "string", "pattern": "^pixz\\.[a-z0-9-]+\\.[a-z0-9-]+$" },
+    "description": { "type": "string" },
+    "category": { "type": "string", "enum": ["trigger","method","output","failure","verification","scope","hallucination","consistency"] },
+    "input": {
+      "type": "object",
+      "properties": {
+        "prompt": { "type": "string" },
+        "context": { "type": "object" },
+        "runtime": { "type": "string" }
+      }
+    },
+    "expect": {
+      "type": "object",
+      "properties": {
+        "should_trigger": { "type": "boolean" },
+        "must_contain": { "type": "array", "items": { "type": "string" } },
+        "must_not_contain": { "type": "array", "items": { "type": "string" } },
+        "verifies": { "type": "array", "items": { "type": "string" } },
+        "artifacts": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "scoring": {
+      "type": "object",
+      "properties": {
+        "weight": { "type": "number", "minimum": 0, "maximum": 1 },
+        "threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

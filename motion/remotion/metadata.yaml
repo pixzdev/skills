@@ -1,0 +1,32 @@
+id: pixz.motion.remotion
+name: Remotion
+category: motion
+version: 1.0.0
+status: stable
+description: Declarative video composition with timeline verification and render-pipeline
+  discipline.
+triggers:
+- remotion
+- programmatic video
+- react video
+requires:
+- pixz.core.environment-awareness
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

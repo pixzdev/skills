@@ -1,0 +1,26 @@
+{
+  "id": "eval.antislop.design-01",
+  "skill_id": "pixz.quality.anti-ai-slop",
+  "description": "Flags generic SaaS glassmorphism without banning gradients dogmatically",
+  "category": "output",
+  "input": {
+    "prompt": "Review hero section with generic glassmorphism cards",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "communicative",
+      "functional",
+      "justified aesthetic"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "diagnostic not dogmatic"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

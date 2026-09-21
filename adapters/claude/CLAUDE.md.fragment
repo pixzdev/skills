@@ -1,0 +1,6 @@
+# CLAUDE.md — include universal registry
+@AGENTS.md
+
+# Claude-specific skill wiring
+# Skills live in .claude/skills/<name>/SKILL.md
+# This repo's skills are also readable from skills/core/* etc via adapter

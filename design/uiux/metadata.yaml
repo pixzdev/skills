@@ -1,0 +1,34 @@
+id: pixz.design.uiux
+name: UI/UX Design
+category: design
+version: 1.0.0
+status: stable
+description: 'Human-centered interface methodology: flows, hierarchy, affordance and
+  usability verification.'
+triggers:
+- ui design
+- ux review
+- interaction design
+- usability
+requires:
+- pixz.core.context-engineering
+aggregates: []
+optional:
+- pixz.quality.anti-ai-slop
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

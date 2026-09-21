@@ -1,0 +1,26 @@
+{
+  "id": "eval.gsap.perf-01",
+  "skill_id": "pixz.motion.gsap",
+  "description": "GSAP skill enforces transform/opacity and reduced-motion guards",
+  "category": "method",
+  "input": {
+    "prompt": "Animate hero with ScrollTrigger",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "transform",
+      "opacity",
+      "prefers-reduced-motion"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "performance + a11y"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "id": "eval.uiux.flow-01",
+  "skill_id": "pixz.design.uiux",
+  "description": "UIUX defines flows and hierarchy with anti-slop",
+  "category": "method",
+  "input": {
+    "prompt": "Design dashboard for analytics product",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "flows",
+      "hierarchy",
+      "affordance",
+      "anti-ai-slop"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "human-centered"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

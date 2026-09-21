@@ -1,0 +1,28 @@
+{
+  "id": "eval.context.sufficiency-01",
+  "skill_id": "pixz.core.context-engineering",
+  "description": "Context acquisition order includes workflow\u2192repo\u2192tools\u2192docs\u2192research\u2192user",
+  "category": "method",
+  "input": {
+    "prompt": "Gather context for adding OAuth to existing repo",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "workflow state",
+      "repository",
+      "tools",
+      "research",
+      "user clarification"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "sufficiency check"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

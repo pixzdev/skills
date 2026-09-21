@@ -1,0 +1,33 @@
+id: pixz.quality.anti-ai-slop
+name: Anti-AI Slop
+category: quality
+version: 1.0.0
+status: stable
+description: Detects and challenges generic, decorative, boilerplate or hallucinated
+  artifacts in design, code and docs.
+triggers:
+- anti slop
+- generic design
+- boilerplate
+- AI slop
+requires:
+- pixz.core.verification
+aggregates: []
+optional: []
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []
