@@ -1,11 +1,11 @@
 ---
 name: System Design
 description: Structures system tradeoffs, constraints, failure domains and verification for architecture decisions.
-version: 1.0.1
+version: 1.1.0
 id: pixz.engineering.system-design
 category: engineering
-triggers: [system design, architecture, scalability, tradeoffs, failure modes]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [system design, architecture, scalability, tradeoffs]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # System Design — `pixz.engineering.system-design`

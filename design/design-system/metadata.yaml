@@ -1,7 +1,7 @@
 id: pixz.design.design-system
 name: Design System
 category: design
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: Defines and enforces tokens, components, patterns and governance for
   consistent UIs.

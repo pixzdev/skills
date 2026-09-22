@@ -104,6 +104,27 @@ def simple_yaml_load(path):
         i+=1
     return data
 
+def parse_frontmatter(text):
+    """Parse the `---`-delimited SKILL.md frontmatter (inline scalars + [a, b] lists only)."""
+    if not text.startswith("---"):
+        return None
+    end = text.find("\n---", 3)
+    if end == -1:
+        return None
+    fm = {}
+    for line in text[3:end].splitlines():
+        line = line.strip()
+        if not line or line.startswith("#") or ":" not in line:
+            continue
+        key, val = line.split(":", 1)
+        key, val = key.strip(), val.strip()
+        if val.startswith("[") and val.endswith("]"):
+            inner = val[1:-1].strip()
+            fm[key] = [x.strip().strip("'\"") for x in inner.split(",")] if inner else []
+        else:
+            fm[key] = val.strip("'\"")
+    return fm or None
+
 def validate():
     errors = []
     warnings = []
@@ -190,6 +211,40 @@ def validate():
     for sch in ["skill.schema.json","registry.schema.json","workflow.schema.json","eval.schema.json"]:
         if not (ROOT / "schemas" / sch).exists():
             warnings.append(f"Missing schema {sch}")
+
+    # check SKILL.md frontmatter consistency with registry (single source of truth)
+    for s in reg["skills"]:
+        path = ROOT / s.get("path","")
+        skill_md = (path / "SKILL.md").read_text(encoding="utf-8")
+        fm = parse_frontmatter(skill_md)
+        if not fm:
+            continue  # missing frontmatter already reported above
+        if fm.get("id") != s["id"]:
+            errors.append(f"{s['id']}: SKILL.md frontmatter id {fm.get('id')!r} != registry id")
+        if fm.get("version") != s.get("version"):
+            errors.append(f"{s['id']}: SKILL.md frontmatter version {fm.get('version')!r} != registry {s.get('version')}")
+        if "triggers" in fm and fm["triggers"] != s.get("triggers"):
+            errors.append(f"{s['id']}: SKILL.md frontmatter triggers {fm['triggers']} != registry {s.get('triggers')}")
+        if "compatible_runtimes" in fm and fm["compatible_runtimes"] != s.get("compatible_runtimes"):
+            errors.append(f"{s['id']}: SKILL.md frontmatter compatible_runtimes {fm['compatible_runtimes']} != registry {s.get('compatible_runtimes')}")
+
+    # check runtime-profile + README prompt contracts (docs as executable contract)
+    profile = ROOT / "profiles" / "super-z" / "PROFILE.md"
+    if not (ROOT / "profiles" / "README.md").exists():
+        errors.append("Missing profiles/README.md (profile isolation contract)")
+    if not profile.exists():
+        errors.append("Missing profiles/super-z/PROFILE.md (Super Z / GLM / Z.AI Web profile)")
+    else:
+        ptxt = profile.read_text(encoding="utf-8").lower()
+        for req in ["fast", "balanced", "deep", "autonomous", "askuserquestion", "does not change", "unverified"]:
+            if req not in ptxt:
+                errors.append(f"profiles/super-z/PROFILE.md missing required content: {req!r}")
+    readme = ROOT / "README.md"
+    if readme.exists():
+        rtxt = readme.read_text(encoding="utf-8")
+        for req in ["AI Agent Installation Prompt", "Super Z / GLM / Z.AI Web Prompt"]:
+            if req not in rtxt:
+                errors.append(f"README.md missing required section: {req!r}")
 
     # check resolves for orchestrator
     # quick cycle check via resolver import

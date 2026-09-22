@@ -1,11 +1,11 @@
 ---
 name: Quality Gate
 description: Final ship gate — consolidates verification, risk, stop conditions and residual unknowns.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.quality-gate
 category: core
 triggers: [quality gate, ship check, done criteria, release gate]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Quality Gate — `pixz.core.quality-gate`

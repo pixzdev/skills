@@ -1,11 +1,11 @@
 ---
 name: Security Review
 description: Checklist-driven security review covering auth, authz, input, secrets, deps and architecture — scoped to authorized environments.
-version: 1.0.1
+version: 1.1.0
 id: pixz.security.review
 category: security
-triggers: [security review, secure coding, audit, web security, api security]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [security review, threat model, secure coding, audit]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Security Review — `pixz.security.review`

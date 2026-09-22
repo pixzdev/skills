@@ -8,7 +8,7 @@
 |--------|---------|-------|
 | ClawHub (when published) | `openclaw skills install @pixzdev/orchestrator` | workspace (`./skills/`) or `--global` (`~/.openclaw/skills/`) |
 | skills.sh listing | `openclaw skills install skills-sh:pixzdev/skills/orchestrator` | workspace / --global |
-| Git | `openclaw skills install git:pixzdev/skills@main` (whole repo) or `git:pixzdev/skills@v1.0.1` | workspace / --global |
+| Git | `openclaw skills install git:pixzdev/skills@main` (whole repo) or `git:pixzdev/skills@v1.1.0` | workspace / --global |
 | Local directory | `openclaw skills install ./core/orchestrator --as pixz-orchestrator` | workspace / --global |
 
 **Discovery order (VERIFIED):** workspace `skills/` > project `.agents/skills/` > personal `~/.agents/skills/` > managed `<state-dir>/skills/` > workshop `.../workshop-skills/` > bundled > extraDirs. `openclaw skills list` shows priority.

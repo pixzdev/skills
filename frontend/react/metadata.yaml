@@ -1,7 +1,7 @@
 id: pixz.frontend.react
 name: React Engineering
 category: frontend
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: 'React/Next.js methodology: composition, state, boundaries, performance
   and verification.'

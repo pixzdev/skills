@@ -9,9 +9,11 @@
 What: machine-contract checks.
 
 - frontmatter valid (`name`/`description` present, SKILL.md == SKILL.md)
+- frontmatter consistency: `id`/`version`/`triggers`/`compatible_runtimes` in `SKILL.md` frontmatter equal `registry.json` values (hard error — added v1.1.0 after 28/28 drift was observed)
 - required files exist (`SKILL.md` + `metadata.yaml` per skill)
 - IDs valid (`pixz.<domain>.<name>`, SemVer)
 - registry consistency (`registry.json` ↔ `metadata.yaml`, no duplicate IDs/paths)
+- profile/README contracts (v1.1.0): `profiles/README.md` + `profiles/super-z/PROFILE.md` exist with required sections (modes, `AskUserQuestion`, isolation, UNVERIFIED disclosure); `README.md` contains the AI Agent Installation Prompt and Super Z / GLM / Z.AI Web Prompt sections
 - dependency graph valid, topo-sorted
 - no cycles (DFS)
 - schemas valid (JSON Schema draft-07)

@@ -77,3 +77,39 @@ Repo passes anti-ai-slop on code/docs: no filler, no fake complexity, no boilerp
 
 ## Final Quality Gate
 All checks in `docs/architecture.md#Limits` and `CONTRIBUTING.md` validation pass. See `FINAL_REPORT.md` (or `docs/final-report.md`) for ship verdict.
+
+## v1.1.0 — Frontier Reconstruction Audit (2026-09-22)
+
+Evidence-driven pass over the whole repository (see `docs/final-report.md` v1.1.0 for the full report).
+
+### Findings (classified)
+
+| ID | Class | Finding |
+|----|-------|---------|
+| G-1 | gap | Super Z / GLM / Z.AI Web runtime profile absent (mission §19) |
+| G-2 | gap | README had no inline copy-paste AI Agent Installation Prompt / Super Z prompt (mission §20) |
+| D-1 | drift (OBSERVED, 28/28) | SKILL.md frontmatter `compatible_runtimes` = 4 runtimes vs registry 6 (missing `codex`, `generic`) |
+| D-2 | drift (OBSERVED, 20/28) | SKILL.md frontmatter `triggers` supersets of registry triggers |
+| D-3 | drift | README + AGENTS.md said "layer 3 (4 scenarios)"; actual behavioral scenarios = 15 |
+| D-4 | drift | `adapters/README.md` referenced `claude/SKILL_TEMPLATE.md` — file does not exist |
+| D-5 | defect | `adapters/*/install.sh` used relative `scripts/resolve.py` — broke outside repo root |
+| D-6 | drift | orchestrator SKILL.md loop string (13 stages incl. ROUTE/DELEGATE/COORDINATE/RE-EXECUTE) diverged from canonical 11-phase loop + machine enum |
+| D-7 | drift | adapters/README install paths for OpenCode (`.opencode/skills/`) and Hermes (`hermes/skills/`) diverged from verified matrix |
+| D-8 | drift | `agents/orchestrator.yaml` `max_skill_chain_depth: 12` vs registry limit 15; agent yamls had 4 runtimes vs 6 |
+| V-1 | weakness | `validate.py` did not cross-check SKILL.md frontmatter against registry → D-1/D-2 undetectable |
+| V-2 | weakness | no machine check for README prompt sections or profile presence |
+
+### Changes
+
+1. **G-1/G-2:** new isolated `profiles/` (`profiles/README.md` isolation contract + `profiles/super-z/PROFILE.md`: mandatory `AskUserQuestion` mode selection FAST/BALANCED/DEEP/AUTONOMOUS, default BALANCED, mode semantics, compute policy, never-list, graceful degradation, UNVERIFIED disclosure). README gained inline **AI Agent Installation Prompt** + **Super Z / GLM / Z.AI Web Prompt** (copy-paste, runtime-agnostic).
+2. **D-1/D-2:** all 28 SKILL.md frontmatters synced to `registry.json` (source of truth).
+3. **V-1:** `validate.py` now hard-errors on frontmatter `id`/`version`/`triggers`/`compatible_runtimes` drift.
+4. **V-2:** `validate.py` now machine-checks profile presence + required sections and README prompt sections.
+5. **D-3:** scenario counts corrected (15). **D-4:** stale `SKILL_TEMPLATE.md` reference removed (replaced with actual `CLAUDE.md.fragment`). **D-5:** install.sh scripts resolve repo root from their own path. **D-6:** orchestrator loop aligned to canonical 11 phases with explicit substep mapping. **D-7/D-8:** adapter paths + agents yaml aligned.
+6. **Version:** 1.0.1 → 1.1.0 (new capability: runtime profiles; minor bump).
+
+### Anti-confirmation check
+
+- Deliberately injected a frontmatter drift during verification: `validate.py` failed with the expected hard error (check is real, not documentary).
+- Kept the old behavioral-eval design (heuristic, disclosed) rather than claiming model-grade — no false-precision upgrade.
+- Profile explicitly labeled SPECIFIED / behaviorally UNVERIFIED; no skill added for it (taxonomy: PROFILE, not SKILL — avoids skill explosion).

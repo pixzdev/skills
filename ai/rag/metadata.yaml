@@ -1,7 +1,7 @@
 id: pixz.ai.rag
 name: RAG Systems
 category: ai
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: 'Grounded retrieval-augmented generation: chunking, grounding, citation
   discipline and eval.'

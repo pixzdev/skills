@@ -1,11 +1,11 @@
 ---
 name: Planning
 description: Decomposes objectives into verifiable, sequenced steps with dependencies and exit criteria.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.planning
 category: core
-triggers: [plan, roadmap, break down task, milestone, decompose]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [plan, roadmap, break down task, milestone]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Planning — `pixz.core.planning`

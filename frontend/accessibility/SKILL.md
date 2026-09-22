@@ -1,11 +1,11 @@
 ---
 name: Accessibility
 description: WCAG-grounded auditing and remediation — perceivable, operable, understandable, robust.
-version: 1.0.1
+version: 1.1.0
 id: pixz.frontend.accessibility
 category: frontend
-triggers: [a11y, accessibility, wcag, aria, screen reader, keyboard nav]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [a11y, accessibility, wcag, aria, screen reader]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Accessibility — `pixz.frontend.accessibility`

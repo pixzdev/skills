@@ -1,11 +1,11 @@
 ---
 name: Kubernetes
 description: Declarative Kubernetes delivery with rollout, health-check and failure-mode discipline.
-version: 1.0.1
+version: 1.1.0
 id: pixz.devops.kubernetes
 category: devops
-triggers: [kubernetes, k8s, helm, deployment, pod, rollout]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [kubernetes, k8s, helm, deployment, pod]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Kubernetes — `pixz.devops.kubernetes`

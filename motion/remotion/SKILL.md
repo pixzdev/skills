@@ -1,11 +1,11 @@
 ---
 name: Remotion
 description: Declarative video composition with timeline verification and render-pipeline discipline.
-version: 1.0.1
+version: 1.1.0
 id: pixz.motion.remotion
 category: motion
-triggers: [remotion, programmatic video, react video, timeline render]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [remotion, programmatic video, react video]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Remotion — `pixz.motion.remotion`

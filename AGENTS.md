@@ -26,7 +26,7 @@ UNDERSTAND → DISCOVER → PLAN → EXECUTE → INSPECT → CHALLENGE → VERIF
 ## Skill Conventions
 
 - **Folder:** `<domain>/<name>/SKILL.md` + `metadata.yaml` (required). `name` in frontmatter **should be kebab-case slug matching folder** for `npx skills` CLI compat (`orchestrator`, not `Orchestrator`). Currently titles are human-case but folder slug is used for CLI `--skill <folder>`.
-- **Frontmatter:** `---` with `name` and `description` (progressive disclosure budget; frontmatter always visible).
+- **Frontmatter:** `---` with `name` and `description` (progressive disclosure budget; frontmatter always visible). When `id`, `version`, `triggers`, or `compatible_runtimes` are present in frontmatter they **must equal the registry values** — `scripts/validate.py` cross-checks them (hard error on drift).
 - **Contract (all):** Purpose, Triggers, When to use / NOT, Inputs, Required context, Methodology (operational steps), Dependencies, Tools, Constraints/Failure, Verification, Example, Structured output. Long rationale → `docs/`.
 - **ID:** stable `pixz.<domain>.<name>` — never filename.
 
@@ -39,10 +39,10 @@ UNDERSTAND → DISCOVER → PLAN → EXECUTE → INSPECT → CHALLENGE → VERIF
 ## Validation / Test Commands
 
 ```bash
-python scripts/validate.py                  # layer 1: registry/metadata/schemas/cycles
+python scripts/validate.py                  # layer 1: registry/metadata/schemas/cycles + SKILL.md frontmatter consistency + profile/README contracts
 python scripts/check-cycles.py              # layer 1: no cycles
 python evals/runner.py                      # layer 2: doc validation heuristic (15 cases)
-python evals/behavioral/runner.py           # layer 3: routing smoke (4 scenarios)
+python evals/behavioral/runner.py           # layer 3: routing smoke (15 scenarios)
 bash scripts/integration-smoke.sh           # layer 4: installer → discovery → invocation (where CLI available)
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 12 nodes
@@ -132,11 +132,20 @@ Runtime compat for all: `claude, openclaw, opencode, hermes, codex, generic` —
 
 See matrix `docs/install/README.md`. Summary: skills.sh `npx skills add` auto-picks `~/.claude/skills` / `.opencode/skill` / `.agents/skills`; Claude `~/.claude/skills/` or `.claude/skills/`; OpenClaw `skills/` / `~/.openclaw/skills/` / `openclaw skills list`; OpenCode `.opencode/skill/` (singular) + compat; Hermes `~/.hermes/skills/` or `skills/`; Generic `.agents/skills/`.
 
-For agent copy-paste: `docs/install-as-skill.md` (short) and `docs/prompts/install-skill-agent.md` (runtime-adaptive full with verification report).
+For agent copy-paste: `README.md` inline prompts (**AI Agent Installation Prompt**, **Super Z / GLM / Z.AI Web Prompt**), `docs/install-as-skill.md` (short), and `docs/prompts/install-skill-agent.md` (runtime-adaptive full with verification report).
+
+## Runtime Profiles (isolated — not skills)
+
+A **profile** is a runtime-specific operating overlay (class: PROFILE / restricted POLICY). It is **not a skill**: no `pixz.*` ID, not in `registry.json`, not resolved by `scripts/resolve.py`, and it **does not change** universal skill semantics, the dependency model, or the verification layers. It only parameterizes orchestrator operating depth and runtime compute/interaction policy; on conflict, skills and repo policies win.
+
+- **Super Z / GLM / Z.AI Web** → `profiles/super-z/PROFILE.md`: mandatory `AskUserQuestion` mode selection before substantive work (FAST / BALANCED / DEEP / AUTONOMOUS; default BALANCED), mode semantics, compute policy ("generous compute is not permission to waste compute"), graceful degradation when `AskUserQuestion` is absent.
+- Status: **SPECIFIED** (2026-09-22); behavioral effect **UNVERIFIED** — never cite the profile as behaviorally effective.
+- Isolation contract + extension rules: `profiles/README.md`. Machine-checked by `scripts/validate.py` (presence + required sections + README prompt sections).
+- README entry points: **AI Agent Installation Prompt** and **Super Z / GLM / Z.AI Web Prompt** (copy-paste, inline in `README.md`); full runtime-adaptive prompt: `docs/prompts/install-skill-agent.md`.
 
 ## Versioning
 
-`VERSION` 1.0.1 repo; `metadata.yaml:version` per skill; `latest` (main HEAD) / `stable` (latest `v*.*.*` tag) / `pinned` (future — no `pixz.lock` yet, see `docs/versioning.md`).
+`VERSION` 1.1.0 repo; `metadata.yaml:version` per skill; `latest` (main HEAD) / `stable` (latest `v*.*.*` tag) / `pinned` (future — no `pixz.lock` yet, see `docs/versioning.md`).
 
 ## Verification (layers)
 

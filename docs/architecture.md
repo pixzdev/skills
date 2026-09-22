@@ -53,7 +53,7 @@ Runtime-specific representation (.claude/skills/, ~/.openclaw/skills/, etc.)
 
 Core remains vendor-neutral. Adapters are thin translators — see `adapters/README.md` for VERIFIED vs PARTIALLY VERIFIED matrix.
 
-## Core Skill Graph — Verified (v1.0.1)
+## Core Skill Graph — Verified (v1.1.0)
 
 ```
 orchestrator (mandatory aggregates: 8)
