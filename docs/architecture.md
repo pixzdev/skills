@@ -157,6 +157,20 @@ Before adding any protocol, schema, skill, agent, state file, registry, abstract
 - "Phase" as a machine state: **retired** (kept as optional narrative labels only).
 - Not deleted (kept deliberately): the four verification layers, dependency model + resolver, adapters, the 14 domain skills (unchanged), limits/caps.
 
+## Architecture Delta — v2.0.0 → v2.1.0 (self-learning upgrade)
+
+| Area | OLD (2.0.0) | NEW (2.1.0) | Evidence / reason |
+|------|-------------|-------------|-------------------|
+| Post-install | install prompts end at verification; adaptation required a user-pasted prompt each session | **Self-learning lifecycle** DETECT→INVENTORY→BASELINE→ADAPT→VERIFY→PERSIST→READY owned by `pixz.core.self-learning`; trigger lives in AGENTS.md (read at session start) | Benchmark availability≠invocation; research 1.1–1.4 (`docs/research/self-learning-findings.md`); mission §3–§4 |
+| Runtime memory | per-task state only | + `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.json`): baseline, digested inventory (drift detector), adaptation status+evidence, learning ledger; task-state gains optional `adaptation` pointer | Same substrate as task-state (no parallel memory architecture); Reflexion episodic-memory + Voyager verified-only persistence lessons |
+| Verification | 4 layers, proven/trusted/unknown | + **verification-depth ladder** (EXISTS→PARSES→SCHEMA-COMPLIANT→CORRECT→INTEGRATED→RUNTIME-ACTIVE→PERSISTENT→IMPROVED) as `pixz.protocol.verification-depth` in `core/verification` | Mission §8; makes "installed ≠ active ≠ adapted ≠ improved" machine-checkable |
+| Improvement | failures[] lesson field only | Explicit loop OBSERVE→…→REGRESSION CHECK→PERSIST with artifact ladder (LESSON/MECHANISM/TEST/VERIFIED IMPROVEMENT/EMPIRICALLY IMPROVED), six challenges, anti-proliferation gate folded into `pixz.policy.simplicity` | Reflexion + DGM/SEAL failure modes (reward hacking, forgetting); mission §7–§11 |
+| Drift | none | content-digest inventory; `status` distinguishes added/removed/version/version-only/content drift; version change ≠ behavior change until diff inspected | Mission §14 |
+| Evals | 15 doc + 23 behavioral | 18 doc + 33 behavioral (E-series) + **9 deterministic lifecycle tests** (fresh-process reload, duplicate-setup refusal, drift, failed adaptation, regression) | Mission §13, §15 — cross-session claims tested where testable, marked UNVERIFIED where not |
+| Anti-budget | orchestrator closure ≤ 4 | unchanged — self-learning is *optional*, not aggregate; trivial-rename scenario now also asserts no self-learning activation | GLM 1.48× overhead obligation |
+
+**Not built (gate applied):** no memory skill, no self-improvement agent role, no lesson database, no re-training scheduler, no separate validation-depth skill — see `docs/taxonomy.md#210-decisions-self-learning-upgrade`.
+
 ## Anti-Patterns Guarded
 
 - Skill explosion → taxonomy 7-criteria + anti-overengineering gate

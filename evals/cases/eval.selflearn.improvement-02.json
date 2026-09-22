@@ -1,0 +1,35 @@
+{
+  "id": "eval.selflearn.improvement-02",
+  "skill_id": "pixz.core.self-learning",
+  "description": "Self-learning skill documents the improvement loop: artifact ladder (lesson/mechanism/test/verified improvement), six challenges, anti-proliferation gate, adaptive complexity.",
+  "category": "method",
+  "input": {
+    "prompt": "Convert this recurring failure into a durable improvement: learn from failure, challenge the proposal, regression-check and persist",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "LESSON",
+      "MECHANISM",
+      "TEST",
+      "VERIFIED IMPROVEMENT",
+      "CHALLENGE",
+      "REGRESSION CHECK",
+      "Anti-proliferation",
+      "Adaptive complexity",
+      "overfitting",
+      "adversarial"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "lesson != mechanism != verified improvement (mission §7)",
+      "persistent improvements survive six challenges (mission §11)",
+      "no skill/agent/schema explosion (mission §10)"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

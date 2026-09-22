@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pixz.dev/schemas/adaptation-state.schema.json",
+  "title": "PixzFlow Adaptation State",
+  "description": "Runtime-level self-learning state — the post-install continuity substrate of PixzFlow 2.1. Complements (never replaces) the per-task schemas/task-state.schema.json: task-state tracks ONE task; adaptation-state tracks the runtime's relationship with the installed PixzFlow workflow (baseline, activation, drift, verified learning). Default path: .pixz/adaptation-state.json. Compact and machine-readable: summaries + references only — never transcripts, never hidden chain-of-thought, never unnecessary user information. Entries admitted to learning[] require verification evidence (Voyager lesson: only verified artifacts enter the persistent library).",
+  "type": "object",
+  "required": ["schema_version", "pixzflow", "inventory", "adaptation"],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "runtime": {
+      "type": "object",
+      "description": "Observed runtime profile (baseline dimensions). Record only what was actually observed; use \"unknown\" otherwise.",
+      "properties": {
+        "name": { "type": "string", "description": "claude | openclaw | opencode | hermes | codex | cursor | generic | <other>" },
+        "model": { "type": "string", "description": "Model self-report if available, else \"unknown\"." },
+        "signals": { "type": "array", "items": { "type": "string" }, "description": "Observable identity signals used to recognize the runtime (paths found, CLIs present, self-report)." },
+        "instruction_sources": { "type": "array", "items": { "type": "string" }, "description": "How the runtime reaches PixzFlow: AGENTS.md, CLAUDE.md@import, skills dir, etc." },
+        "session": { "type": "string", "description": "Session/context characteristics relevant to persistence (compaction observed? restartable? subagents available?)." }
+      }
+    },
+    "pixzflow": {
+      "type": "object",
+      "required": ["version"],
+      "properties": {
+        "version": { "type": "string", "description": "PixzFlow VERSION at adaptation time." },
+        "source": { "type": "string", "description": "Where it came from: repo URL + SHA/tag, skills.sh, manual copy." },
+        "channel": { "type": "string", "enum": ["latest", "stable", "pinned"] }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Capability baseline (mission §6). Values: yes | no | unknown — observed, not assumed.",
+      "properties": {
+        "state_persistence": { "type": "string", "enum": ["yes", "no", "unknown"], "description": "Can this runtime keep files across sessions (filesystem .pixz/)?" },
+        "verification": { "type": "string", "enum": ["yes", "no", "unknown"], "description": "Can the agent run commands/tests to verify claims?" },
+        "delegation": { "type": "string", "enum": ["yes", "no", "unknown"], "description": "Subagents available?" },
+        "research": { "type": "string", "enum": ["yes", "no", "unknown"], "description": "Web/external research available?" },
+        "tools": { "type": "string", "description": "Compact inventory of relevant tools/CLIs observed." },
+        "unknowns": { "type": "array", "items": { "type": "string" }, "description": "Observed gaps — capabilities that remain UNKNOWN rather than invented." }
+      }
+    },
+    "inventory": {
+      "type": "array",
+      "description": "Installed capability snapshot with content digests — the drift detector. digest = sha256(SKILL.md + 0x00 + metadata.yaml) computed by scripts/activation.py.",
+      "items": {
+        "type": "object",
+        "required": ["id", "version", "digest"],
+        "properties": {
+          "id": { "type": "string" },
+          "version": { "type": "string" },
+          "path": { "type": "string" },
+          "digest": { "type": "string" },
+          "installed": { "type": "boolean", "description": "Discovery command showed it at its install location (not merely present in source)." },
+          "verified": { "type": "boolean", "description": "Installation verified with evidence per the install protocol." }
+        }
+      }
+    },
+    "adaptation": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["baselined", "ready", "stale"],
+          "description": "baselined = inventory+baseline recorded, behavioral adaptation not yet verified; ready = adaptation verified with evidence; stale = drift detected since last adaptation (re-adapt the delta, then sync)."
+        },
+        "evidence": { "type": "string", "description": "What verified the adaptation (command output refs, eval ids, observed behavior). Required to reach ready." },
+        "adapted_at": { "type": "string" },
+        "baselined_at": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "learning": {
+      "type": "object",
+      "description": "Persistent learning ledger. Admit only: stable lessons, verified mechanisms, important failures, validated decisions, reusable procedures, known constraints, open unknowns. Status discipline mirrors the claim lifecycle: nothing here is 'learned' by assertion.",
+      "properties": {
+        "lessons": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "lesson", "status"],
+            "properties": {
+              "id": { "type": "string" },
+              "lesson": { "type": "string", "description": "One or two lines: what the next run must not repeat / should reuse." },
+              "origin": { "type": "string", "description": "Failure/task reference that produced it." },
+              "status": { "type": "string", "enum": ["candidate", "stable", "superseded"], "description": "candidate = observed once; stable = recurred or verified; superseded = replaced (marked, never deleted)." },
+              "recorded_at": { "type": "string" }
+            }
+          }
+        },
+        "improvements": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "what", "kind", "status"],
+            "properties": {
+              "id": { "type": "string" },
+              "what": { "type": "string" },
+              "kind": { "type": "string", "enum": ["mechanism", "test", "procedure", "policy-tweak"], "description": "Deliberately NOT: new skill, new agent, new schema, new dependency — those require the anti-proliferation gate first." },
+              "origin_lesson": { "type": "string", "description": "lesson id this improvement converts." },
+              "status": { "type": "string", "enum": ["proposed", "challenged", "implemented", "verified", "regressed", "rejected"], "description": "proposed → challenged (six challenges) → implemented → verified (regression check passed) ; regressed/rejected are terminal-with-reason." },
+              "challenge_outcome": { "type": "string", "description": "How it survived: failure / regression / overfitting / complexity / confirmation / adversarial challenges." },
+              "verification": { "type": "string", "description": "Evidence that it works at the claimed depth (verification-depth ladder)." },
+              "regression_check": { "type": "string", "description": "What existing behavior was re-tested after the change." },
+              "recorded_at": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "history": {
+      "type": "array",
+      "description": "Compact event log (keep <= 50 entries; prune oldest). Not a transcript.",
+      "items": {
+        "type": "object",
+        "required": ["at", "event"],
+        "properties": {
+          "at": { "type": "string" },
+          "event": { "type": "string", "enum": ["init", "adapted", "synced", "drift-detected", "lesson", "improvement", "note"] },
+          "summary": { "type": "string" }
+        }
+      }
+    }
+  }
+}

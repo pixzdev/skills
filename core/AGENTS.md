@@ -19,6 +19,7 @@
 | `pixz.core.change-safety` | Change Safety | `core/change-safety/` | safe change, reversible |
 | `pixz.core.replanning` | Replanning | `core/replanning/` | replan, pivot |
 | `pixz.core.quality-gate` | Quality Gate | `core/quality-gate/` | quality gate, ship check |
+| `pixz.core.self-learning` | Self-Learning | `core/self-learning/` | self-train, post-install, skill version changed |
 
 ## Discovery
 ```bash

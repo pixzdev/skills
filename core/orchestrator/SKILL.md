@@ -75,7 +75,7 @@ Every added capability, subagent, research pass, or verification round must have
 
 ## Dependencies
 - **aggregates (mandatory when installed):** `pixz.core.verification` — the evidence floor. Even a mis-routed task keeps verification.
-- **optional (activated on demand via the capability protocol):** `pixz.core.planning`, `pixz.core.context-engineering`, `pixz.core.environment-awareness`, `pixz.core.capability-discovery`, `pixz.core.workflow-continuity`, `pixz.core.delegation-handoff`, `pixz.core.epistemic-reasoning`, `pixz.core.epistemic-challenger`, `pixz.core.replanning`, `pixz.core.quality-gate`, `pixz.core.change-safety`, `pixz.quality.anti-ai-slop`
+- **optional (activated on demand via the capability protocol):** `pixz.core.planning`, `pixz.core.context-engineering`, `pixz.core.environment-awareness`, `pixz.core.capability-discovery`, `pixz.core.workflow-continuity`, `pixz.core.delegation-handoff`, `pixz.core.epistemic-reasoning`, `pixz.core.epistemic-challenger`, `pixz.core.replanning`, `pixz.core.quality-gate`, `pixz.core.change-safety`, `pixz.quality.anti-ai-slop`, `pixz.core.self-learning`
 - **requires:** none (top-level composition) · **conflicts:** none
 - Rationale (2.0.0): v1.1.0 made 8 capabilities mandatory aggregates; the GLM benchmark showed skills-alone ≈ no measurable advantage (B≈B1, C≈A) and 1.48× token overhead, worst on trivial tasks. Mandatory set reduced to the one structural floor; everything else activates on demand. See `docs/benchmark/GLM-benchmark-findings.md`.
 

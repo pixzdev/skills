@@ -10,6 +10,8 @@ echo "=== Layer 2: Documentary (heuristic) ==="
 python3 "$ROOT/evals/runner.py" || { echo "FAIL doc eval"; exit 1; }
 echo "=== Layer 3: Behavioral smoke ==="
 python3 "$ROOT/evals/behavioral/runner.py" || { echo "FAIL behavioral"; exit 1; }
+echo "=== Layer 3b: Self-learning lifecycle (deterministic) ==="
+python3 "$ROOT/evals/lifecycle/run_tests.py" || { echo "FAIL lifecycle"; exit 1; }
 echo "=== Layer 4: Integration — installer → discovery ==="
 echo "--- skills.sh CLI presence ---"
 if command -v npx >/dev/null 2>&1; then
@@ -25,6 +27,8 @@ ls -l "$ROOT/core/orchestrator/SKILL.md" && head -5 "$ROOT/core/orchestrator/SKI
 echo "--- Resolver smoke (install-time dependency) ---"
 python3 "$ROOT/scripts/resolve.py" --install pixz.core.orchestrator --runtime claude 2>&1 | tail -n 20
 python3 "$ROOT/scripts/resolve.py" --install pixz.core.orchestrator --runtime claude --with-optional 2>&1 | tail -n 20
+echo "--- Post-install activation probe (self-learning) ---"
+python3 "$ROOT/scripts/activation.py" --state "$(mktemp -d)/state.json" status || true
 echo "--- OpenClaw discovery (if installed) ---"
 if command -v openclaw >/dev/null 2>&1; then
   openclaw skills list 2>&1 | head -n 50 || echo "openclaw skills list failed"

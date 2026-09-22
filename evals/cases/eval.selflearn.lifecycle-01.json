@@ -1,0 +1,35 @@
+{
+  "id": "eval.selflearn.lifecycle-01",
+  "skill_id": "pixz.core.self-learning",
+  "description": "Self-learning skill documents the post-install activation lifecycle with state file, probe and ready/no-re-run discipline.",
+  "category": "method",
+  "input": {
+    "prompt": "PixzFlow was just installed; self-train: run first activation, build the adaptation baseline, adapt, verify and persist",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "DETECT",
+      "BASELINE",
+      "ADAPT",
+      "VERIFY",
+      "PERSIST",
+      "READY",
+      ".pixz/adaptation-state.json",
+      "scripts/activation.py",
+      "do not duplicate setup",
+      "unknown"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "post-install lifecycle exists with machine probe",
+      "second activation is a check not a re-run",
+      "unsupported capabilities stay unknown"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

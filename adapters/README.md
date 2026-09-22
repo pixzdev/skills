@@ -64,6 +64,12 @@ cp -r core/orchestrator skills/pixz-orchestrator
 
 Resolver validates `compatible_runtimes` before suggesting install path.
 
+## Post-install activation (universal, 2.1+)
+
+Every runtime gets the same lifecycle after install: `INSTALL → VALIDATE → ACTIVATE → SELF-TRAIN → VERIFY → READY` — probe with `python3 scripts/activation.py status`, baseline with `init`, record verified adaptation with `mark-adapted --evidence` (auto-runs the adoption assessment). The trigger is `AGENTS.md` (read natively by openclaw/opencode/hermes; imported via `CLAUDE.md` for claude), so no runtime needs a pasted self-training prompt. State: `.pixz/adaptation-state.json`. Adapters stay thin — activation semantics are universal, never forked per runtime.
+
+2.2 companions per runtime: `scripts/hooks.py check|install --runtime <rt>` (claude wires `CLAUDE.md → @AGENTS.md`, append-only + idempotent; native runtimes verify-only) · `scripts/activation.py verify-installed --runtime <rt>` (integrity of installed copies vs source digests, using the same install paths as the table above) · `scripts/doctor.py --write` (measured baseline) · `scripts/sitrep.py` (orientation report).
+
 ## Limits
 
 Adapters enforce from `registry.json#limits`: `max_skill_chain_depth=15`, `max_orchestration_depth=6`, `max_iterations=8`.

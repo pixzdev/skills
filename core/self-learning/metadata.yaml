@@ -1,0 +1,11 @@
+id: pixz.core.self-learning
+name: Self-Learning
+version: 2.1.0
+category: core
+description: Post-install activation, runtime adaptation and evidence-driven self-improvement with anti-proliferation gates.
+triggers: [self-train, self-learn, first activation, post-install, skill version changed, adaptation baseline, improve workflow, learn from failure]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
+requires: []
+aggregates: []
+optional: [pixz.core.capability-discovery, pixz.core.workflow-continuity, pixz.core.epistemic-challenger, pixz.core.verification]
+conflicts: []

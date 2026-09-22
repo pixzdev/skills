@@ -192,6 +192,15 @@
         "summary": { "type": "string" },
         "restored_from": { "type": "string" }
       }
+    },
+    "adaptation": {
+      "type": "object",
+      "description": "Pointer to the runtime-level self-learning state (schemas/adaptation-state.schema.json, default .pixz/adaptation-state.json). PixzFlow 2.1: ORIENT checks this — if missing or stale, run the post-install activation lifecycle (pixz.core.self-learning) once; never re-run setup when status is ready and no drift.",
+      "properties": {
+        "state_ref": { "type": "string", "description": "Path to adaptation-state file." },
+        "status": { "type": "string", "enum": ["new", "baselined", "ready", "stale"], "description": "Mirror of adaptation.status observed at last check." },
+        "notes": { "type": "string" }
+      }
     }
   },
   "$defs": {

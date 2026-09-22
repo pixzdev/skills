@@ -1,0 +1,34 @@
+{
+  "id": "eval.verification.depth-ladder-01",
+  "skill_id": "pixz.core.verification",
+  "description": "Verification skill documents the verification-depth ladder: claim depth must match evidence depth, with explicit forbidden substitutions.",
+  "category": "method",
+  "input": {
+    "prompt": "Verify that the claim 'the integration is runtime-active and improved' is backed by evidence at the right depth",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "verification-depth ladder",
+      "EXISTS",
+      "PARSES",
+      "SCHEMA-COMPLIANT",
+      "CORRECT",
+      "INTEGRATED",
+      "RUNTIME-ACTIVE",
+      "PERSISTENT",
+      "IMPROVED",
+      "file exists = valid"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "verification depth must match the claim (mission §8)",
+      "weak rungs never substitute stronger claims"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

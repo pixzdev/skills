@@ -2,7 +2,7 @@
 
 ## 1. What it is
 
-**PixzFlow** is a persistent, adaptive, model-agnostic **operating layer** for capable AI agents: an entry protocol (`AGENTS.md`), operating modes (fast/balanced/deep/autonomous), a persistent task-state + evidence protocol, a skill ecosystem (28 skills with stable IDs and explicit dependencies), and runtime overlays (e.g. `ZAI.md` for Super Z / GLM / Z.AI Web). PIXZ.DEV is the brand.
+**PixzFlow** is a persistent, adaptive, model-agnostic **operating layer** for capable AI agents: an entry protocol (`AGENTS.md`), operating modes (fast/balanced/deep/autonomous), a persistent task-state + evidence protocol, a skill ecosystem (29 skills with stable IDs and explicit dependencies), and runtime overlays (e.g. `ZAI.md` for Super Z / GLM / Z.AI Web). PIXZ.DEV is the brand.
 
 ## 2. Why
 

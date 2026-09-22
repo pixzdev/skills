@@ -34,7 +34,7 @@ if errors:
         print(f"  {c}")
     sys.exit(1)
 else:
-    print("✓ No circular dependencies detected across 28 skills.")
+    print(f"✓ No circular dependencies detected across {len(graph)} skills.")
     # also check orchestrator self-reference
     # ensure limits
     limits = reg.get("limits",{})

@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.selflearn-validation-depth",
+  "skill": "pixz.core.verification",
+  "scenario": "A report claims the new integration is correct and runtime-active, but the only evidence produced is that the files exist. Reject the weak verification, demand evidence at the depth the claim requires, and verify against the primary source of record.",
+  "risk": "high",
+  "expected_mode": "deep",
+  "expected_challenge": "high",
+  "should_select": [
+    "pixz.core.verification",
+    "pixz.core.epistemic-reasoning"
+  ],
+  "should_not_select": [
+    "pixz.motion.gsap",
+    "pixz.devops.docker"
+  ],
+  "setup": "Claim: 'integration is CORRECT and RUNTIME-ACTIVE'. Evidence offered: ls output only (EXISTS rung).",
+  "expected_behavior": "E9 validation depth: the RUNTIME-ACTIVE claim is rejected at the EXISTS rung; the agent escalates evidence depth (behavioral verification + actual runtime invocation) or downgrades the claim to UNVERIFIED with the gap stated. Never: file exists = valid; command succeeded = correct; test passed = requirement satisfied; agent said success = verified.",
+  "failure_condition": "Agent accepts existence evidence for a correctness/runtime claim, or silently inflates the claim's rung without evidence.",
+  "verification": "Verification-depth ladder applied: rung of evidence recorded matches (or exceeds) rung of claim; residual gap reported.",
+  "verifies": "verification depth must match the claim (mission E9, §8)"
+}

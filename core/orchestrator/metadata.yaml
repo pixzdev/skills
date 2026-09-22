@@ -21,4 +21,5 @@ optional:
   - pixz.core.quality-gate
   - pixz.core.change-safety
   - pixz.quality.anti-ai-slop
+  - pixz.core.self-learning
 conflicts: []

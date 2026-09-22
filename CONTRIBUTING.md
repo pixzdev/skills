@@ -52,13 +52,15 @@ Declare `requires` / `aggregates` / `optional` / `conflicts` in `metadata.yaml`.
 ## Validation Checklist (CI must run these)
 
 ```bash
-python scripts/validate.py        # schema + registry + metadata consistency
-python scripts/check-cycles.py    # no circular deps
+python scripts/validate.py            # schema + registry + metadata consistency
+python scripts/check-cycles.py        # no circular deps
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
-python evals/runner.py            # eval harness (if touching evals)
+python evals/runner.py                # layer 2 documentary
+python evals/behavioral/runner.py     # layer 3 behavioral smoke
+python evals/lifecycle/run_tests.py   # layer 3b self-learning lifecycle (deterministic)
 ```
 
-All four must pass. Tag releases `v*.*.*` only after quality-gate.
+All must pass. Tag releases `v*.*.*` only after quality-gate.
 
 ## Style / Quality
 

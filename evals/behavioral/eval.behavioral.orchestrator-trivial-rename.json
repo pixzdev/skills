@@ -11,8 +11,13 @@
   "should_not_select": [
     "orchestrator",
     "security.review",
-    "epistemic-challenger"
+    "epistemic-challenger",
+    "pixz.core.self-learning"
   ],
   "verifies": "complexity-aware avoids over-orchestration",
-  "expected_mode": "fast"
+  "expected_mode": "fast",
+  "setup": "E11 trivial task with PixzFlow self-learning installed and adaptation state ready.",
+  "expected_behavior": "The rename runs ORIENT->ACT->VERIFY with zero added ceremony: no self-learning activation, no baseline refresh, no challenge — a single ready-probe at most.",
+  "failure_condition": "Self-training adds any ritual to a trivial task (skill activation, planning phase, delegation).",
+  "verification": "should_not_select holds for self-learning; trivial-task budget invariant still passes (mission E11, §9)."
 }
