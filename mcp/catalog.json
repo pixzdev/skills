@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "kind": "pixz.mcp-catalog",
   "note": "Machine source of truth for vetted MCP servers and external skill sources. Universe policy: FREE + NO SIGNUP + NO API KEY. Docs-verification is NOT liveness proof — run `python3 scripts/mcp.py check <id>|--all` at setup time; the result in .pixz/mcp-check.json is the liveness evidence.",
   "policy": {
@@ -18,28 +18,38 @@
       "id": "mcpmarket",
       "name": "MCP Market",
       "url": "https://mcpmarket.com",
-      "used_for": ["server directory", "agent-skills marketplace (free/official sections)"],
+      "used_for": [
+        "server directory",
+        "agent-skills marketplace (free/official sections)"
+      ],
       "note": "Directory of MCP servers, clients and agent skills. Discovery source, not a trust source — entries still pass the VET gate."
     },
     {
       "id": "official-docs",
       "name": "Vendor documentation",
       "url": "per-entry (verification.source)",
-      "used_for": ["endpoint verification", "auth-free claims"],
+      "used_for": [
+        "endpoint verification",
+        "auth-free claims"
+      ],
       "note": "Each T1 entry cites the vendor page where the endpoint + no-key claim was read."
     },
     {
       "id": "awesome-lists",
       "name": "Curated community lists",
       "url": "https://github.com/mukul-dutt/awesome-mcp-list · https://github.com/sylviangth/awesome-remote-mcp-servers",
-      "used_for": ["T2 discovery"],
+      "used_for": [
+        "T2 discovery"
+      ],
       "note": "Community lists with public-repo requirement — used only as discovery input."
     },
     {
       "id": "skills-sh",
       "name": "skills.sh",
       "url": "https://skills.sh",
-      "used_for": ["agent skills via `npx skills add`"],
+      "used_for": [
+        "agent skills via `npx skills add`"
+      ],
       "note": "Official skill-install CLI used by PixzFlow itself (`npx skills add pixzdev/skills`)."
     }
   ],
@@ -82,7 +92,14 @@
     "medium": {
       "description": "Orchestrator + all optional skills; curated free remote+local set that covers docs, repo Q&A and web fetch.",
       "skills": "orchestrator --with-optional (16 nodes)",
-      "servers": ["context7", "deepwiki", "gitmcp", "microsoft-learn", "fetch", "sequential-thinking"]
+      "servers": [
+        "context7",
+        "deepwiki",
+        "gitmcp",
+        "microsoft-learn",
+        "fetch",
+        "sequential-thinking"
+      ]
     },
     "full": {
       "description": "Everything: all skills, full vetted catalog, skill-hub discovery, adapters + overlays.",
@@ -103,7 +120,10 @@
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["resolve-library-id", "query-docs"],
+      "capabilities": [
+        "resolve-library-id",
+        "query-docs"
+      ],
       "data_flow": "library name + query text sent to Upstash",
       "verification": {
         "level": "official-docs",
@@ -124,7 +144,11 @@
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["read_wiki_structure", "read_wiki_contents", "ask_question"],
+      "capabilities": [
+        "read_wiki_structure",
+        "read_wiki_contents",
+        "ask_question"
+      ],
       "data_flow": "repo name + question sent to Cognition",
       "verification": {
         "level": "official-docs",
@@ -150,7 +174,12 @@
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["repo_context", "llms_txt", "readme", "file_lookup"],
+      "capabilities": [
+        "repo_context",
+        "llms_txt",
+        "readme",
+        "file_lookup"
+      ],
       "data_flow": "repo path + requested files sent to gitmcp.io (public repos only)",
       "verification": {
         "level": "official-docs",
@@ -171,7 +200,10 @@
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["search_documentation", "get_documentation"],
+      "capabilities": [
+        "search_documentation",
+        "get_documentation"
+      ],
       "data_flow": "query text sent to Microsoft",
       "verification": {
         "level": "official-docs",
@@ -192,7 +224,10 @@
       "free": true,
       "signup": "none",
       "tier": "T2",
-      "capabilities": ["search_docs", "fetch_docs"],
+      "capabilities": [
+        "search_docs",
+        "fetch_docs"
+      ],
       "data_flow": "query text sent to Cloudflare",
       "verification": {
         "level": "community-listed",
@@ -213,7 +248,10 @@
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["search_docs", "ask_question"],
+      "capabilities": [
+        "search_docs",
+        "ask_question"
+      ],
       "data_flow": "query text sent to Astro (Kapa-backed)",
       "verification": {
         "level": "official-docs",
@@ -234,7 +272,10 @@
       "free": true,
       "signup": "none",
       "tier": "T2",
-      "capabilities": ["recommend_skills", "load_skill"],
+      "capabilities": [
+        "recommend_skills",
+        "load_skill"
+      ],
       "data_flow": "task description sent to Wondel",
       "verification": {
         "level": "community-listed",
@@ -255,7 +296,9 @@
       "free": true,
       "signup": "none",
       "tier": "T2",
-      "capabilities": ["search_skills"],
+      "capabilities": [
+        "search_skills"
+      ],
       "data_flow": "search query sent to bytesagain.com",
       "verification": {
         "level": "community-listed",
@@ -276,7 +319,10 @@
       "free": true,
       "signup": "none",
       "tier": "T2",
-      "capabilities": ["search_guides", "fetch_guide"],
+      "capabilities": [
+        "search_guides",
+        "fetch_guide"
+      ],
       "data_flow": "search query sent to developertoolkit.ai",
       "verification": {
         "level": "community-listed",
@@ -297,7 +343,14 @@
       "free": true,
       "signup": "none",
       "tier": "T2",
-      "capabilities": ["unit_conversion", "text_processing", "data_parsing", "encoding", "math", "cryptography"],
+      "capabilities": [
+        "unit_conversion",
+        "text_processing",
+        "data_parsing",
+        "encoding",
+        "math",
+        "cryptography"
+      ],
       "data_flow": "input values sent to usefulai.fun",
       "verification": {
         "level": "community-listed",
@@ -314,12 +367,17 @@
       "transport": "stdio",
       "url": null,
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-fetch"
+      ],
       "auth": "none",
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["fetch_url (markdown)"],
+      "capabilities": [
+        "fetch_url (markdown)"
+      ],
       "data_flow": "requested URL fetched locally by the server process (content returns to the client)",
       "verification": {
         "level": "official-package",
@@ -336,12 +394,22 @@
       "transport": "stdio",
       "url": null,
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "{allowed_dir}"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "{allowed_dir}"
+      ],
       "auth": "none",
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["read", "write", "list", "move", "search (scoped to allowed dirs)"],
+      "capabilities": [
+        "read",
+        "write",
+        "list",
+        "move",
+        "search (scoped to allowed dirs)"
+      ],
       "data_flow": "none (local process)",
       "verification": {
         "level": "official-package",
@@ -358,12 +426,18 @@
       "transport": "stdio",
       "url": null,
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-time"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-time"
+      ],
       "auth": "none",
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["current_time", "timezones"],
+      "capabilities": [
+        "current_time",
+        "timezones"
+      ],
       "data_flow": "none",
       "verification": {
         "level": "official-package",
@@ -380,12 +454,17 @@
       "transport": "stdio",
       "url": null,
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
       "auth": "none",
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["knowledge-graph entities, relations, queries"],
+      "capabilities": [
+        "knowledge-graph entities, relations, queries"
+      ],
       "data_flow": "none (local graph.json)",
       "verification": {
         "level": "official-package",
@@ -402,12 +481,17 @@
       "transport": "stdio",
       "url": null,
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
       "auth": "none",
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["structured step-by-step reasoning branches"],
+      "capabilities": [
+        "structured step-by-step reasoning branches"
+      ],
       "data_flow": "none",
       "verification": {
         "level": "official-package",
@@ -424,12 +508,22 @@
       "transport": "stdio",
       "url": null,
       "command": "npx",
-      "args": ["-y", "@playwright/mcp@latest"],
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ],
       "auth": "none",
       "free": true,
       "signup": "none",
       "tier": "T1",
-      "capabilities": ["navigate", "click", "fill", "screenshot", "evaluate", "network"],
+      "capabilities": [
+        "navigate",
+        "click",
+        "fill",
+        "screenshot",
+        "evaluate",
+        "network"
+      ],
       "data_flow": "visited pages + DOM content; pages are rendered locally",
       "verification": {
         "level": "official-package",
@@ -437,6 +531,159 @@
         "checked": "2026-09-22"
       },
       "notes": "Real browser automation. Capable of actions on any page the user is logged into — treat every navigation/interaction as a mutation (change-safety), and never enter credentials on the user's behalf without explicit instruction."
+    },
+    {
+      "id": "shadcn-ui",
+      "name": "shadcn/ui v4",
+      "vendor": "Jpisnice (community)",
+      "category": "design",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "@jpisnice/shadcn-ui-mcp-server"
+      ],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": [
+        "component source",
+        "blocks",
+        "demos",
+        "metadata",
+        "directory browsing"
+      ],
+      "data_flow": "none (local process)",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/Jpisnice/shadcn-ui-mcp-server (official README: 'npx @jpisnice/shadcn-ui-mcp-server' basic usage needs no token; 2.7k stars per AgentRank 2026-03 index)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Real shadcn/ui v4 component context (React/Svelte/Vue/React Native) - generate UI from actual component data instead of hallucinated markup. Works WITHOUT a GitHub token (60 req/h); an optional token only raises the GitHub rate limit (user-managed, never auto-added). Framework flags: --framework svelte|vue|react-native."
+    },
+    {
+      "id": "magic-ui",
+      "name": "Magic UI",
+      "vendor": "Magic UI (official)",
+      "category": "design",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "@magicuidesign/mcp@latest"
+      ],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": [
+        "listRegistryItems",
+        "searchRegistryItems",
+        "getRegistryItem"
+      ],
+      "data_flow": "none (local process)",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/magicuidesign/mcp (official README: 'npx -y @magicuidesign/mcp@latest', MIT, no key)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Official Magic UI MCP - animated UI components (marquee, blur fade text, grid background, ...) with live registry data + install instructions per item."
+    },
+    {
+      "id": "better-icons",
+      "name": "Better Icons",
+      "vendor": "better-auth (community)",
+      "category": "design",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "better-icons"
+      ],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": [
+        "search_icons",
+        "get_icon",
+        "sync_icon",
+        "scan_project_icons",
+        "recommend_icons",
+        "find_similar_icons"
+      ],
+      "data_flow": "none (local process)",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/better-auth/better-icons (README: 'npx -y better-icons' MCP config, no key; 440 stars per AgentRank index)",
+        "checked": "2026-09-22"
+      },
+      "notes": "200,000+ icons across 150+ collections (Lucide, MDI, Heroicons, Tabler, ...). sync_icon writes into the project's icons file instead of pasting SVG into chat (saves tokens); scan_project_icons keeps a project icon inventory. Ships a companion agent skill (npx skills add better-auth/better-icons)."
+    },
+    {
+      "id": "excalidraw",
+      "name": "Excalidraw Canvas",
+      "vendor": "yctimlin (community)",
+      "category": "design",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-excalidraw-server"
+      ],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": [
+        "element CRUD",
+        "describe",
+        "screenshot",
+        "mermaid",
+        "export .excalidraw",
+        "snapshot/rollback"
+      ],
+      "data_flow": "none (local process)",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/yctimlin/mcp_excalidraw (README: 'npx -y mcp-excalidraw-server', 26 tools, 'Core drawing runs fully local (Node 20+) - no API keys', 1.4k stars)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Live Excalidraw workbench: the agent draws, SEES its own work via screenshots, iterates on layout, exports commit-able .excalidraw files. Canvas server auto-starts on 127.0.0.1 (local). The share tool (upload to excalidraw.com) is optional - do NOT use it without user approval (data leaves the machine). Node 20+ required."
+    },
+    {
+      "id": "shadcnspace",
+      "name": "Shadcn Space",
+      "vendor": "Shadcn Space (community)",
+      "category": "design",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "shadcnspace-mcp@latest"
+      ],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": [
+        "browse blocks/components",
+        "search",
+        "install via shadcn CLI"
+      ],
+      "data_flow": "none (local process)",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://shadcnspace.com/docs/getting-started/mcp-server-docs (docs: 'npx -y shadcnspace-mcp@latest' local; free users add the MCP server without a token)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Live registry of shadcn blocks/components with real props + variants. Free blocks install with NO token; Pro blocks/pages need a license token (out of the free universe - user-managed only if the user requests)."
     }
   ],
   "excluded_with_reason": [
@@ -469,6 +716,21 @@
       "name": "mcpmarket.com premium/paid skills",
       "url": "https://mcpmarket.com/tools/skills",
       "reason": "paid listings (e.g. $19) violate the free universe; only free/official sections are in-scope"
+    },
+    {
+      "name": "Figma (all routes)",
+      "url": "official Dev Mode MCP / GLips Framelink / plumb-mcp / figwright / figma-mcp-free",
+      "reason": "every route requires a Figma account (free plan = signup): REST-route servers need a token; local-plugin routes (plumb-mcp, figwright, figma-mcp-free) are token-free but still require the Figma desktop app + free-plan account + a Figma file. If the user has a Figma account, the local-plugin route is the user-approved path (no token stored anywhere)."
+    },
+    {
+      "name": "Penpot MCP",
+      "url": "https://github.com/penpot/penpot-mcp",
+      "reason": "requires a Penpot account or self-hosted instance (signup)"
+    },
+    {
+      "name": "Magic (21st.dev) / v0 / Framer MCPs",
+      "url": "various",
+      "reason": "API key required (signup)"
     }
   ]
 }

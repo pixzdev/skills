@@ -5,7 +5,7 @@
 | Change | Detail |
 |---|------|
 | New skill | `pixz.core.mcp` v1.0.0 — **MCP & External Capability Integration**: trust tiers (T1/T2/T3) + security vetting gate, free + no-signup-first universe, live-check-first (`initialize` + `tools/list`) before wiring, idempotent runtime-agnostic auto-config, budgeted activation, untrusted-tool-output rule, skill-import quarantine protocol |
-| New catalog | `mcp/catalog.json` (16 vetted servers: 10 remote no-auth + 6 local official stdio; 4 skill sources incl. mcpmarket.com free/official + skills.sh; `excluded_with_reason` for auth-required entries) + `mcp/README.md` (human guide) |
+| New catalog | `mcp/catalog.json` (21 vetted servers: 10 remote no-auth + 11 local stdio — 6 official reference + 5 design (shadcn-ui, magic-ui, better-icons, excalidraw, shadcnspace); 4 skill sources incl. mcpmarket.com free/official + skills.sh; `excluded_with_reason` for auth-required entries incl. all Figma routes) + `mcp/README.md` (human guide) |
 | New script | `scripts/mcp.py` (stdlib-only): `list` · `tier` · `check` (live probe → evidence `.pixz/mcp-check.json`) · `add`/`remove` (idempotent, non-destructive; per-runtime config shapes; codex snippet) · `status` · `detect` |
 | New protocol | `pixz.protocol.mcp-integration` (points at `core/mcp/SKILL.md`) |
 | New policy | `pixz.policy.pixzflow-mandate` — **complex tasks MUST run under the full PixzFlow protocol; a complex task completed without it is a contractual failure (GAGAL)**, not accepted as complete until retrofitted with evidence; trivial work exempt. Canonical text: `AGENTS.md#pixzflow-mandate-complex-task-obligation` |

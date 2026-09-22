@@ -1336,7 +1336,7 @@
       "category": "core",
       "version": "1.0.0",
       "status": "stable",
-      "description": "Vetted, free + no-signup-first integration of MCP servers and external agent skills: trust tiers + security vetting gate, live-check-first (initialize + tools/list) before wiring, idempotent runtime-agnostic auto-config (scripts/mcp.py), budgeted activation, tool output treated as untrusted data. Catalog: mcp/catalog.json (16 servers + 4 skill sources, incl. mcpmarket.com).",
+      "description": "Vetted, free + no-signup-first integration of MCP servers and external agent skills: trust tiers + security vetting gate, live-check-first (initialize + tools/list) before wiring, idempotent runtime-agnostic auto-config (scripts/mcp.py), budgeted activation, tool output treated as untrusted data. Catalog: mcp/catalog.json (21 servers + 4 skill sources, incl. mcpmarket.com).",
       "triggers": [
         "mcp",
         "model context protocol",

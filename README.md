@@ -29,7 +29,7 @@ STATE     continuity              (L5 — task-state + adaptation-state + eviden
 | `AGENTS.md` | Canonical operating contract (agent entry point, incl. the **PixzFlow Mandate**) |
 | `registry.json` | Machine source of truth — skills, protocols, policies, limits |
 | `llms.txt` | LLM map (projection of the registry) |
-| `mcp/catalog.json` | Vetted MCP server + skill-source catalog (free + no-signup-only; 16 servers, 4 skill sources) |
+| `mcp/catalog.json` | Vetted MCP server + skill-source catalog (free + no-signup-only; 21 servers, 4 skill sources) |
 | `schemas/` | `task-state` · `adaptation-state` · `handoff` · `skill` · `registry` · `eval` |
 | `scripts/` | `validate.py` · `check-cycles.py` · `resolve.py` · `activation.py` (incl. `verify-installed`) · `doctor.py` · `assess.py` · `sitrep.py` · `hooks.py` · `mcp.py` (auto-config) · `integration-smoke.sh` |
 | `evals/` | documentary (21) + behavioral (34) + lifecycle (14) |
@@ -171,9 +171,10 @@ An overlay parameterizes one runtime without changing universal semantics. Curre
 PixzFlow integrates **MCP servers** and **external agent skills** with the same discipline it applies to everything else: vetted sources, evidence before trust, budgeted activation.
 
 - **Universe policy:** the default integration universe is **free + no signup + no API key**. Anything that requires an account or a key is excluded by default and only enters on explicit user request with user-managed credentials.
-- **Catalog:** `mcp/catalog.json` — 16 vetted servers (10 remote, 6 local stdio) + 4 skill sources. Every entry records `trust_tier` (T1 vendor-official / T2 catalog-verified / T3 unvetted), capabilities, data flow, and the **source where the endpoint + no-key claim was read** (`official-docs` / `official-package` / `community-listed`). Docs-verification is **not** liveness proof — `scripts/mcp.py check` runs a real `initialize` + `tools/list` handshake at setup time and writes the evidence to `.pixz/mcp-check.json`.
+- **Catalog:** `mcp/catalog.json` — 21 vetted servers (10 remote no-auth, 11 local stdio) + 4 skill sources. Every entry records `trust_tier` (T1 vendor-official / T2 catalog-verified / T3 unvetted), capabilities, data flow, and the **source where the endpoint + no-key claim was read** (`official-docs` / `official-package` / `community-listed`). Docs-verification is **not** liveness proof — `scripts/mcp.py check` runs a real `initialize` + `tools/list` handshake at setup time and writes the evidence to `.pixz/mcp-check.json`.
 - **Remote (no auth):** Context7 (current library docs) · DeepWiki (ask about any public GitHub repo) · GitMCP (instant docs/code context for *your* repo — URL auto-filled from `git remote`) · Microsoft Learn · Cloudflare Docs · Astro Docs · Wondel Skills (skills via MCP) · AI Skills Search (60k+ skills) · Developer Toolkit (950+ guides) · Useful AI utilities.
 - **Local stdio (official reference servers, no auth):** fetch · filesystem (always scoped) · time · memory · sequential-thinking · playwright (browser automation).
+- **Design set (local, no auth, no Figma — all Figma routes need an account → excluded by policy):** shadcn-ui (shadcn/ui v4 real components + blocks) · magic-ui (official, animated components) · better-icons (200k+ icons, 150+ collections, syncs into the project icons file) · excalidraw (draw → screenshot → iterate → commit `.excalidraw`) · shadcnspace (blocks registry, free tier keyless). `scripts/mcp.py list --category design`.
 - **Discovery directories:** [mcpmarket.com](https://mcpmarket.com) (server directory + agent-skills marketplace — free/official sections only) · [skills.sh](https://skills.sh) · curated community lists. Directories are **discovery sources, not trust sources** — every import passes the vetting gate.
 - **Skill import = prompt-code import.** External SKILL.md bundles go through quarantine → security review (prompt-injection, exfiltration, secret harvesting) → install → discovery verification → explicit enablement. Never auto-enabled.
 - **Runtime-agnostic auto-config:** `scripts/mcp.py` detects the runtime, live-checks each server, and writes the config **idempotently and non-destructively** (`.mcp.json` for Claude/Cursor/generic · `.cursor/mcp.json` · `opencode.json` · printed TOML snippet for Codex) — never overwriting user-modified entries, never writing credentials.
@@ -189,7 +190,7 @@ Before any setup, the agent **MUST ask** which tier the user wants (ask via the 
 |---|---|---|---|
 | **Minimal** | orchestrator closure (4 nodes) | none — native tools only | contract wiring + one readiness probe |
 | **Medium** | orchestrator + all optional (16 nodes) | curated set: context7 · deepwiki · gitmcp(self) · microsoft-learn · fetch · sequential-thinking — each live-checked before wiring | full self-learning lifecycle (doctor → init → adapt → verify → mark-adapted) |
-| **Full** | all skills (30) | full vetted catalog (16 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) | adapters + overlay activation + full validation/eval layers + integrity check |
+| **Full** | all skills (30) | full vetted catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) | adapters + overlay activation + full validation/eval layers + integrity check |
 
 Probe before asking (`scripts/activation.py status`): a runtime already `ready` does not get re-setup, and an upgrade is incremental. `python3 scripts/mcp.py tier <minimal|medium|full>` prints the exact server list.
 
@@ -327,7 +328,7 @@ Repo: https://github.com/pixzdev/skills (machine source of truth: registry.json)
    "Which PixzFlow setup tier should I install?"
    1. Minimal — orchestrator closure (4 skills) + contract wiring + one probe; NO MCP (native tools only)
    2. Medium — orchestrator + all optional skills (16) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
-   3. Full — all skills (30) + full vetted MCP catalog (16 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
+   3. Full — all skills (30) + full vetted MCP catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
    Tiers set installation footprint only — never the mandate, change-safety, or verification. If the user does not answer (or the tool is unavailable), DEFAULT TO MINIMAL and state the default. For Super Z / GLM / Z.AI Web runtimes, ZAI.md governs this question (together with the operating-mode question).
 2. INSPECT ENVIRONMENT — probe, do not assume:
    - Paths: ls -la ~/.claude/skills .claude/skills .opencode/skill ~/.config/opencode/skill ~/.hermes/skills .agents/skills ./skills
@@ -399,7 +400,7 @@ You are an agent identified as Super Z, GLM, or Z.AI Web. Confirm that identity 
    a) SETUP TIER (only if the runtime is not already READY — probe with `scripts/activation.py status` first; never re-ask an adapted runtime):
       - Minimal — orchestrator closure (4 skills) + contract wiring + one probe; no MCP
       - Medium — orchestrator + all optional skills (16) + curated free/no-signup MCP set, live-checked before wiring; full self-learning lifecycle
-      - Full — all skills (30) + full vetted MCP catalog (16 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays
+      - Full — all skills (30) + full vetted MCP catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays
       Default to Minimal and state it if the user does not answer.
    b) OPERATING MODE — choose exactly one:
       - Fast — minimum orchestration overhead

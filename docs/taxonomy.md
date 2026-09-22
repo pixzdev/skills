@@ -127,7 +127,7 @@ The complex-task obligation (complex work MUST run under the full protocol; skip
 Machine source of truth for the integration universe: free + no signup + no API key by policy, trust tiers, per-entry verification sources, `excluded_with_reason` for auth-required entries. It is a **projection of curation decisions, not a second registry** — servers are not `registry.json` skills; the skill is `pixz.core.mcp`.
 
 ### Intentionally NOT created in 2.4
-No per-server skills (16 servers as 16 skills would be micro-skill proliferation — the catalog + one skill covers them) · no MCP client skill (the runtime *is* the client) · no secrets-manager skill (policy: user-managed credentials, outside this repo's artifacts) · no automatic skill-merger from mcpmarket.com (imports are quarantined + reviewed + explicitly enabled — never auto) · no behavioral eval that fakes a network handshake (the live check runs at setup time on a networked runtime; evals assert routing + documentary gates only).
+No per-server skills (21 servers as 21 skills would be micro-skill proliferation — the catalog + one skill covers them) · no MCP client skill (the runtime *is* the client) · no secrets-manager skill (policy: user-managed credentials, outside this repo's artifacts) · no automatic skill-merger from mcpmarket.com (imports are quarantined + reviewed + explicitly enabled — never auto) · no behavioral eval that fakes a network handshake (the live check runs at setup time on a networked runtime; evals assert routing + documentary gates only).
 
 ## 2.2.0 Decisions (adoption tooling)
 

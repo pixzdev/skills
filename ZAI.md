@@ -30,7 +30,7 @@ Before beginning substantive work, the agent **MUST** invoke its available **`As
 > **Which PixzFlow setup tier should I install?**
 > 1. **Minimal** — orchestrator closure (4 skills) + contract wiring + one probe; **no MCP** (native tools only)
 > 2. **Medium** — orchestrator + all optional skills (16) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
-> 3. **Full** — all skills (30) + full vetted MCP catalog (16 servers, remote + local) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
+> 3. **Full** — all skills (30) + full vetted MCP catalog (21 servers, remote + local) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
 
 Tier semantics, per-server lists, and the free + no-signup policy: `README.md#setup-tiers-ask-first` and `mcp/catalog.json`. Setup is executed per `pixz.core.mcp` (vet → live-check → idempotent auto-config via `scripts/mcp.py`) — never wired blind.
 

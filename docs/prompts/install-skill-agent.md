@@ -18,7 +18,7 @@ Invoke the runtime's structured question tool (AskUserQuestion or equivalent) an
 
 1. **Minimal** — orchestrator closure (4 skills) + contract wiring + one probe; no MCP (native tools only)
 2. **Medium** — orchestrator + all optional skills (16) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
-3. **Full** — all skills (30) + full vetted MCP catalog (16 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
+3. **Full** — all skills (30) + full vetted MCP catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
 
 Tiers set installation footprint only — never the mandate, change-safety, or verification. If the user does not answer (or the tool is unavailable), **default to Minimal** and state the default. Probe first (`python3 scripts/activation.py status`): a runtime already `READY` is not re-setup; an upgrade is incremental. For Super Z / GLM / Z.AI Web runtimes, `ZAI.md` governs this question (together with the operating-mode question). Then continue with the phases below, sizing step 3/4 resolution to the tier (Minimal → orchestrator closure; Medium → `--with-optional`; Full → all registry skills).
 

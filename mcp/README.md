@@ -46,9 +46,23 @@ Human guide to the vetted MCP universe. Machine source of truth: [`catalog.json`
 | `sequential-thinking` | `@modelcontextprotocol/server-sequential-thinking` | structured reasoning scratchpad | Deep/Autonomous mode |
 | `playwright` | `@playwright/mcp@latest` | real browser automation | every navigation/interaction is a mutation (change-safety); never enter credentials without explicit instruction |
 
+### Design (local stdio, no auth) — the "design set"
+
+For UI/design work that has **no Figma** (Figma routes all need an account → excluded by policy):
+
+| id | Package | What it does | Notes |
+|---|---|---|---|
+| `shadcn-ui` | `@jpisnice/shadcn-ui-mcp-server` | real shadcn/ui **v4** component source + blocks + demos + metadata | React/Svelte/Vue/RN via `--framework`; keyless (60 req/h; optional user token only raises rate limit) |
+| `magic-ui` | `@magicuidesign/mcp@latest` | animated UI components (marquee, blur fade, grid bg, …) | **official** Magic UI server, live registry |
+| `better-icons` | `better-icons` | 200k+ icons, 150+ collections (Lucide/MDI/Heroicons/…) | `sync_icon` writes into the project icons file (saves tokens); companion skill via `npx skills add` |
+| `excalidraw` | `mcp-excalidraw-server` | live diagram canvas: draw → screenshot → iterate → export `.excalidraw` into the repo | Node 20+; `share` uploads off-machine — user approval required |
+| `shadcnspace` | `shadcnspace-mcp@latest` | shadcn blocks/components registry with real props + variants | free blocks need **no token**; Pro = out of the free universe |
+
+**Design set + Design DNA (planned skill):** the design MCPs supply *component truth* (real props/variants, not hallucinated markup) while a project-adaptive design skill supplies *project constraint* (the project's own palette/spacing/type scale). Together: "UI that looks like it belongs in THIS project, built from real components." `python3 scripts/mcp.py list --category design` lists the set.
+
 ### Excluded by policy (need a signup/key)
 
-Hugging Face · GitHub · Tavily/Exa/Firecrawl/Brave/Perplexity · Slack/Notion/Gmail/Linear/Supabase/Shopify/Stripe · You.com (profile implied) · mcpmarket.com **paid** skill listings. Full list + reasons: `catalog.json → excluded_with_reason`.
+Hugging Face · GitHub · Tavily/Exa/Firecrawl/Brave/Perplexity · Slack/Notion/Gmail/Linear/Supabase/Shopify/Stripe · You.com (profile implied) · **Figma — all routes** (official Dev Mode MCP, Framelink, plumb-mcp, figwright, figma-mcp-free: every route needs a Figma account; local-plugin routes are token-free but still need the app + account — user-approved path if the user has one) · **Penpot** (account/self-host) · **Magic (21st.dev) / v0 / Framer** (API key) · mcpmarket.com **paid** skill listings. Full list + reasons: `catalog.json → excluded_with_reason`.
 
 ## Setup tiers
 
@@ -56,7 +70,7 @@ Hugging Face · GitHub · Tavily/Exa/Firecrawl/Brave/Perplexity · Slack/Notion/
 |---|---|
 | **Minimal** | none — native tools only |
 | **Medium** | `context7 · deepwiki · gitmcp(self) · microsoft-learn · fetch · sequential-thinking` — each live-checked before wiring |
-| **Full** | all 16 vetted servers + skill-hub discovery (mcpmarket.com free/official sections, skills.sh) |
+| **Full** | all 21 vetted servers + skill-hub discovery (mcpmarket.com free/official sections, skills.sh) |
 
 `python3 scripts/mcp.py tier <name>` prints the exact list.
 
