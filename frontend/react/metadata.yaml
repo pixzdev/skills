@@ -1,9 +1,9 @@
 id: pixz.frontend.react
 name: React Engineering
 category: frontend
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: 'React/Next.js methodology: composition, state, boundaries, performance
+description: React/Next.js methodology — composition, server vs client boundaries, state, data fetching, performance and verification. Use for React/Next work. Do not use for non-React UI. For multi-step features, use MAIN skill pixz.core.orchestrator.
   and verification.'
 triggers:
 - react

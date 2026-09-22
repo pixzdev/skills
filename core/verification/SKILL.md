@@ -1,7 +1,7 @@
 ---
 name: Verification
 description: Evidence-based verification as a continuous loop — source-of-record discipline, the verification-depth ladder (claim depth must match evidence depth), triggered checks, typed verification, residual risks.
-version: 2.1.0
+version: 2.2.0
 id: pixz.core.verification
 category: core
 triggers: [verify, inspect, validate, check correctness, source of record]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Verification — `pixz.core.verification`
 
+> **Specialist HOW skill (evidence).** For practical multi-step operating methodology, activate the **MAIN skill** `pixz.core.orchestrator` — verification is its mandatory evidence floor. Load `core/orchestrator/references/operating-methodology.md` for "code is not proof", second pass, and ship criteria.
+>
 > Compilation is not correctness. Tests are evidence, not proof. **A record is not the thing.**
 
 ## Purpose

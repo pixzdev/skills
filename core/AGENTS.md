@@ -1,6 +1,8 @@
 # AGENTS.md — Core — Orchestration & Reasoning (`core/`)
 
 > Hierarchical registry for `core/`. This file navigates; canonical truth remains [`/AGENTS.md`](../AGENTS.md) + [`/registry.json`](../registry.json). Do not duplicate dependency truth here.
+>
+> **Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills in this folder answer HOW. If you want more practical multi-step methodology, use the orchestrator and load `core/orchestrator/references/operating-methodology.md` when the task is complex.
 
 ## Skills in `core/`
 

@@ -1,9 +1,9 @@
 id: pixz.ai.rag
 name: RAG Systems
 category: ai
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: 'Grounded retrieval-augmented generation: chunking, grounding, citation
+description: Grounded retrieval-augmented generation — chunking, hybrid retrieval, citation, UNKNOWN handling and eval. Use when answers must come from a corpus. Do not invent citations. For system-level RAG work, use MAIN skill pixz.core.orchestrator.
   discipline and eval.'
 triggers:
 - rag

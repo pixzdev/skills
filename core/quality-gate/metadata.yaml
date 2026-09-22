@@ -1,8 +1,8 @@
 id: pixz.core.quality-gate
 name: Quality Gate
-version: 2.0.0
+version: 2.1.0
 category: core
-description: The done-decision — consolidates verification, risk and orchestration budget into stop/ship/revise/replan.
+description: The done-decision — consolidates acceptance criteria, verification, challenge verdicts, residual risks and the orchestration budget into stop/ship/revise/replan. Use before claiming done. Operating methodology lives in MAIN skill pixz.core.orchestrator.
 triggers: [quality gate, ship check, done criteria, release gate]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

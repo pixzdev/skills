@@ -1,8 +1,8 @@
 id: pixz.core.replanning
 name: Replanning
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Failure recovery ladder and bounded replanning — each retry adds information.
+description: Failure recovery and structured replanning — classify, hypothesize, test, repair, regression-check; each retry must add information; bounded escalation ladder.
 triggers: [replan, pivot, strategy failed, alternative approach, failure, recovery]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

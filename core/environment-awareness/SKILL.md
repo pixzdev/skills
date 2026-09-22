@@ -1,7 +1,7 @@
 ---
 name: Environment Awareness
 description: Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling during ORIENT — before any environment-dependent decision.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.environment-awareness
 category: core
 triggers: [environment, stack detection, runtime, package manager, git state]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Environment Awareness — `pixz.core.environment-awareness`
 
+> **Specialist HOW skill (environment).** For practical multi-step operating methodology, activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` when environment risk is part of a larger delivery.
+>
 > A prevention mechanism against hallucinated assumptions.
 
 ## Purpose

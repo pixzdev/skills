@@ -1,9 +1,9 @@
 id: pixz.engineering.system-design
 name: System Design
 category: engineering
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Structures system tradeoffs, constraints, failure domains and verification
+description: Make architecture tradeoffs explicit and verifiable — constraints, failure domains, ADRs, SLIs. Use for cross-service or scale decisions. Do not use for a single-function refactor. For multi-step shipping, use MAIN skill pixz.core.orchestrator.
   for architecture decisions.
 triggers:
 - system design

@@ -1,7 +1,7 @@
 ---
 name: Epistemic Challenger
 description: Intensity-scaled adversarial challenge (risk × uncertainty × impact × irreversibility) with an explicit stop rule — no always-challenge, no debate loops.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.epistemic-challenger
 category: core
 triggers: [challenge, counterargument, how could this be wrong, falsify, red team]

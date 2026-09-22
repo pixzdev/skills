@@ -1,0 +1,30 @@
+{
+  "id": "eval.orchestrator.main-skill-01",
+  "skill_id": "pixz.core.orchestrator",
+  "description": "Orchestrator is documented as the MAIN practical operating skill and points agents to the progressive-disclosure operating methodology.",
+  "category": "method",
+  "input": {
+    "prompt": "Orchestrate a complex multi-step production change with research, specialists, verification and a second pass",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "MAIN skill",
+      "operating-methodology",
+      "DISCOVER",
+      "PLAN",
+      "DELEGATE",
+      "VERIFY",
+      "second pass"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "orchestrator is the practical main skill; full loop is progressive disclosure"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

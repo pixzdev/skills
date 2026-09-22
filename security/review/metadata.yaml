@@ -1,9 +1,9 @@
 id: pixz.security.review
 name: Security Review
 category: security
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Checklist-driven security review covering auth, authz, input, secrets,
+description: Checklist-driven security review covering auth, authz, input, secrets, deps and architecture — scoped to authorized environments. Use before shipping auth, payments, PII, or public APIs. Never test production without authority.
   deps and architecture.
 triggers:
 - security review

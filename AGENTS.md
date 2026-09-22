@@ -49,6 +49,8 @@ Mode is an **upper tendency**, never a minimum ceremony: a deep-mode agent still
 
 ## Capability Activation (persistent skill protocol)
 
+**Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills answer HOW. If you want more practical multi-step methodology (define → research → plan → delegate → inspect → challenge → verify → replan → iterate → ship), activate the orchestrator. Load `core/orchestrator/references/operating-methodology.md` when the task is complex enough that the orchestrator body is not enough. Do not load it for trivial reversible edits.
+
 Skills are **persistent capabilities, not one-time prompt attachments**. They stay available across the whole task lifecycle.
 
 ```

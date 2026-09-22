@@ -1,8 +1,8 @@
 id: pixz.core.capability-discovery
 name: Capability Discovery
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Persistent capability discovery and invocation with progressive loading and tracked activation state.
+description: Persistent capability discovery and invocation — progressive loading of skills, agents, tools, MCP servers and libraries, with tracked activation state that survives phase transitions.
 triggers: [discover, what can I use, available tools, find skill, activate skill]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires: []

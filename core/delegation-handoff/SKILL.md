@@ -1,7 +1,7 @@
 ---
 name: Delegation & Handoff
 description: Bounded delegation with an explicit economics test, structured dispatch contract, mandatory structured return, and parent inspection — no "looks good" returns.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.delegation-handoff
 category: core
 triggers: [delegate, handoff, subagent, dispatch task]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Delegation & Handoff — `pixz.core.delegation-handoff`
 
+> **Specialist HOW skill (dispatch contract).** For practical multi-step operating methodology — who to summon, how to coordinate, how to inspect — activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` for the specialist catalog and swarm rules.
+>
 > Delegation is a **context-isolation + parallelism** mechanism, not a capability upgrade. A subagent earns its existence only when the economics test passes.
 
 ## Purpose

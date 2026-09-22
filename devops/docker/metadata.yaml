@@ -1,9 +1,9 @@
 id: pixz.devops.docker
 name: Docker & Containers
 category: devops
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Reproducible container construction, layering, supply-chain and runtime
+description: Reproducible container construction — digest-pinned bases, multi-stage builds, non-root runtime, supply-chain and runtime verification. Use for images and Dockerfiles. Never unpinned latest tags. For rollout work, use MAIN skill pixz.core.orchestrator.
   verification.
 triggers:
 - docker

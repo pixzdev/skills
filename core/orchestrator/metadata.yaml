@@ -1,8 +1,8 @@
 id: pixz.core.orchestrator
 name: Orchestrator
-version: 2.0.0
+version: 2.1.0
 category: core
-description: PixzFlow's adaptive agent operating system — assess, mode, activate, delegate, decide — with an explicit orchestration budget.
+description: MAIN PixzFlow operating skill. Assesses the task, selects mode, activates capabilities, delegates, inspects, challenges, verifies, replans, and ships. Use for complex/multi-step work. Do not use for trivial reversible edits. Load references/operating-methodology.md for the full practical loop.
 triggers: [orchestrate, coordinate, delegate, complex task, multi-step]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires: []

@@ -1,9 +1,9 @@
 id: pixz.design.uiux
 name: UI/UX Design
 category: design
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: 'Human-centered interface methodology: flows, hierarchy, affordance and
+description: Human-centered interface methodology — flows, hierarchy, affordance, states, and usability verification. Use when designing or reviewing UI. Do not use for backend-only work. For multi-step product work, use MAIN skill pixz.core.orchestrator.
   usability verification.'
 triggers:
 - ui design

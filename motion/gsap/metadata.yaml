@@ -1,9 +1,9 @@
 id: pixz.motion.gsap
 name: GSAP Motion
 category: motion
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: GSAP timeline and ScrollTrigger methodology with performance and accessibility
+description: GSAP timeline and ScrollTrigger methodology with performance and accessibility constraints. Use when motion must aid comprehension. Do not animate layout properties. For multi-step UI work, use MAIN skill pixz.core.orchestrator.
   constraints.
 triggers:
 - gsap

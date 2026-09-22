@@ -7,7 +7,7 @@
 | Layer | What it tests | Harness | Result |
 |-------|---------------|---------|--------|
 | **1 Structural** | frontmatter, files, IDs, registry consistency, dependency graph, no cycles, schemas | `scripts/validate.py` + `scripts/check-cycles.py` | PASS/FAIL per check, no score |
-| **2 Documentary** | required sections, install commands, examples, metadata completeness (keyword/section presence) | `evals/runner.py` on `evals/cases/*.json` (15 cases) | heuristic `X/Y passed` |
+| **2 Documentary** | required sections, install commands, examples, metadata completeness (keyword/section presence) | `evals/runner.py` on `evals/cases/*.json` (19 cases) | heuristic `X/Y passed` |
 | **3 Behavioral** | task success, correctness, verification, constraints, tool choice, skill selection, stopping, uncertainty, challenge, regression | `evals/behavioral/runner.py` on `evals/behavioral/*.json` (4 scenarios) | PASS/FAIL per scenario + evidence + limitations |
 | **4 Integration** | repo → installer → runtime → discovery → invocation → execution | `scripts/integration-smoke.sh` (skills.sh + openclaw + manual `ls`) | PASS/FAIL per runtime + evidence |
 
@@ -42,7 +42,7 @@ Layer 3 cases add `expected_routing`, `should_select`, `should_not_select`, `ris
 
 ## Coverage
 
-- Layer 2: 15 doc cases (core + niche)
+- Layer 2: 19 doc cases (core + niche)
 - Layer 3: 4 behavioral smokes (orchestrator trivial/ UI / security / prod migration) — smoke, not model-graded
 - Layer 4: smoke covers resolver + discovery `ls`/`list` per runtime
 

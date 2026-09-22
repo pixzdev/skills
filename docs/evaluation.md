@@ -20,7 +20,7 @@ How: `python scripts/validate.py` + `python scripts/check-cycles.py`. Exit non-z
 - required sections in each SKILL.md (Purpose, Triggers/When, Methodology, Verification, Structured output — per category)
 - install commands present where relevant; examples present; metadata complete
 
-How: `python evals/runner.py` — 15 cases, keyword/section presence. **Heuristic, not semantic.** Report as `X/15 heuristic` — no fake precision.
+How: `python evals/runner.py` — 19 cases, keyword/section presence. **Heuristic, not semantic.** Report as `X/19 heuristic` — no fake precision.
 
 ### Layer 3 — Behavioral smoke (heuristic + registry invariants)
 What it checks **now (2.1.0)**:
@@ -59,13 +59,13 @@ Any 2.0 change must not: make trivial tasks slower (token overhead guard) · cre
 
 ## Scoring & Reporting
 
-- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/18 heuristic` · behavioral `X/33` + invariants · lifecycle `X/9 deterministic` · integration PASS/FAIL per runtime with evidence.
+- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/19 heuristic` · behavioral `X/33` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime with evidence.
 - Every eval result carries: `test_id`, `scenario`, `expected`, `actual`, `pass`, `evidence`, `limitations`.
 - Layer 1–2 results must never be presented as Layer 3–4 evidence.
 
 ## Artifacts
 
-- `evals/cases/*.json` — Layer 2 (18)
+- `evals/cases/*.json` — Layer 2 (19)
 - `evals/behavioral/*.json` + `runner.py` — Layer 3 (33 + invariants)
 - `evals/lifecycle/run_tests.py` — Layer 3b (14 deterministic self-learning tests)
 - `scripts/integration-smoke.sh` — Layer 4 (includes lifecycle suite + activation probe)

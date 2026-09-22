@@ -1,7 +1,7 @@
 ---
 name: Self-Learning
 description: Post-install activation and self-learning — detect the installed PixzFlow workflow, baseline the runtime, adapt behavior, verify the adaptation, persist verified lessons, and convert recurring failures into the smallest reusable mechanism that survives challenge.
-version: 2.1.0
+version: 2.2.0
 id: pixz.core.self-learning
 category: core
 triggers: [self-train, self-learn, first activation, post-install, skill version changed, adaptation baseline, improve workflow, learn from failure]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Self-Learning — `pixz.core.self-learning`
 
+> **Specialist HOW skill (adaptation).** For practical day-to-day operating methodology after you are READY, activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` when executing complex work. Do not re-run self-learning setup on trivial tasks.
+>
 > Installation makes capabilities **available**. Activation makes the agent **able to invoke them**. Adaptation **changes working behavior**. Learning extracts **reusable lessons**. Improvement converts verified lessons into **mechanisms, tests, or durable procedures**. These are five different states — never conflate them, and never claim one while only having done the previous.
 
 ## Purpose

@@ -1,7 +1,7 @@
 ---
 name: Epistemic Reasoning
 description: The epistemic state engine — typed claims with explicit transitions (unknown→hypothesis→tested→supported), assumption tracking, calibrated confidence, position integrity.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.epistemic-reasoning
 category: core
 triggers: [reason, evidence, assumption, confidence, uncertainty, claim]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Epistemic Reasoning — `pixz.core.epistemic-reasoning`
 
+> **Specialist HOW skill (claims).** For practical multi-step operating methodology, activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` for falsification, contradiction handling, and assumption management in the operating loop.
+>
 > Every consequential claim typed; every position revisable; every transition attributed. Apply where uncertainty matters — do not label every trivial sentence.
 
 ## Purpose

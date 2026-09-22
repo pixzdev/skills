@@ -1,6 +1,8 @@
 # AGENTS.md — DevOps (`devops/`)
 
 > Hierarchical registry for `devops/`. This file navigates; canonical truth remains [`/AGENTS.md`](../AGENTS.md) + [`/registry.json`](../registry.json). Do not duplicate dependency truth here.
+>
+> **Main skill:** specialist skills here answer HOW. For practical multi-step operating methodology, activate `pixz.core.orchestrator` (and load `core/orchestrator/references/operating-methodology.md` when the work is complex).
 
 ## Skills in `devops/`
 

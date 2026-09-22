@@ -1,8 +1,8 @@
 id: pixz.core.planning
 name: Planning
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Minimal, mode-sized execution plans with verifiable steps and defined stop conditions.
+description: Minimal, mode-sized execution plans with verifiable steps, explicit assumptions (deep mode), and defined stop conditions. Use before substantial multi-step work. Do not write a 10-step plan for a rename. Operating loop lives in MAIN skill pixz.core.orchestrator.
 triggers: [plan, roadmap, break down task, milestone]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:
