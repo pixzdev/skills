@@ -19,7 +19,7 @@ PixzFlow **does not** teach basic engineering to frontier models, does not force
 ## Entry Protocol (every task)
 
 ```
-ORIENT   → state exists? read task-state first (continuation). Environment relevant? inspect it (don't assume npm/pnpm, Next/Vite).
+ORIENT   → state exists? read task-state first (continuation). PixzFlow installed here? probe adaptation once (see Self-Learning). Environment relevant? inspect it (don't assume npm/pnpm, Next/Vite).
 MODEL    → restate objective, acceptance criteria, constraints, unknowns. Requested vs necessary vs optional vs out-of-scope.
 ASSESS   → bands: complexity · risk · uncertainty · reversibility · horizon (low/medium/high/critical). Reassess on material new information.
 MODE     → fast | balanced | deep | autonomous (user instruction > runtime overlay > balanced default).
@@ -69,6 +69,17 @@ Statuses: `available → discovered → considered → activated → active → 
 
 **Budget rule:** every activation must earn its context cost. Skill spam (loading 10 skills for a rename) is a failure. The resolver (`scripts/resolve.py`) is for **install-time** dependencies; activation is a runtime decision recorded in task-state.
 
+## Post-Install Activation & Self-Learning (`pixz.core.self-learning`)
+
+Installation makes capabilities **available**; activation makes them **invocable**; adaptation **changes working behavior**; learning extracts **reusable lessons**; improvement converts verified lessons into **mechanisms/tests/procedures**. Never conflate these, never claim one having only done the previous.
+
+- **First activation (post-install):** `DETECT → INVENTORY → BASELINE → ADAPT → VERIFY → PERSIST → READY`. Probe: `python3 scripts/activation.py status` (exit 0 = ready, 10 = new/stale). No state → `init`, adapt behavior, verify at RUNTIME-ACTIVE depth, `mark-adapted --evidence …` (refused without evidence — "I have learned PixzFlow" is not evidence). State: `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.json`). Baseline records only observed facts (runtime, tools, instruction sources, state/verification/delegation/research capability); unobserved stays `unknown` — never invented. No hidden chain-of-thought in state.
+- **Second activation is a CHECK, not a re-run.** State `ready` + no drift → work. Duplicate setup is a failure.
+- **Drift (skill version changed / skill added or removed):** status reports the delta. Never assume version change = behavior change — inspect the actual diff, re-adapt only what changed (`sync`, then `mark-adapted`).
+- **Improvement loop (during work):** `OBSERVE → IDENTIFY → ROOT-CAUSE → GENERALIZE → CHALLENGE → PROPOSE → SELECT → IMPLEMENT → VERIFY → REGRESSION CHECK → PERSIST`. Distinguish LESSON / MECHANISM / TEST / VERIFIED IMPROVEMENT / EMPIRICALLY IMPROVED; a successful task does not mean the process improved. Every persistent improvement survives six challenges: failure · regression · overfitting · complexity · confirmation · adversarial.
+- **Anti-proliferation gate:** failures must not spawn new skills/agents/protocols/schemas/instruction files/dependencies unless existing mechanisms cannot express the fix, the failure class recurs, and the benefit justifies permanent cost. Prefer policy → extend existing mechanism → test → (last) new abstraction. Self-learning must never add ceremony to trivial tasks.
+- **Boundaries:** the lifecycle survives compaction/restart/handoff because durable state lives in files and this file is read at session start; subagents receive adaptation status in the handoff packet and never re-run setup. This is behavioral/runtime adaptation — no model weights are modified.
+
 ## Task State & Continuity
 
 - Schema: `schemas/task-state.schema.json`. Storage: `.pixz/task-state.json` (filesystem is the continuity substrate — conversation context is lossy; files survive compaction and restarts).
@@ -87,7 +98,7 @@ Where uncertainty matters, label claims: `FACT · OBSERVED · SOURCE CLAIM · IN
 
 Verify: **before irreversible action · after significant mutation · after dependency/architecture change · before consequential claims · before handoff · before completion.**
 
-Kinds: implementation · claim · artifact · regression · security · deployment. Evidence = command output, test result, diff, artifact, repro steps — with source and strength. Compilation is not correctness; tests are evidence, not proof. Distinguish **proven** (reproduced + inspected) vs **trusted** (primary source, not reproduced — confidence capped medium) vs **unknown**. Always report residual risks. Methodology: `pixz.core.verification`.
+Kinds: implementation · claim · artifact · regression · security · deployment. **Depth rule (`pixz.protocol.verification-depth`):** verification depth must match the claim — EXISTS→existence check · PARSES→parser · SCHEMA-COMPLIANT→schema validation · CORRECT→behavioral verification · INTEGRATED→integration test · RUNTIME-ACTIVE→runtime invocation · PERSISTENT→repeated/delayed observation · IMPROVED→baseline comparison. Never substitute a weaker rung: file exists = valid ✗ · command succeeded = correct ✗ · test passed = requirement satisfied ✗ · agent said success = verified ✗. Evidence = command output, test result, diff, artifact, repro steps — with source and strength. Compilation is not correctness; tests are evidence, not proof. Distinguish **proven** (reproduced + inspected) vs **trusted** (primary source, not reproduced — confidence capped medium) vs **unknown**. Always report residual risks. Methodology: `pixz.core.verification`.
 
 ## Delegation
 
@@ -120,6 +131,8 @@ python scripts/validate.py            # registry/metadata/schemas/consistency + 
 python scripts/check-cycles.py        # no dependency cycles
 python evals/runner.py                # layer 2: documentary heuristic
 python evals/behavioral/runner.py     # layer 3: routing/activation smoke
+python evals/lifecycle/run_tests.py   # layer 3b: self-learning lifecycle (deterministic)
+python scripts/activation.py status   # self-learning probe (exit 0 ready / 10 new|stale)
 bash scripts/integration-smoke.sh     # layer 4: installer → discovery → invocation
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude
 ```
@@ -129,4 +142,4 @@ python scripts/resolve.py --install pixz.core.orchestrator --runtime claude
 
 ## Pointers
 
-Architecture & delta (old→new) `docs/architecture.md` · activation/routing `docs/architecture/routing.md` · evaluation + ablations `docs/evaluation.md` · GLM benchmark record `docs/benchmark/GLM-benchmark-findings.md` · successor benchmark `docs/benchmark/successor-benchmark.md` · research findings `docs/research/frontier-agent-findings.md` · install matrix `docs/install/README.md` · dependency model `docs/dependency-model.md` · state schema `schemas/task-state.schema.json` · handoff contract `schemas/handoff.schema.json`.
+Architecture & delta (old→new) `docs/architecture.md` · activation/routing `docs/architecture/routing.md` · evaluation + ablations `docs/evaluation.md` · GLM benchmark record `docs/benchmark/GLM-benchmark-findings.md` · successor benchmark `docs/benchmark/successor-benchmark.md` · research findings `docs/research/frontier-agent-findings.md` + `docs/research/self-learning-findings.md` · install matrix `docs/install/README.md` · dependency model `docs/dependency-model.md` · task state schema `schemas/task-state.schema.json` · adaptation state schema `schemas/adaptation-state.schema.json` · handoff contract `schemas/handoff.schema.json`.

@@ -1,8 +1,8 @@
 id: pixz.core.verification
 name: Verification
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Evidence-based verification as a continuous loop with source-of-record discipline and typed checks.
+description: Evidence-based verification as a continuous loop with source-of-record discipline, the verification-depth ladder and typed checks.
 triggers: [verify, inspect, validate, check correctness, source of record]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

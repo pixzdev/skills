@@ -1,5 +1,5 @@
 {
-  "version": "2.0.0",
+  "version": "2.1.0",
   "channel": "stable",
   "limits": {
     "max_skill_chain_depth": 15,
@@ -48,6 +48,18 @@
       "name": "Failure Recovery & Escalation",
       "description": "FAIL→CLASSIFY→INSPECT→ISOLATE→HYPOTHESIS→TEST→REPAIR→REGRESSION CHECK→CONTINUE; each retry adds information; ladder retry→inspect→alternate→research→specialist→challenge→parent→user.",
       "path": "core/replanning/SKILL.md"
+    },
+    {
+      "id": "pixz.protocol.self-learning",
+      "name": "Self-Learning Lifecycle",
+      "description": "Post-install lifecycle DETECT→INVENTORY→BASELINE→ADAPT→VERIFY→PERSIST→READY plus in-work improvement loop OBSERVE→DIAGNOSE→CHALLENGE→IMPROVE→VERIFY→REGRESS→PERSIST→REUSE; adaptation state in .pixz/adaptation-state.json; second activation is a check, never a re-run; drift re-adapts only the delta.",
+      "path": "core/self-learning/SKILL.md"
+    },
+    {
+      "id": "pixz.protocol.verification-depth",
+      "name": "Verification Depth",
+      "description": "Verification depth must match the claim: EXISTS→existence check, PARSES→parser, SCHEMA-COMPLIANT→schema validation, CORRECT→behavioral verification, INTEGRATED→integration test, RUNTIME-ACTIVE→runtime invocation, PERSISTENT→repeated/delayed observation, IMPROVED→baseline comparison. Never substitute a weaker rung (file exists = valid, command succeeded = correct, test passed = requirement satisfied, agent said success = verified).",
+      "path": "core/verification/SKILL.md"
     }
   ],
   "policies": [
@@ -62,7 +74,7 @@
     {
       "id": "pixz.policy.simplicity",
       "name": "Simplicity",
-      "description": "Minimum necessary, not minimum possible; avoid unnecessary abstraction/deps/agents/tools. Anti-overengineering gate: every new subsystem must answer what failure it prevents, what behavior it enables, what measurable improvement, what its cost, and whether simpler suffices.",
+      "description": "Minimum necessary, not minimum possible; avoid unnecessary abstraction/deps/agents/tools. Anti-overengineering gate: every new subsystem must answer what failure it prevents, what behavior it enables, what measurable improvement, what its cost, and whether simpler suffices. Applies to self-improvement: failures must not spawn new skills/agents/protocols/schemas/instruction files/dependencies unless existing mechanisms cannot express the fix, the failure class recurs, and the benefit justifies permanent cost (improvement-economy gate).",
       "enforces": [
         "all"
       ]
@@ -125,7 +137,8 @@
         "pixz.core.replanning",
         "pixz.core.quality-gate",
         "pixz.core.change-safety",
-        "pixz.quality.anti-ai-slop"
+        "pixz.quality.anti-ai-slop",
+        "pixz.core.self-learning"
       ],
       "conflicts": [],
       "compatible_runtimes": [
@@ -479,9 +492,9 @@
       "id": "pixz.core.verification",
       "name": "Verification",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Evidence-based verification as a continuous loop with source-of-record discipline and typed checks.",
+      "description": "Evidence-based verification as a continuous loop with source-of-record discipline, the verification-depth ladder and typed checks.",
       "triggers": [
         "verify",
         "inspect",
@@ -1254,6 +1267,53 @@
       ],
       "tools": [],
       "path": "ai/agent-design"
+    },
+    {
+      "id": "pixz.core.self-learning",
+      "name": "Self-Learning",
+      "category": "core",
+      "version": "2.1.0",
+      "status": "stable",
+      "description": "Post-install activation and self-learning — detect the installed workflow, baseline the runtime, adapt behavior, verify the adaptation, persist verified lessons, convert recurring failures into the smallest challenged mechanism.",
+      "triggers": [
+        "self-train",
+        "self-learn",
+        "first activation",
+        "post-install",
+        "skill version changed",
+        "adaptation baseline",
+        "improve workflow",
+        "learn from failure"
+      ],
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.core.capability-discovery",
+        "pixz.core.workflow-continuity",
+        "pixz.core.epistemic-challenger",
+        "pixz.core.verification"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "inputs": [
+        "objective",
+        "constraints",
+        "context"
+      ],
+      "outputs": [
+        "artifact",
+        "findings",
+        "verification"
+      ],
+      "tools": [],
+      "path": "core/self-learning"
     }
   ]
 }

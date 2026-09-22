@@ -1,7 +1,7 @@
 ---
 name: Verification
-description: Evidence-based verification as a continuous loop — source-of-record discipline, triggered checks, typed verification (implementation/claim/artifact/regression/security/deployment), residual risks.
-version: 2.0.0
+description: Evidence-based verification as a continuous loop — source-of-record discipline, the verification-depth ladder (claim depth must match evidence depth), triggered checks, typed verification, residual risks.
+version: 2.1.0
 id: pixz.core.verification
 category: core
 triggers: [verify, inspect, validate, check correctness, source of record]
@@ -46,6 +46,27 @@ When a descriptive record is checked against a primary artifact, record `verifie
 - **regression** — what existing behavior could this break? (targeted tests)
 - **security** — threat path checks per `pixz.security.review`
 - **deployment** — actual live state, not deploy output
+
+### 2.5 Verification-Depth Ladder (universal principle — `pixz.protocol.verification-depth`)
+
+> **Verification depth must match the claim being made.** A claim is only as strong as the deepest rung its evidence actually reaches.
+
+| Claim | Minimum evidence depth | What satisfies it |
+|-------|------------------------|-------------------|
+| EXISTS | existence check | `ls` / discovery output shows the artifact |
+| PARSES | parser | the artifact is syntactically valid (parse succeeds) |
+| SCHEMA-COMPLIANT | schema validation | structural validation against the governing schema |
+| CORRECT | behavioral verification | running it produces the specified behavior (fresh output) |
+| INTEGRATED | integration test | it works composed with its neighbors, not in isolation |
+| RUNTIME-ACTIVE | runtime invocation | the actual runtime discovers and invokes it (not just present) |
+| PERSISTENT | repeated/delayed observation | it survives a boundary: re-run, fresh process, next session |
+| IMPROVED | baseline comparison | measured against the pre-change baseline, delta shown |
+
+Rules:
+- **Never substitute a weaker rung for a stronger claim:** `file exists = valid` ✗ · `command succeeded = correct` ✗ · `test passed = requirement satisfied` ✗ · `agent said success = verified` ✗.
+- Escalate only as far as the claim demands — verifying EXISTS at RUNTIME-ACTIVE depth is waste (orchestration budget).
+- When the required depth is not achievable in this environment, the claim is downgraded to UNVERIFIED with the gap stated — never silently claimed at a higher rung.
+- Layers of this repo map onto the ladder: structural (EXISTS/PARSES/SCHEMA-COMPLIANT) → documentary/behavioral smoke (weak CORRECT) → integration (INTEGRATED/RUNTIME-ACTIVE) → lifecycle suite (PERSISTENT) → successor benchmark (IMPROVED).
 
 ### 3. Five Checks (apply proportionally)
 - **inspection** — read artifact against requirements
