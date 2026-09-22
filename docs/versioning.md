@@ -1,5 +1,20 @@
 # Versioning — PixzFlow
 
+## 2.2.0 Notes (non-breaking, additive)
+
+| Change | Detail |
+|---|------|
+| New script | `scripts/doctor.py` — measured runtime baseline (state persistence, command execution, tools, contract reachability); `--write` fills only `unknown` dimensions; the unmeasurable (delegation, research) stays unknown |
+| New script | `scripts/assess.py` — adoption score 0–100 as a sum of named evidence-backed checks (A installation 30 · B activation 35 · C operability 25 · D learning 10); UNVERIFIED items score 0; `--full` executes layer-1 + lifecycle as deeper evidence. Doctrine printed with every report: adoption score ≠ quality metric |
+| Auto-run | `activation.py mark-adapted` now runs the assessment automatically at first-run completion and records it in history (never blocks the READY transition) |
+| New command | `activation.py verify-installed --runtime <rt>` — installed copies vs source digests; MODIFIED → exit 10 (tamper/corruption detection) |
+| New script | `scripts/sitrep.py` — one-block orientation report (adaptation probe + task state + learning highlights) for ORIENT/compaction/handoff |
+| New script | `scripts/hooks.py` — runtime contract wiring: `check`/`install`, append-only and idempotent; Claude `CLAUDE.md → @AGENTS.md`, native AGENTS.md runtimes are documented no-ops; repo self-wires its own `CLAUDE.md` |
+| Contracts | AGENTS.md self-learning section carries doctor/assess/sitrep/integrity/wiring; ZAI.md explicit that the overlay never overrides the lifecycle or the assessment; install prompts (README + docs/prompts) require the auto-assessment score + integrity result in the final report |
+| Evals | lifecycle suite 9 → 14 deterministic tests (doctor, integrity, sitrep, assessment incl. fresh-env-low-score + auto-run, hooks idempotency) |
+
+No skill contracts changed; no schema changes; no triggers changed — minor bump.
+
 ## 2.1.0 Notes (non-breaking, additive)
 
 | Change | Detail |

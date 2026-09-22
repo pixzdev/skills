@@ -4,7 +4,7 @@
 
 ## Identity
 - Repo: https://github.com/pixzdev/skills
-- Version: 2.1.0 (VERSION file; registry.json)
+- Version: 2.2.0 (VERSION file; registry.json)
 - Entry (agents): `AGENTS.md` — canonical operating contract (entry protocol, modes, activation, self-learning, state, evidence, delegation, verification, stopping)
 - Entry (humans): `README.md` — overview + copy-paste **AI Agent Installation Prompt** + **Super Z / GLM / Z.AI Web Prompt**
 - Machine registry: `registry.json` (source of truth for capabilities)
@@ -18,9 +18,10 @@ L0 model-native (irreplaceable) → L1 runtime → L2 PixzFlow operating layer (
 Modes: `fast | balanced | deep | autonomous` (user > overlay > balanced default; upper tendency, never minimum ceremony).
 Assessment bands: low/medium/high/critical over complexity, risk, uncertainty, reversibility, horizon.
 
-## Post-install self-learning (2.1)
+## Post-install self-learning (2.1 → 2.2)
 `INSTALL → DETECT → INVENTORY → BASELINE → ADAPT → VERIFY → PERSIST → READY`, then during work `OBSERVE → DIAGNOSE → CHALLENGE → IMPROVE → VERIFY → REGRESS → PERSIST → REUSE ↺`.
 Installation ≠ activation ≠ adaptation ≠ learning ≠ improvement — never conflate. Probe: `python3 scripts/activation.py status` (exit 0 ready · 10 new/stale). State: `.pixz/adaptation-state.json` (schemas/adaptation-state.schema.json). Second activation is a check, not a re-run; skill-version drift re-adapts only the inspected delta. Skill: `pixz.core.self-learning`. Behavioral runtime adaptation only — no model weights change; unsupported capabilities stay UNKNOWN.
+2.2 tooling (stdlib-only): `scripts/doctor.py` measures the baseline (fills only unknowns) · `scripts/assess.py` adoption score 0–100 = named evidence-backed checks (UNVERIFIED scores 0; NOT a quality metric) — auto-runs after `mark-adapted` · `scripts/sitrep.py` one-block ORIENT/handoff report · `scripts/hooks.py` contract wiring (claude CLAUDE.md→@AGENTS.md; native runtimes no-op) · `activation.py verify-installed` installed-copy integrity vs source digests.
 
 ## Capability activation (persistent)
 `DISCOVER → MATCH → LOAD (progressive) → ACTIVATE → USE → VERIFY → PERSIST → REINVOKE → COMPLETE`
@@ -90,7 +91,7 @@ Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor; 4-
 - Policies: Scope Control · Simplicity (incl. anti-overengineering gate + improvement-economy/anti-proliferation gate) · Change Safety (static) · Orchestration Budget · Anti-AI Slop (diagnostic)
 
 ## Verification (layers, never conflate)
-1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (18, heuristic) · 3 behavioral `evals/behavioral/runner.py` (33 + registry invariants, heuristic) · 3b lifecycle `evals/lifecycle/run_tests.py` (9, deterministic state machine) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H; UNRUN until executed).
+1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (18, heuristic) · 3 behavioral `evals/behavioral/runner.py` (33 + registry invariants, heuristic) · 3b lifecycle `evals/lifecycle/run_tests.py` (14, deterministic state machine + 2.2 tooling) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H + I/J/K self-learning; UNRUN until executed).
 
 ## Limitations (honest)
 - pinned channel: DOCUMENTED ONLY (no pixz.lock)

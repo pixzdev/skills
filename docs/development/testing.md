@@ -8,7 +8,7 @@ See `docs/evaluation.md` for layer definitions.
 
 **Layer 3 — behavioral:** `python evals/behavioral/runner.py` (routing + orchestrator + self-learning E-series smoke). Each scenario: expected vs actual + evidence + limitations.
 
-**Layer 3b — lifecycle:** `python evals/lifecycle/run_tests.py` (9 deterministic self-learning tests: first/second activation, fresh-process reload, drift, failed adaptation, regression). Model-free; proves the state machine at PERSISTENT rung, never fakes model behavior.
+**Layer 3b — lifecycle:** `python evals/lifecycle/run_tests.py` (14 deterministic tests: activation, fresh-process reload, drift, failed adaptation, regression, doctor, integrity, sitrep, adoption assessment, hooks). Model-free; proves the state machine at PERSISTENT rung, never fakes model behavior.
 
 **Layer 4 — integration:** `bash scripts/integration-smoke.sh` where feasible (`npx skills list`, `openclaw skills list/check`, `ls <installed>/SKILL.md`, lifecycle suite, activation probe). Manual smoke where no CI binary (Hermes/Codex) — still capture `ls`/`list` output.
 

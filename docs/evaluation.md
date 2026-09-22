@@ -34,7 +34,7 @@ How: `python evals/behavioral/runner.py`. **Heuristic keyword routing + static i
 ### Layer 3b — Self-learning lifecycle (deterministic, model-free)
 What it checks: the state-machine half of self-learning, in subprocess-isolated tests — first activation (NEW→BASELINED) · duplicate-setup refusal · persisted state reload in a **fresh process** · skill version change (drift→sync→re-adapt) · version-without-content distinction · newly discovered skill · failed adaptation (no-evidence refusal, corrupt-state loud failure) · regression of READY after drift · task-state adaptation pointer.
 
-How: `python evals/lifecycle/run_tests.py`. Deterministic assertions, exit non-zero on fail. **Proves the mechanism at PERSISTENT rung; the behavioral half (a real model actually adapting) remains heuristic/UNVERIFIED — no cross-session model behavior is faked.**
+How: `python evals/lifecycle/run_tests.py`. Deterministic assertions, exit non-zero on fail. **Proves the mechanism at PERSISTENT rung; the behavioral half (a real model actually adapting) remains heuristic/UNVERIFIED — no cross-session model behavior is faked.** Since 2.2.0 the suite also covers doctor (measured baseline), verify-installed (integrity), sitrep, adoption assessment (auto-run at first-run completion), and hooks wiring.
 
 ### Layer 4 — Integration (where feasible)
 repo → installer → runtime → discovery → invocation: clean-env `npx skills list` before/after, `openclaw skills list/check`, manual `cp -r` + `ls` evidence, resolver dry-runs. Where CI lacks a runtime binary: **manual smoke** with required `ls`/`list` evidence; claim level per runtime VERIFIED vs PARTIALLY VERIFIED (`docs/install/README.md`).
@@ -67,7 +67,7 @@ Any 2.0 change must not: make trivial tasks slower (token overhead guard) · cre
 
 - `evals/cases/*.json` — Layer 2 (18)
 - `evals/behavioral/*.json` + `runner.py` — Layer 3 (33 + invariants)
-- `evals/lifecycle/run_tests.py` — Layer 3b (9 deterministic self-learning tests)
+- `evals/lifecycle/run_tests.py` — Layer 3b (14 deterministic self-learning tests)
 - `scripts/integration-smoke.sh` — Layer 4 (includes lifecycle suite + activation probe)
 - `docs/benchmark/GLM-benchmark-findings.md` — v1 empirical record
 - `docs/benchmark/successor-benchmark.md` — model-graded benchmark design (ablation A–H, task classes, metrics)

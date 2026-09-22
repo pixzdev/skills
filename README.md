@@ -29,8 +29,8 @@ STATE     continuity              (L5 — task-state + adaptation-state + eviden
 | `registry.json` | Machine source of truth — skills, protocols, policies, limits |
 | `llms.txt` | LLM map (projection of the registry) |
 | `schemas/` | `task-state` · `adaptation-state` · `handoff` · `skill` · `registry` · `eval` |
-| `scripts/` | `validate.py` · `check-cycles.py` · `resolve.py` · `activation.py` · `integration-smoke.sh` |
-| `evals/` | documentary (18) + behavioral (33) + lifecycle (9) |
+| `scripts/` | `validate.py` · `check-cycles.py` · `resolve.py` · `activation.py` (incl. `verify-installed`) · `doctor.py` · `assess.py` · `sitrep.py` · `hooks.py` · `integration-smoke.sh` |
+| `evals/` | documentary (18) + behavioral (33) + lifecycle (14) |
 | `adapters/` | Thin runtime translators (claude, openclaw, opencode, hermes) |
 | `core/` + domains | 14 core + 15 domain skills (`pixz.<domain>.<name>` IDs) |
 
@@ -85,6 +85,16 @@ Five distinct states — never conflated, never claimed out of order:
 
 Mechanism: `pixz.core.self-learning` + `scripts/activation.py` (probe exit codes: `0` ready · `10` new/stale · `1` error) + `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.json`). Skill-version change never assumes behavior change — the delta is inspected and only the changed capabilities are re-adapted. This is behavioral/runtime adaptation: **no model weights are modified**; learning is evidence-driven; persistent changes require verification; unsupported capabilities remain UNKNOWN rather than invented.
 
+Supporting tooling (all stdlib-only):
+
+| Tool | Purpose |
+|---|---|
+| `scripts/doctor.py` | **measures** the baseline (state persistence, command execution, tools, contract reachability) instead of self-reporting; `--write` fills only `unknown` dimensions |
+| `scripts/assess.py` | adoption score 0–100 = sum of named evidence-backed checks (each PASS/FAIL; UNVERIFIED scores 0). **Auto-runs after `mark-adapted`.** Not a quality metric |
+| `scripts/sitrep.py` | one-block orientation report (adaptation + task + learning) for ORIENT/compaction/handoff |
+| `scripts/hooks.py` | runtime contract wiring (`check`/`install`, idempotent; Claude `CLAUDE.md → @AGENTS.md`, native runtimes no-op) |
+| `activation.py verify-installed` | integrity: installed copies vs source digests (tamper/corruption detection) |
+
 ## Persistent state
 
 | File | Scope | Survives |
@@ -126,7 +136,7 @@ Never: `file exists = valid` · `command succeeded = correct` · `test passed = 
 | 1 Structural | `scripts/validate.py` + `check-cycles.py` | registry/metadata/schemas consistent; contracts hold |
 | 2 Documentary | `evals/runner.py` (18, heuristic) | skills document required methodology |
 | 3 Behavioral | `evals/behavioral/runner.py` (33 + invariants, heuristic) | routing/activation smoke, evidence floor, trivial-task budget, mode consistency |
-| 3b Lifecycle | `evals/lifecycle/run_tests.py` (9, deterministic) | self-learning state machine: first/second activation, reload, drift, failed adaptation, regression |
+| 3b Lifecycle | `evals/lifecycle/run_tests.py` (14, deterministic) | self-learning state machine + 2.2 tooling: activation, reload, drift, failed adaptation, regression, doctor, integrity, sitrep, assessment, hooks |
 | 4 Integration | `scripts/integration-smoke.sh` | installer → discovery → invocation where runtimes exist |
 
 ## Adaptive complexity
@@ -184,10 +194,10 @@ Full matrix with evidence per runtime: `docs/install/README.md`.
 
 What happens after installation — and why it survives sessions:
 
-1. **VALIDATE** — the runtime's discovery command shows each capability at its install location; discovery output is the evidence, not the clone.
-2. **ACTIVATE + SELF-TRAIN** — `python3 scripts/activation.py init --runtime <detected>` baselines the inventory (with content digests) and the runtime dimensions; the agent adapts its working behavior per `AGENTS.md` (entry protocol, modes, evidence rules, verification triggers, delegation constraints).
-3. **VERIFY** — adaptation is a RUNTIME-ACTIVE claim: run the validation layers, invoke a real capability, show the probe transitions. Then `python3 scripts/activation.py mark-adapted --evidence "<observed>"` — refused without evidence.
-4. **READY** — every later session probes once (`activation.py status`): `ready` + no drift → work immediately. Version/content drift → inspect the actual delta, re-adapt only what changed (`sync` → `mark-adapted`).
+1. **VALIDATE** — the runtime's discovery command shows each capability at its install location; discovery output is the evidence, not the clone. Optionally check integrity of installed copies: `activation.py verify-installed --runtime <rt>`.
+2. **ACTIVATE + SELF-TRAIN** — `python3 scripts/doctor.py --write` measures the baseline; `python3 scripts/activation.py init --runtime <detected>` records inventory (with content digests) + dimensions; the agent adapts its working behavior per `AGENTS.md` (entry protocol, modes, evidence rules, verification triggers, delegation constraints); wire the contract if needed (`scripts/hooks.py install --runtime <rt>`).
+3. **VERIFY** — adaptation is a RUNTIME-ACTIVE claim: run the validation layers, invoke a real capability, show the probe transitions. Then `python3 scripts/activation.py mark-adapted --evidence "<observed>"` — refused without evidence — which **automatically runs the adoption assessment** (score 0–100, named checks).
+4. **READY** — every later session probes once (`activation.py status`): `ready` + no drift → work immediately (`scripts/sitrep.py` for the one-block report). Version/content drift → inspect the actual delta, re-adapt only what changed (`sync` → `mark-adapted`).
 
 No self-training prompt needs to be pasted again: the trigger lives in `AGENTS.md` (read at session start), the state lives in `.pixz/adaptation-state.json`.
 
@@ -217,7 +227,7 @@ docs/                                     # architecture, evaluation, taxonomy, 
 
 ## Evaluation
 
-See `docs/evaluation.md`. Per-layer results, never cross-layer inflation: structural PASS/FAIL · documentary `X/18 heuristic` · behavioral `X/33` + invariants · lifecycle `X/9 deterministic` · integration PASS/FAIL per runtime. The behavioral E-series covers: first activation · existing runtime (no duplicate setup) · skill upgrade · failed assumption · self-improvement · anti-overengineering · regression · persistence · validation depth · contradictory evidence · trivial-task budget · high-risk escalation.
+See `docs/evaluation.md`. Per-layer results, never cross-layer inflation: structural PASS/FAIL · documentary `X/18 heuristic` · behavioral `X/33` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime. The behavioral E-series covers: first activation · existing runtime (no duplicate setup) · skill upgrade · failed assumption · self-improvement · anti-overengineering · regression · persistence · validation depth · contradictory evidence · trivial-task budget · high-risk escalation.
 
 ## Benchmarks
 
@@ -297,17 +307,21 @@ Repo: https://github.com/pixzdev/skills (machine source of truth: registry.json)
    AGENTS.md: PASS | FAIL — <how the runtime reaches the contract>
    Overlay: PASS | FAIL | N/A — <ZAI.md reachable? evidence>
 10. ACTIVATE + SELF-TRAIN (post-install lifecycle — do not skip):
-   - Probe first: python3 scripts/activation.py status   (if STATE=READY and no drift, skip to step 11 report — do NOT duplicate setup)
-   - First activation: python3 scripts/activation.py init --runtime <detected> --source pixzdev/skills@<sha> --dim state_persistence=<yes|no|unknown> --dim verification=<yes|no|unknown> --dim delegation=<yes|no|unknown> --dim research=<yes|no|unknown>
-   - Record only OBSERVED dimensions; anything unobserved stays unknown. Then adapt your working behavior to AGENTS.md (entry protocol, modes, evidence rules, verification triggers, delegation constraints, capability-activation protocol, stopping rules).
+   - Probe first: python3 scripts/activation.py status   (if STATE=READY and no drift, skip to step 12 report — do NOT duplicate setup)
+   - Measure the baseline: python3 scripts/doctor.py --write  (measures state persistence, command execution, tools, contract reachability; fills only unknown dimensions — what it cannot measure stays unknown, never invented). Wire the contract if the runtime needs it: python3 scripts/hooks.py install --runtime <detected>
+   - First activation: python3 scripts/activation.py init --runtime <detected> --source pixzdev/skills@<sha> --dim delegation=<yes|no|unknown> --dim research=<yes|no|unknown> (record only OBSERVED dimensions; delegation/research are not locally measurable — the agent records them from runtime self-report)
+   - Adapt your working behavior to AGENTS.md (entry protocol, modes, evidence rules, verification triggers, delegation constraints, capability-activation protocol, stopping rules).
    - VERIFY the adaptation at RUNTIME-ACTIVE depth (run the repo validation layers where the source is available; invoke one real capability; show the probe transition), then: python3 scripts/activation.py mark-adapted --evidence "<what you actually observed>". This command refuses without evidence — "I have learned PixzFlow" is not evidence.
-11. FINAL REPORT — append to the installation report:
+11. ADOPTION ASSESSMENT (automatic) — mark-adapted auto-runs scripts/assess.py and prints an adoption score 0–100. The score is a sum of named evidence-backed checks (each PASS/FAIL; UNVERIFIED items score 0; gaps listed) — it is NOT a model-quality or workflow-effectiveness metric. Reproduce with python3 scripts/assess.py [--full]. If installed skill copies exist, also run python3 scripts/activation.py verify-installed --runtime <detected> and report any MODIFIED copies (inspect before trusting).
+12. FINAL REPORT — append to the installation report:
    Activation: NEW->BASELINED->READY | ALREADY READY — <probe output>
    Adaptation evidence: <commands run + observed output>
-   Baseline dimensions: <observed values; unknowns listed, not invented>
+   Baseline dimensions: <measured by doctor.py; unknowns listed, not invented>
+   Adoption score: <N/100 + verdict, exactly as printed by the assessment; list the failing checks>
+   Integrity: verify-installed PASS | MODIFIED(<ids>) | NOT RUN — <reason>
    Notes: <fallbacks used, limitations>
 
-Success means steps 6–11 are backed by evidence. An honest FAILED report with evidence is an acceptable outcome; fabricating a PASS is not.
+Success means steps 6–12 are backed by evidence. An honest FAILED report with evidence is an acceptable outcome; fabricating a PASS is not.
 ```
 
 ## Super Z / GLM / Z.AI Web Install & Activation Prompt
@@ -324,7 +338,7 @@ You are an agent identified as Super Z, GLM, or Z.AI Web. Confirm that identity 
    - Deep — more relevant skills, specialist subagents, research, verification, adversarial review
    - Autonomous — Deep-level rigor with minimal user interruptions
    If the user does not select a mode, default to Balanced and state the default. If AskUserQuestion is unavailable, state that and proceed at Balanced.
-3. ACTIVATE PIXZFLOW PERSISTENTLY — read AGENTS.md and registry.json in the repository; install capabilities via the verified mechanisms in docs/install/README.md; resolve dependencies with scripts/resolve.py first; verify installation and invocation with evidence. Operate under the capability-activation protocol: skills are persistent capabilities available throughout the task lifecycle, loaded progressively and tracked in task state. Then run the post-install self-learning lifecycle (steps 10–11 of the standard prompt): baseline via scripts/activation.py, adapt behavior, verify at RUNTIME-ACTIVE depth, mark-adapted with evidence — never duplicate an existing READY adaptation.
+3. ACTIVATE PIXZFLOW PERSISTENTLY — read AGENTS.md and registry.json in the repository; install capabilities via the verified mechanisms in docs/install/README.md; resolve dependencies with scripts/resolve.py first; verify installation and invocation with evidence. Operate under the capability-activation protocol: skills are persistent capabilities available throughout the task lifecycle, loaded progressively and tracked in task state. Then run the post-install self-learning lifecycle (steps 10–12 of the standard prompt): measure the baseline via scripts/doctor.py, init via scripts/activation.py, adapt behavior, verify at RUNTIME-ACTIVE depth, mark-adapted with evidence (auto-runs the adoption assessment) — never duplicate an existing READY adaptation.
 4. OPERATE AT THE SELECTED MODE (per ZAI.md):
    - Fast: minimum overhead; direct execution; targeted verification.
    - Balanced: complexity-aware routing; minimum sufficient delegation; challenger only when risk×uncertainty×impact×irreversibility is high.

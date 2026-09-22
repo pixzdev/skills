@@ -109,7 +109,8 @@ Installation is not the end. If the source repo is available (clone or checkout)
 - First activation: `python3 scripts/activation.py init --runtime <detected> --source pixzdev/skills@<sha>` (+ `--dim <capability>=yes|no|unknown` for observed capabilities only — unobserved stays `unknown`, never invented).
 - Adapt working behavior to `AGENTS.md` (entry protocol, modes, evidence rules, verification triggers, delegation constraints, stopping rules).
 - Verify the adaptation at RUNTIME-ACTIVE depth (file existence is not activation; run a real invocation), then `python3 scripts/activation.py mark-adapted --evidence "<what you actually observed>"` — it refuses without evidence.
-- Append to the report: `Activation:` state transitions, adaptation evidence, observed baseline dimensions.
+- `mark-adapted` auto-runs the adoption assessment (`scripts/assess.py`, score 0–100 of named evidence-backed checks — not a quality metric); reproduce with `python3 scripts/assess.py` and record the score + failing checks.
+- Append to the report: `Activation:` state transitions, adaptation evidence, measured baseline dimensions (doctor.py), `Adoption score: N/100 + verdict`.
 
 If the source scripts are unavailable (skill installed without the repo), state `Activation: SKIPPED (no source scripts)` and follow `AGENTS.md` as shipped with the skill.
 

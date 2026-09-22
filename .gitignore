@@ -1,2 +1,5 @@
 # PixzFlow runtime state (per-environment, never committed)
 .pixz/
+
+# Python bytecode caches
+__pycache__/

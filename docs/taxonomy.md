@@ -109,6 +109,18 @@ Deterministic state machine (probe/init/mark-adapted/sync/mark-installed) — th
 ### Intentionally NOT created in 2.1
 No "memory" skill (adaptation-state + task-state already cover it) · no self-improvement *agent* type (the loop is methodology, not a role) · no separate validation-depth skill (protocol + verification skill suffice) · no re-training scheduler (probe-at-ORIENT + drift detection suffice) · no lesson database (compact JSON ledger suffices).
 
+## 2.2.0 Decisions (adoption tooling)
+
+### New TOOLS (scripts — not skills, not schemas)
+- **doctor.py** — measured baseline: converts self-reported dimensions into observed ones; the unmeasurable stays `unknown`. Classification: TOOL (no methodology to invoke, no triggers — it serves the self-learning lifecycle).
+- **assess.py** — adoption score 0–100. Classification: TOOL with an explicit doctrine guard: it sums *named evidence-backed adoption checks* (each PASS/FAIL, UNVERIFIED scores 0). This is **not** the "numeric task-scoring engine" rejected in 2.0 (that one would grade model/task quality); adoption completeness is a checklist of verifiable facts, and the report prints the doctrine with every run.
+- **sitrep.py** — one-block ORIENT/handoff report over existing state files. TOOL (read-only composition).
+- **hooks.py** — runtime contract wiring (append-only, idempotent; claude-only write path, native runtimes verify-only). TOOL.
+- **verify-installed** (activation.py subcommand) — installed-copy integrity vs source digests. Extends the existing drift family; no new concept.
+
+### Intentionally NOT created in 2.2
+No new skills/schemas/agents; no daemon/watcher; no global cross-project state; no task templates (no evidence of need yet).
+
 ### Anti-Overengineering Gate applied (things NOT built in 2.0)
 - No separate "evidence graph database" — the graph is references inside `task-state.schema.json` (simpler, same benefit).
 - No numeric task-scoring engine — qualitative bands (hypothesis, to be validated by successor benchmark).

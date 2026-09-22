@@ -39,6 +39,8 @@ python3 scripts/activation.py sync                  # after inspecting a skill-v
 
 State lives in `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.json`); the protocol lives in `AGENTS.md` (read at session start), so later sessions probe once and continue — no re-pasted training prompt, no duplicate setup. Methodology: `core/self-learning/SKILL.md`; deterministic tests: `evals/lifecycle/run_tests.py`.
 
+2.2 companions: `python3 scripts/doctor.py --write` (measures the baseline) · `python3 scripts/hooks.py install --runtime <rt>` (contract wiring) · `python3 scripts/activation.py verify-installed --runtime <rt>` (installed-copy integrity) · `python3 scripts/sitrep.py` (orientation report). `mark-adapted` auto-runs `scripts/assess.py` — adoption score 0–100 of named evidence-backed checks (UNVERIFIED scores 0; not a quality metric).
+
 ## Quick Start per Runtime
 
 ### skills.sh (any agent)
