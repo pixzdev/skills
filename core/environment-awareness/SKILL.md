@@ -1,7 +1,7 @@
 ---
 name: Environment Awareness
-description: Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling before acting.
-version: 1.1.0
+description: Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling during ORIENT — before any environment-dependent decision.
+version: 2.0.0
 id: pixz.core.environment-awareness
 category: core
 triggers: [environment, stack detection, runtime, package manager, git state]
@@ -17,7 +17,7 @@ Before environment-dependent decisions, inspect the actual environment when tool
 
 ## Triggers
 - Any task touching build, run, install, test, deploy, scaffolding, or stack-specific code generation
-- First step after DISCOVER in orchestrator loop
+- ORIENT step, whenever the task is environment-dependent (see `AGENTS.md#entry-protocol`)
 
 ## Methodology
 

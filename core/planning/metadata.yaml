@@ -1,34 +1,13 @@
 id: pixz.core.planning
 name: Planning
+version: 2.0.0
 category: core
-version: 1.1.0
-status: stable
-description: Decomposes objectives into verifiable, sequenced steps with dependencies
-  and exit criteria.
-triggers:
-- plan
-- roadmap
-- break down task
-- milestone
+description: Minimal, mode-sized execution plans with verifiable steps and defined stop conditions.
+triggers: [plan, roadmap, break down task, milestone]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:
-- pixz.core.context-engineering
+  - pixz.core.context-engineering
 aggregates: []
 optional:
-- pixz.core.environment-awareness
+  - pixz.core.environment-awareness
 conflicts: []
-compatible_runtimes:
-- claude
-- openclaw
-- opencode
-- hermes
-- codex
-- generic
-inputs:
-- objective
-- constraints
-- context
-outputs:
-- artifact
-- findings
-- verification
-tools: []

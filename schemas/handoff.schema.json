@@ -1,0 +1,52 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pixz.dev/schemas/handoff.schema.json",
+  "title": "PixzFlow Handoff Contract",
+  "description": "Delegation contract: what is dispatched and what MUST come back. A return missing any required field is rejected by the inspector — no vague 'looks good'. The parent inspects; it never treats subagent output as truth.",
+  "type": "object",
+  "required": ["objective", "return"],
+  "properties": {
+    "objective": { "type": "string", "description": "Bounded objective of the delegated work (subset of parent task, never the whole task)." },
+    "constraints": { "type": "array", "items": { "type": "string" }, "description": "Scope, authority, reversibility note, iteration cap for the child." },
+    "context_packet": { "type": "object", "description": "Relevant parent state: decisions, assumptions, evidence refs, verification requirements. Not the whole conversation." },
+    "success_criteria": { "type": "array", "items": { "type": "string" }, "description": "Observable conditions for acceptance." },
+    "return": {
+      "type": "object",
+      "required": [
+        "work_performed", "findings", "evidence", "assumptions", "unknowns",
+        "verification", "remaining_work", "recommended_next_action"
+      ],
+      "properties": {
+        "work_performed": { "type": "array", "items": { "type": "string" } },
+        "artifact": { "type": "string", "description": "Path/reference to the produced artifact." },
+        "findings": { "type": "array", "items": { "type": "string" } },
+        "evidence": { "type": "array", "items": { "type": "string" }, "description": "Concrete evidence: outputs, paths, test results. Not adjectives." },
+        "assumptions": { "type": "array", "items": { "type": "string" } },
+        "unknowns": { "type": "array", "items": { "type": "string" } },
+        "decisions": { "type": "array", "items": { "type": "string" }, "description": "Decisions the child made that the parent must ratify or note." },
+        "tests": { "type": "array", "items": { "type": "string" }, "description": "Tests run and their results." },
+        "verification": {
+          "type": "object",
+          "required": ["result"],
+          "properties": {
+            "result": { "type": "string", "enum": ["pass", "fail", "conditional", "not_run"] },
+            "checks": { "type": "array", "items": { "type": "string" } },
+            "residual_risks": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "remaining_work": { "type": "array", "items": { "type": "string" } },
+        "recommended_next_action": { "type": "string" }
+      }
+    },
+    "inspection": {
+      "type": "object",
+      "description": "Parent's inspection of the return. Required before the return is accepted.",
+      "properties": {
+        "contract_satisfied": { "type": "boolean" },
+        "evidence_backs_claims": { "type": "boolean" },
+        "scope_controlled": { "type": "boolean" },
+        "verdict": { "type": "string", "enum": ["accepted", "returned_to_agent", "escalated"] }
+      }
+    }
+  }
+}

@@ -10,5 +10,7 @@
     "pixz.core.quality-gate"
   ],
   "should_not_select": [],
-  "verifies": "irreversible requires authority"
+  "verifies": "irreversible requires authority",
+  "expected_mode": "deep",
+  "context": "Dropping a production database is irreversible. Assess risk and reversibility for a safe change, and run a release gate with done criteria before executing."
 }

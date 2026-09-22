@@ -9,5 +9,6 @@
     "pixz.core.context-engineering"
   ],
   "should_not_select": [],
-  "verifies": "sufficiency gate"
+  "verifies": "sufficiency gate",
+  "expected_mode": "balanced"
 }

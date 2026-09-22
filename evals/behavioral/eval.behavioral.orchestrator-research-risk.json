@@ -10,5 +10,7 @@
     "pixz.core.epistemic-challenger"
   ],
   "should_not_select": [],
-  "verifies": "grounding and falsification"
+  "verifies": "grounding and falsification",
+  "expected_mode": "deep",
+  "context": "Insufficient research creates significant risk for production auth. Use RAG retrieval against official docs, and challenge the conclusion to find how it could be wrong."
 }

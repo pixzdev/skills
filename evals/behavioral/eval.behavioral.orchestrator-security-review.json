@@ -10,5 +10,7 @@
     "pixz.core.verification"
   ],
   "should_not_select": [],
-  "verifies": "mandatory safety not routed away"
+  "verifies": "mandatory safety not routed away",
+  "expected_mode": "deep",
+  "context": "Run a security review of the auth endpoints and verify each finding against the actual code and a reproduction."
 }

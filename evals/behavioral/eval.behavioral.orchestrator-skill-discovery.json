@@ -1,0 +1,17 @@
+{
+  "id": "eval.behavioral.orchestrator-skill-discovery",
+  "skill": "pixz.core.capability-discovery",
+  "scenario": "Fix the auth token handling bug and verify the fix. Installed skills include a security review skill.",
+  "risk": "high",
+  "expected_mode": "deep",
+  "expected_challenge": "high",
+  "should_select": [
+    "pixz.security.review",
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes",
+    "pixz.motion.gsap"
+  ],
+  "verifies": "capability invocation: when skills are explicitly available, the relevant one is discovered and activated (benchmark: availability != invocation)"
+}

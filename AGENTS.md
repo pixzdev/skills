@@ -1,161 +1,132 @@
-# AGENTS.md — PIXZ.DEV Skills (Agent Guide)
+# AGENTS.md — PixzFlow Operating Contract
 
-> **Canonical for agents.** Source of truth for discovery, workflow, skill/registry conventions, validation, and contribution. Human overview is `README.md`; this file is operational.
+> **Canonical for agents.** This file is the PixzFlow operating layer (Level 2): how to work, what to verify, how to stay persistent. Machine registry: `registry.json` (source of truth). LLM map: `llms.txt`. Human overview: `README.md`. Runtime overlay for Super Z / GLM / Z.AI Web: `ZAI.md`.
 
-## Purpose
+## What PixzFlow Is
 
-Portable skills that answer: *what skill for this task, what does it require, which runtime can run it, how is it verified/challenged?* See `README.md#why` for narrative; this file tells you how to work in this repo.
+A persistent, adaptive, **model-agnostic** operating layer for capable AI agents. Division of labor:
 
-## Architecture (source of truth)
-
-- **Core:** `SKILL.md` + `metadata.yaml` per skill, validated by `schemas/skill.schema.json`
-- **Registry:** `registry.json` is **machine source** (validated by `schemas/registry.schema.json`); `AGENTS.md` (this file) is its human/agent projection; `*/AGENTS.md` are navigation only.
-- **Workflow state:** `schemas/workflow.schema.json` (11 runtime phases: `DEFINE`, `DISCOVER`, `RESEARCH`, `PLAN`, `EXECUTE`, `INSPECT`, `CHALLENGE`, `VERIFY`, `REPLAN`, `IMPROVE`, `SHIP`). Methodological `NORMALIZE`/`ARCHITECT` map to `PLAN`; `IMPLEMENT` maps to `EXECUTE`. `REINITIATE` is a policy (restart from `DEFINE`), not a state — see `docs/architecture.md`.
-- **Adapter:** `adapters/` are thin translators; core methodology never forks per runtime.
-
-## Workflow — How Agents Work Here
-
-Follow:
 ```
-UNDERSTAND → DISCOVER → PLAN → EXECUTE → INSPECT → CHALLENGE → VERIFY → REPLAN → IMPROVE → VERIFY → SHIP
+MODEL provides intelligence · RUNTIME provides execution · PIXZFLOW provides operating discipline
+SKILLS provide specialized capability · STATE provides continuity · EVIDENCE provides epistemic grounding
+VERIFICATION provides reality checks · AGENTS provide specialized parallel capability · TOOLS provide access to the world
 ```
-- **Complexity-aware:** trivial rename → `UNDERSTAND→EXECUTE→VERIFY` (no orchestrator). High risk×uncertainty×impact → full loop with challenger + quality-gate. See `docs/architecture/routing.md`.
-- **Context protocol:** `workflow state → repo/local → tools/MCP → docs → external research (official first) → user last`
-- **Environment first:** inspect OS/runtime/framework/package-manager/git (`pixz.core.environment-awareness`) before assuming `npm` vs `pnpm`, `Next.js` vs `Vite`.
 
-## Skill Conventions
+Layers (conceptual, not infrastructure): **L0** model-native (reasoning, context window, native tools/memory — cannot be replaced) → **L1** runtime (tools, MCP, sandbox, subagents) → **L2** PixzFlow (this file, workflow, state, evidence, policies) → **L2.5** runtime overlays (`ZAI.md`) → **L3** capabilities (`registry.json` skills) → **L4** dynamic execution (agents, subagents, MCP, external systems) → **L5** task state/evidence (artifacts, tests, verification, handoffs).
 
-- **Folder:** `<domain>/<name>/SKILL.md` + `metadata.yaml` (required). `name` in frontmatter **should be kebab-case slug matching folder** for `npx skills` CLI compat (`orchestrator`, not `Orchestrator`). Currently titles are human-case but folder slug is used for CLI `--skill <folder>`.
-- **Frontmatter:** `---` with `name` and `description` (progressive disclosure budget; frontmatter always visible). When `id`, `version`, `triggers`, or `compatible_runtimes` are present in frontmatter they **must equal the registry values** — `scripts/validate.py` cross-checks them (hard error on drift).
-- **Contract (all):** Purpose, Triggers, When to use / NOT, Inputs, Required context, Methodology (operational steps), Dependencies, Tools, Constraints/Failure, Verification, Example, Structured output. Long rationale → `docs/`.
-- **ID:** stable `pixz.<domain>.<name>` — never filename.
+PixzFlow **does not** teach basic engineering to frontier models, does not force one rigid checklist on every model, and does not replace native capability. It makes strong behavior more **consistent, persistent, inspectable, transferable, and recoverable** — and it keeps trivial work cheap.
 
-## Registry Conventions
+## Entry Protocol (every task)
 
-- **Single source:** `registry.json`. Do not edit this projection (`AGENTS.md` trigger table) without editing `registry.json` + `metadata.yaml`; run `python scripts/validate.py` to catch drift.
-- **Generated files:** `registry.json` is **not** generated from a separate builder here; it's manually maintained but cross-checked by `scripts/validate.py` (registry ↔ metadata ↔ filesystem ↔ schemas). If you add a skill, update both `metadata.yaml` and `registry.json`.
-- **Do not edit `registry.json` without validating.**
+```
+ORIENT   → state exists? read task-state first (continuation). Environment relevant? inspect it (don't assume npm/pnpm, Next/Vite).
+MODEL    → restate objective, acceptance criteria, constraints, unknowns. Requested vs necessary vs optional vs out-of-scope.
+ASSESS   → bands: complexity · risk · uncertainty · reversibility · horizon (low/medium/high/critical). Reassess on material new information.
+MODE     → fast | balanced | deep | autonomous (user instruction > runtime overlay > balanced default).
+PLAN     → minimal execution plan sized to mode (fast: 0–2 steps or none; balanced: 3–7; deep: + explicit assumptions + evidence plan).
+ACT      → smallest action that advances the plan; classify mutations (reversible/partially/irreversible) before executing.
+OBSERVE  → read actual outputs. Actual artifacts beat reports.
+VERIFY   → evidence, not claims (see Verification). Update task-state.
+DECIDE   → done | continue | replan | delegate | research | challenge | escalate | stop.
+```
 
-## Validation / Test Commands
+No fixed phase ceremony: the loop is **state + transitions + decisions**, and depth is set by assessment, not by habit. A trivial task is `ORIENT → ACT → VERIFY → done` with zero skills activated.
+
+## Operating Modes (behavioral differences, not labels)
+
+| | Discovery | Planning | Delegation | Verification | Challenge | State |
+|---|-----------|----------|------------|--------------|-----------|-------|
+| **fast** | none/registry scan | 0–2 steps | none | targeted: close the change | none | in-context |
+| **balanced** | registry + relevant skill bodies | 3–7 steps | minimum sufficient | evidence checks + regression | only high risk×uncertainty×impact | task-state file when task outlives one session step |
+| **deep** | deep capability discovery | full plan + assumptions + evidence plan | specialists with structured handoffs; parallel only independent work | multiple independent checks; source-of-record | adversarial on consequential claims | full task-state + checkpoints |
+| **autonomous** | as deep | dynamic decomposition; replan on evidence | as deep + explicit stop/escalation criteria | continuous; checkpoint before irreversible | as deep | full task-state + periodic checkpoints; record decisions for after-the-fact review |
+
+Mode is an **upper tendency**, never a minimum ceremony: a deep-mode agent still runs a trivial rename fast.
+
+## Assessment Bands
+
+`low / medium / high / critical` per dimension — qualitative, not numeric. What the bands drive: plan size · how many skills to activate · whether to delegate · whether to research · challenge intensity · verification depth · checkpoint frequency. Escalate a band (never silently) when new evidence changes it.
+
+## Capability Activation (persistent skill protocol)
+
+Skills are **persistent capabilities, not one-time prompt attachments**. They stay available across the whole task lifecycle.
+
+```
+DISCOVER   scan registry.json / llms.txt metadata (name + description only)
+MATCH      trigger/task fit + runtime compat; record considered + rejected-with-reason
+LOAD       progressive: metadata → SKILL.md body → bundled references (never preload all)
+ACTIVATE   record in task-state `capabilities[]`: id, status=active, reason, state_digest
+USE        follow the skill's methodology; feed findings back into task-state
+VERIFY     skill's required_verification entries run when triggered
+PERSIST    compact state survives phase changes: findings, unresolved, required_verification,
+           reactivation_conditions — NOT full skill text
+REINVOKE   status → reactivation_required when conditions fire (e.g. auth changed after a
+           security review); re-load body only if needed
+COMPLETE   status → completed when its verification is satisfied
+```
+
+Statuses: `available → discovered → considered → activated → active → suspended | reactivation_required → completed`.
+
+**Budget rule:** every activation must earn its context cost. Skill spam (loading 10 skills for a rename) is a failure. The resolver (`scripts/resolve.py`) is for **install-time** dependencies; activation is a runtime decision recorded in task-state.
+
+## Task State & Continuity
+
+- Schema: `schemas/task-state.schema.json`. Storage: `.pixz/task-state.json` (filesystem is the continuity substrate — conversation context is lossy; files survive compaction and restarts).
+- **Resume:** on any continuation, read task-state first, restate objective, honor `next_action`, keep `active` capabilities re-activated per their `reactivation_conditions`, then continue. Never re-derive decisions from memory.
+- **Checkpoint** before long substeps, before irreversible actions, and at phase boundaries. Checkpoint = objective + assessment + active plan + key decisions + open items + next_action.
+- Decisions are **marked, never deleted** (status: active/superseded/revoked) — this is the goal-drift counter.
+- State must survive: context compaction · session restart · subagent handoff · model change · runtime change. Keep entries short (summaries + references, never transcripts).
+
+## Evidence Discipline
+
+Where uncertainty matters, label claims: `FACT · OBSERVED · SOURCE CLAIM · INFERRED · ASSUMPTION · HYPOTHESIS · UNKNOWN · UNVERIFIED · CONTRADICTED · VERIFIED · FALSIFIED`. Do not label every trivial sentence; do label every consequential one. Confidence needs a basis. Transitions: `unknown → hypothesis → tested → supported/verified` · `assumption → challenged → falsified/supported` · `claim → evidence → verified`. Store in task-state `findings[]`/`evidence[]` (IDs cross-reference — the compact evidence graph; no graph database).
+
+**Source-of-record rule (formal protocol):** a commit message, log, summary, agent report, doc, or generated metadata is **descriptive** — never assume it is authoritative just because it looks authoritative. For claims about actual system state, prefer: actual filesystem · actual git tree · actual test result · actual command output · actual artifact · actual deployed state. When a descriptive record is checked against a primary artifact, record `verified_against`; otherwise the evidence entry is explicitly unverified.
+
+## Verification (a loop, not a final ceremony)
+
+Verify: **before irreversible action · after significant mutation · after dependency/architecture change · before consequential claims · before handoff · before completion.**
+
+Kinds: implementation · claim · artifact · regression · security · deployment. Evidence = command output, test result, diff, artifact, repro steps — with source and strength. Compilation is not correctness; tests are evidence, not proof. Distinguish **proven** (reproduced + inspected) vs **trusted** (primary source, not reproduced — confidence capped medium) vs **unknown**. Always report residual risks. Methodology: `pixz.core.verification`.
+
+## Delegation
+
+Delegate only when `expected information gain + parallelism benefit + specialization benefit > coordination cost`. Good: independent research, independent verification, security review, test generation, alternative-implementation analysis. Bad: dependent edits, shared mutable state, unclear ownership, conflicting architecture decisions, ceremony ("get a second opinion on a one-line change").
+
+- Subagent = **context isolation + summary return**, not a capability upgrade. Dispatch per `schemas/handoff.schema.json` (objective, constraints, context packet, success criteria) and require the full structured return (work, findings, evidence, assumptions, unknowns, decisions, tests, verification, remaining work, recommended next action). **No "looks good" returns.** Inspect the return; never trust blindly.
+- No recursive orchestration: subagents do not spawn subagents. Depth/iteration caps: `registry.json#limits`.
+- Parallelism is per evidence-independence, not per agent count.
+
+## Challenge (intensity-scaled, with a stop rule)
+
+`intensity ≈ risk × uncertainty × impact × irreversibility`. Low-risk reversible → skip. Consequential → adversarial pass: hidden assumptions, contradictory evidence, alternative explanations, unsupported claims, false confidence, stale state, untested edges, source-of-record mismatch, regression, scope creep. **Stop rule:** terminate with `upheld` | `revised` | `falsified` once calibrated intensity is spent or marginal return disappears — no debate loops. Methodology: `pixz.core.epistemic-challenger`.
+
+## Failure Recovery
+
+`FAIL → CLASSIFY (environment | assumption | specification | implementation | external | unknown) → INSPECT → ISOLATE → HYPOTHESIS → TEST → REPAIR → REGRESSION CHECK → CONTINUE`. No blind retry: each retry must add information (recorded in task-state `failures[]`). Escalation ladder: retry → inspect → alternate approach → research → specialist → challenge → parent → user (ask only for genuinely missing information). Cap iterations (`limits.max_iterations`).
+
+## Stopping
+
+Stop when: acceptance criteria met **and** verification sufficient **and** critical risks addressed **and** further iteration has diminishing returns. Do not ship because it compiles. Do not continue past a justified stop. Report: result + evidence + residual risks + unknowns accepted.
+
+## This Repository (working on PixzFlow itself)
+
+- **Machine source of truth:** `registry.json`. `llms.txt` is the LLM map; `AGENTS.md` is the contract — keep all three consistent, no duplicated truth.
+- Skill contract: `<domain>/<name>/SKILL.md` (frontmatter `name`+`description`; when `id`/`version`/`triggers`/`compatible_runtimes` present they **must equal** registry values) + `metadata.yaml`.
+- **Validate after every change** (even docs-only):
 
 ```bash
-python scripts/validate.py                  # layer 1: registry/metadata/schemas/cycles + SKILL.md frontmatter consistency + profile/README contracts
-python scripts/check-cycles.py              # layer 1: no cycles
-python evals/runner.py                      # layer 2: doc validation heuristic (15 cases)
-python evals/behavioral/runner.py           # layer 3: routing smoke (15 scenarios)
-bash scripts/integration-smoke.sh           # layer 4: installer → discovery → invocation (where CLI available)
+python scripts/validate.py            # registry/metadata/schemas/consistency + ZAI.md + README contracts
+python scripts/check-cycles.py        # no dependency cycles
+python evals/runner.py                # layer 2: documentary heuristic
+python evals/behavioral/runner.py     # layer 3: routing/activation smoke
+bash scripts/integration-smoke.sh     # layer 4: installer → discovery → invocation
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude
-python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 12 nodes
 ```
 
-All must pass before tagging `v*.*.*`.
+- New capability must pass the seven standalone criteria (`docs/taxonomy.md`) + the anti-overengineering gate (`docs/architecture.md`). A protocol or doc suffices when a skill doesn't.
+- Versioning: `VERSION` + per-skill SemVer in the same commit; see `docs/versioning.md`.
 
-## Documentation Rules
+## Pointers
 
-- **SKILL.md** = instructions at invocation time (operational, concise)
-- **`docs/`** = human explanation, architecture, install, troubleshooting, evaluation
-- Do not duplicate whole README into this file; do not inflate SKILL.md with docs.
-
-Structure: `docs/getting-started.md`, `docs/install/README.md` (+ `skills-sh.md`, `claude-code.md`, `openclaw.md`, `opencode.md`, `hermes.md`, `generic.md`), `docs/architecture.md`, `docs/architecture/routing.md`, `docs/evaluation.md`, `docs/development/*`, `docs/troubleshooting.md`, `docs/install-as-skill.md`, `docs/prompts/install-skill-agent.md`.
-
-## Dependency Rules
-
-- `requires` hard, `aggregates` mandatory when parent installed, `optional` **opt-in** via `--with-optional`, `conflicts` mutual exclusion. See `docs/dependency-model.md`.
-- Resolver is `scripts/resolve.py` — deterministic, cycle-DFS, runtime/version gates, depth caps (`max_skill_chain_depth=15`, `max_orchestration_depth=6`, `max_iterations=8` from `registry.json#limits`).
-- Do not add `conflicts` without justification; do not make `requires` optional to game the graph.
-
-## Contribution Rules
-
-See `CONTRIBUTING.md`. New skill must pass seven standalone criteria (distinct objective, methodology, triggers, I/O, failure, independent value) and `scripts/validate.py` + `scripts/check-cycles.py`. Do not create a skill when a protocol/policy/doc suffices.
-
-## Anti-AI-Slop Rules
-
-- No generic SaaS glassmorphism, template grids, meaningless gradients/animations, filler copy — see `pixz.quality.anti-ai-slop/SKILL.md`
-- No boilerplate comments, fake evidence, citation dumping, invented capabilities
-- No badge wall, no `🚀 Revolutionary` without evidence
-- Every claim in docs → evidence label: **OBSERVED** (repo/file), **VERIFIED** (official docs + CLI/ls output), **PARTIALLY VERIFIED**, **DOCUMENTED ONLY**, **UNKNOWN**
-- Repo must not exhibit the problems its skills prevent — see `docs/troubleshooting.md`
-
-## How to Avoid Modifying Generated Artifacts Incorrectly
-
-- `registry.json` ↔ `*/metadata.yaml` ↔ `*/SKILL.md` ↔ `schemas/*` must stay consistent — `scripts/validate.py` is the gate.
-- Do not hand-edit `registry.json` skills without creating the matching `metadata.yaml` + `SKILL.md` and running validation.
-- `docs/` may contain generated sections; check file header for source.
-
-## Discovery — Capability Map (projection of `registry.json`)
-
-> **Install ≠ clone.** `git clone` gives source; install registers in `<runtime>/skills/`. See `docs/install/README.md` matrix.
-
-**Core (mandatory via orchestrator — 10 nodes, 12 with `--with-optional`):**
-
-| ID | Name | Path | Triggers | Requires |
-|----|------|------|----------|----------|
-| `pixz.core.orchestrator` | Orchestrator | `core/orchestrator/` | orchestrate, coordinate, delegate, complex task | — (aggregates 8) |
-| `pixz.core.planning` | Planning | `core/planning/` | plan, roadmap | context-engineering |
-| `pixz.core.context-engineering` | Context Engineering | `core/context-engineering/` | context, requirements | — |
-| `pixz.core.environment-awareness` | Environment Awareness | `core/environment-awareness/` | environment, stack detection | — |
-| `pixz.core.capability-discovery` | Capability Discovery | `core/capability-discovery/` | discover, available tools | — |
-| `pixz.core.workflow-continuity` | Workflow Continuity | `core/workflow-continuity/` | workflow, handoff | context-engineering |
-| `pixz.core.delegation-handoff` | Delegation & Handoff | `core/delegation-handoff/` | delegate, handoff | workflow-continuity, context-engineering |
-| `pixz.core.epistemic-reasoning` | Epistemic Reasoning | `core/epistemic-reasoning/` | reason, evidence, confidence | context-engineering |
-| `pixz.core.epistemic-challenger` | Epistemic Challenger | `core/epistemic-challenger/` | challenge, falsify | epistemic-reasoning |
-| `pixz.core.verification` | Verification | `core/verification/` | verify, inspect | epistemic-reasoning |
-| `pixz.core.change-safety` | Change Safety | `core/change-safety/` | safe change, reversible | environment-awareness |
-| `pixz.core.replanning` | Replanning | `core/replanning/` | replan, pivot | planning, verification |
-| `pixz.core.quality-gate` | Quality Gate | `core/quality-gate/` | quality gate, ship check | verification, change-safety |
-
-`orchestrator` aggregates: planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, epistemic-reasoning, verification, quality-gate — mandatory (10). Optional (opt-in): epistemic-challenger, anti-ai-slop.
-
-**Quality / Domain:**
-
-| ID | Path | Triggers |
-|----|------|----------|
-| `pixz.quality.anti-ai-slop` | `quality/anti-ai-slop/` | anti slop, boilerplate |
-| `pixz.engineering.api-design` | `engineering/api-design/` | api design, openapi |
-| `pixz.engineering.system-design` | `engineering/system-design/` | system design |
-| `pixz.security.review` | `security/review/` | security review |
-| `pixz.security.threat-modeling` | `security/threat-modeling/` | threat model, STRIDE |
-| `pixz.design.uiux` | `design/uiux/` | ui design, ux review |
-| `pixz.design.design-system` | `design/design-system/` | design system, tokens |
-| `pixz.frontend.react` | `frontend/react/` | react, next.js |
-| `pixz.frontend.accessibility` | `frontend/accessibility/` | a11y, wcag |
-| `pixz.motion.gsap` | `motion/gsap/` | gsap, scrolltrigger |
-| `pixz.motion.remotion` | `motion/remotion/` | remotion |
-| `pixz.devops.docker` | `devops/docker/` | docker |
-| `pixz.devops.kubernetes` | `devops/kubernetes/` | k8s, helm |
-| `pixz.ai.rag` | `ai/rag/` | rag, retrieval |
-| `pixz.ai.agent-design` | `ai/agent-design/` | agent design |
-
-Runtime compat for all: `claude, openclaw, opencode, hermes, codex, generic` — see `docs/install/README.md` for VERIFIED vs PARTIALLY classification.
-
-## Installation (not clone) — where skills land
-
-See matrix `docs/install/README.md`. Summary: skills.sh `npx skills add` auto-picks `~/.claude/skills` / `.opencode/skill` / `.agents/skills`; Claude `~/.claude/skills/` or `.claude/skills/`; OpenClaw `skills/` / `~/.openclaw/skills/` / `openclaw skills list`; OpenCode `.opencode/skill/` (singular) + compat; Hermes `~/.hermes/skills/` or `skills/`; Generic `.agents/skills/`.
-
-For agent copy-paste: `README.md` inline prompts (**AI Agent Installation Prompt**, **Super Z / GLM / Z.AI Web Prompt**), `docs/install-as-skill.md` (short), and `docs/prompts/install-skill-agent.md` (runtime-adaptive full with verification report).
-
-## Runtime Profiles (isolated — not skills)
-
-A **profile** is a runtime-specific operating overlay (class: PROFILE / restricted POLICY). It is **not a skill**: no `pixz.*` ID, not in `registry.json`, not resolved by `scripts/resolve.py`, and it **does not change** universal skill semantics, the dependency model, or the verification layers. It only parameterizes orchestrator operating depth and runtime compute/interaction policy; on conflict, skills and repo policies win.
-
-- **Super Z / GLM / Z.AI Web** → `profiles/super-z/PROFILE.md`: mandatory `AskUserQuestion` mode selection before substantive work (FAST / BALANCED / DEEP / AUTONOMOUS; default BALANCED), mode semantics, compute policy ("generous compute is not permission to waste compute"), graceful degradation when `AskUserQuestion` is absent.
-- Status: **SPECIFIED** (2026-09-22); behavioral effect **UNVERIFIED** — never cite the profile as behaviorally effective.
-- Isolation contract + extension rules: `profiles/README.md`. Machine-checked by `scripts/validate.py` (presence + required sections + README prompt sections).
-- README entry points: **AI Agent Installation Prompt** and **Super Z / GLM / Z.AI Web Prompt** (copy-paste, inline in `README.md`); full runtime-adaptive prompt: `docs/prompts/install-skill-agent.md`.
-
-## Versioning
-
-`VERSION` 1.1.0 repo; `metadata.yaml:version` per skill; `latest` (main HEAD) / `stable` (latest `v*.*.*` tag) / `pinned` (future — no `pixz.lock` yet, see `docs/versioning.md`).
-
-## Verification (layers)
-
-1 `validate.py` + `check-cycles.py`  2 `evals/runner.py`  3 `evals/behavioral/runner.py`  4 `scripts/integration-smoke.sh` — never present 1–2 as 3–4.
-
-## Portability Classification (keep honest)
-
-- **Native portable** — same `SKILL.md` works with no adapter (all runtimes here)
-- **Adapter-compatible** — path translation only (our adapters)
-- **Documentation-compatible** — understood but not auto-installable
-- **Unsupported** — no verified path (don't claim)
-
-Do not call everything “universal”.
+Architecture & delta (old→new) `docs/architecture.md` · activation/routing `docs/architecture/routing.md` · evaluation + ablations `docs/evaluation.md` · GLM benchmark record `docs/benchmark/GLM-benchmark-findings.md` · successor benchmark `docs/benchmark/successor-benchmark.md` · research findings `docs/research/frontier-agent-findings.md` · install matrix `docs/install/README.md` · dependency model `docs/dependency-model.md` · state schema `schemas/task-state.schema.json` · handoff contract `schemas/handoff.schema.json`.

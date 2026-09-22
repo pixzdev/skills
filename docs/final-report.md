@@ -1,197 +1,131 @@
-# Final Report — PIXZ.DEV Universal Agent Skills Ecosystem (v1.1.0)
+# PixzFlow 2.0.0 — Final Engineering Report (2026-09-22)
 
-> Version: 1.1.0 · Date: 2026-09-22 · Branch: `arena/01a0c6a2-skills` (branched from `main` @ `20fd94d`)
-> Mission: Frontier Reconstruction & Refinement — repository archaeology, capability-model reconstruction, Super Z / GLM / Z.AI Web profile, README agent bootstrap, adversarial self-audit.
-> Prior report: `docs/history/final-report-v1.0.0.md` · Repair history: `docs/repair-report.md`
-> Classification labels used below: **OBSERVED** (traced in source/execution this session) · **SPECIFIED** (stated in spec/config, not independently re-verified) · **INFERRED** (reasonable conclusion from evidence) · **UNKNOWN** (no evidence)
+> Mission: reconstruct PixzFlow as a persistent, adaptive, model-agnostic operating layer — research first, model second, design third, implement fourth, measure fifth. Optimize for **observable agent performance**, not the appearance of intelligence.
 
----
+## Executive Summary
 
-## 1. Repository state discovered
+PixzFlow was reconstructed from "a skills repository with an 11-phase workflow" into a **benchmark-driven adaptive operating layer**: an entry protocol with qualitative assessment, four behavioral operating modes, a persistent capability-activation protocol, a compact task-state + typed-evidence substrate, a formal source-of-record protocol, an intensity-scaled challenger with a binding stop rule, an economics-gated delegation contract, and a formal failure-recovery ladder. The orchestrator's mandatory install closure dropped from 10 nodes to 4 (the evidence floor). Everything is validated, documented, and honestly classified; nothing is claimed that is not backed by evidence.
 
-**OBSERVED** (all verified by execution in this session, 2026-09-22):
+## Research Findings (Phase Zero — `docs/research/frontier-agent-findings.md`)
 
-- 28 skills in 9 domains (`core` 13, `quality` 1, `engineering` 2, `security` 2, `design` 2, `frontend` 2, `motion` 2, `devops` 2, `ai` 2), each `SKILL.md` + `metadata.yaml`.
-- `registry.json` = machine source of truth (28 entries, limits `chain=15 / orchestration=6 / iterations=8`, channel `stable`); `AGENTS.md` = human/agent projection; `*/AGENTS.md` = navigation.
-- Pre-change state passed: `validate.py` 0 errors / 0 warnings; `check-cycles.py` 0 cycles; `evals/runner.py` 15/15 (heuristic); `evals/behavioral/runner.py` 15/15 (heuristic smoke); resolver resolved 10 nodes mandatory / 12 with `--with-optional` for `pixz.core.orchestrator`.
-- Adapters: `claude`, `openclaw`, `opencode`, `hermes` (each `AGENT.md` + `install.sh`); `install.sh` only ran the resolver and printed a pointer — it does **not** copy files (SPECIFIED in README as "adapter = thin translation"; copy steps are documented manually in `docs/install/README.md`).
-- 4 verification layers implemented as documented (structural / documentary / behavioral / integration).
-- No Super Z / GLM / Z.AI Web concept existed anywhere (`grep` over full tree: zero word-boundary matches). **OBSERVED absence.**
-- README pointed to prompt docs (`docs/install-as-skill.md`, `docs/prompts/install-skill-agent.md`) but contained **no inline copy-paste prompt**. **OBSERVED absence.**
+Frontier-agent patterns identified (classified DOCUMENTED/OBSERVED/REPORTED/INFERRED/HYPOTHESIS):
 
-## 2. Architecture reconstructed
+1. **Instruction files are context-budgeted**: Codex truncates AGENTS.md at 32 KiB; recommended practice is <150 lines, command-first, closure-defined, no README duplication. → AGENTS.md rewritten as a high-signal contract; the 28-row table moved to `llms.txt`.
+2. **Progressive disclosure is the skill mechanism** (Anthropic, documented): metadata at startup (~50–100 tokens/skill), body on relevance, references on demand; Claude Code re-injects invoked skill bodies after compaction (capped). → Activation protocol is progressive and tracks activation *state*.
+3. **Subagents are context isolation + summary return** (Claude Code, Gemini CLI documented); Gemini CLI enforces no-sub-subagents. → Delegation contract + recursion prohibition.
+4. **Handoffs transfer control and require explicit criteria + structured returns + guardrails** (OpenAI Agents SDK documented). → `schemas/handoff.schema.json` with mandatory return fields + parent inspection.
+5. **Compaction silently destroys conversation** (Claude Code documented; community observed): system prompt, plans, CLAUDE.md, skills re-inject from disk; rejected approaches vanish. → Task state is a **file**; pinned specifics written before compaction.
+6. **Context engineering** (Anthropic documented): compaction, structured note-taking, sub-agents; treat context as precious; just-in-time retrieval. → Context lifecycle DISCOVER→…→RESTORE with PIN/RESTORE.
+7. **Long-horizon research**: horizon-dependent degradation (HORIZON); failures cluster early; plan injection + interactive guidance beat self-correction alone (LongCLI-Bench); structured verification feedback enables ~70% test-time recovery (LH-Bench); state-as-log (PRO-LONG); goal drift across sessions (YC-Bench); external > intrinsic correction (CorrectBench). → Stateful/resumable design, verification as continuous loop, formal recovery ladder, drift counters (objective restatement, decision marking).
 
-- **Orchestrator** (`pixz.core.orchestrator`): meta-skill; aggregates 8 mandatory skills (→ 10 nodes with transitive `requires`), 2 optional (`epistemic-challenger`, `anti-ai-slop`, opt-in). Determines WHEN/WHO/WHAT/WHY.
-- **Skills** (28): HOW — universal methodology, runtime-agnostic, frontmatter `name`/`description` for progressive disclosure.
-- **Agents** (`agents/orchestrator.yaml`, `agents/specialist.yaml`): role definitions (meta-coordinator, bounded executor) with handoff contracts.
-- **Protocols** (4): context acquisition order, workflow propagation, argumentation (claim lifecycle), escalation ladder.
-- **Policies** (5): scope control, simplicity, change-safety tiers (reversible/partially/irreversible), anti-AI-slop (diagnostic), REINITIATE (restart-from-DEFINE control-flow policy, not a state).
-- **Infra**: `scripts/resolve.py` (deterministic, cycle-DFS, runtime gates, depth caps), `scripts/validate.py` (layer 1), `scripts/check-cycles.py`, `scripts/integration-smoke.sh` (layer 4), `schemas/` (skill/registry/workflow/eval, JSON Schema draft-07), `evals/` (layer 2 + 3).
-- **Workflow state**: `schemas/workflow.schema.json` — 11 machine states; methodological `NORMALIZE`/`ARCHITECT`→`PLAN`, `IMPLEMENT`→`EXECUTE`; `REINITIATE` = policy.
-- **New (this mission)**: `profiles/` — isolated runtime overlays (class PROFILE). Not skills: no ID, not in registry, not resolver-managed; only parameterize orchestrator depth + runtime compute/interaction policy; skills win on conflict.
+We studied observable architecture and behavior — no claims about private model internals.
 
-## 3. Important inconsistencies found
+## Benchmark Findings (record: `docs/benchmark/GLM-benchmark-findings.md`)
 
-| ID | Class | Finding | Evidence |
-|----|-------|---------|----------|
-| G-1 | gap | Super Z / GLM / Z.AI Web profile (mission §19) absent | full-tree grep, zero matches |
-| G-2 | gap | README lacked inline copy-paste agent install prompt + Super Z prompt (mission §20) | README inspection |
-| D-1 | doc/code drift | **28/28** SKILL.md frontmatter `compatible_runtimes` = `[claude, openclaw, opencode, hermes]` vs registry 6 (missing `codex`, `generic`) | scripted cross-check |
-| D-2 | doc/code drift | **20/28** frontmatter `triggers` were supersets of registry triggers (e.g. orchestrator had `route work` only in frontmatter) | scripted cross-check |
-| D-3 | doc drift | README + AGENTS.md claimed "layer 3 (4 scenarios)"; actual = 15 | runner output `15/15` |
-| D-4 | doc drift | `adapters/README.md` listed `claude/SKILL_TEMPLATE.md` — file absent | `find` |
-| D-5 | defect | `adapters/*/install.sh` used relative `scripts/resolve.py` → broke when run from `adapters/<rt>/` | traced + reproduced |
-| D-6 | doc drift | orchestrator SKILL.md loop string = 13 stages (ROUTE/DELEGATE/COORDINATE/RE-EXECUTE) vs canonical 11-phase loop + 11-state enum; mapping undocumented | diff vs `docs/architecture.md` |
-| D-7 | doc drift | adapters/README install paths diverged from verified matrix (OpenCode `.opencode/skills/`, Hermes `hermes/skills/`) | diff vs `docs/install/README.md` |
-| D-8 | config drift | `agents/orchestrator.yaml` `max_skill_chain_depth: 12` vs registry `15`; agent yamls 4 runtimes vs 6 | file diff |
-| V-1 | weakness | `validate.py` never cross-checked SKILL.md frontmatter vs registry → D-1/D-2 invisible | source read |
-| V-2 | weakness | no machine check for README prompt sections / profile presence | source read |
+- 52/52 objective acceptance in **both** conditions → correctness ceiling; **no correctness-claim made**.
+- Blind grading: native ≈ 4.77 vs Pixz ≈ 4.94 (≈ +0.17) — small; reported as such.
+- Tokens: native ≈ 33.8k vs Pixz ≈ 50.0k (≈ 1.48×), worst on trivial tasks; T12 continuation showed Pixz cheaper in phase 2 → amortization **hypothesis**, not proof.
+- Native GLM spontaneously inspects/verifies/recovers/continues → don't teach basics; make behavior consistent/persistent/inspectable/transferable/recoverable.
+- **B ≈ B1, C ≈ A** → skills alone ≈ no measurable advantage.
+- T11 source-of-record: strongest narrow differentiator, **n=2** → promoted to a formal protocol; replication at n≥5 is successor-benchmark priority #1.
+- Native didn't discover installed skills; used them when explicit → availability ≠ invocation → persistent activation protocol.
 
-**Not found** (checked): registry↔metadata drift (none), cycles (none), version mismatches pre-bump (none), fake resolver features (none — `pinned` honestly documented as future), duplicate skill concepts (none beyond documented merges in `docs/taxonomy.md`).
+## Architecture Delta (OLD → NEW)
 
-## 4. Changes implemented
+| OLD (1.1.0) | NEW (2.0.0) |
+|---|---|
+| "PIXZ.DEV Skills" | **PixzFlow** operating layer (PIXZ.DEV = brand) |
+| 11-phase runtime enum (workflow.schema.json) | State + transitions: task-state.schema.json (status + plan + typed findings + evidence + capabilities + failures + next_action + checkpoint) |
+| Orchestrator aggregates 8 (10-node install) | Orchestrator aggregates 1 — `verification` evidence floor (4-node closure) |
+| Skills: installed = invoked; no state | Persistent activation protocol: 8-state lifecycle, compact state digests, reactivation conditions |
+| Evidence: `[string]` | Typed claims (11 types) + typed evidence (10 kinds) + `verified_against` (compact graph via references) |
+| Challenger: risk×uncertainty×impact, "must exit" | + irreversibility factor + **binding stop rule** (spent intensity / zero marginal gain / verdict produced) |
+| Delegation: handoff fields in workflow schema | Economics test + handoff.schema.json + mandatory structured return + inspection + anti-delegation eval |
+| Context: acquisition order only | Full lifecycle DISCOVER→FILTER→PRIORITIZE→LOAD→COMPRESS→PIN→UPDATE→EVICT→RESTORE |
+| Failure: escalation ladder | Formal 9-step ladder; each retry adds information; failures[] with lesson |
+| Modes only in super-z profile | Universal fast/balanced/deep/autonomous (behavioral table in AGENTS.md) |
+| profiles/super-z/PROFILE.md | Top-level **ZAI.md** (Level 2.5; discoverability) |
+| 15 doc + 15 routing smokes | 15 doc + 23 behavioral (8 new mechanism scenarios) + registry invariants + successor benchmark design (ablation A–H) |
 
-1. `profiles/README.md` (new) — profile isolation contract; taxonomy justification (PROFILE, not SKILL); extension rules.
-2. `profiles/super-z/PROFILE.md` (new) — Super Z / GLM / Z.AI Web operating contract (§5 below).
-3. `README.md` — inline **AI Agent Installation Prompt** (runtime-agnostic: IDENTIFY RUNTIME → INSPECT ENVIRONMENT → LOCATE SKILLS → DISCOVER INSTALLATION METHOD → RESOLVE DEPENDENCIES → INSTALL → VERIFY → REPORT; official mechanisms only; config preserved; no success without evidence) + separate **Super Z / GLM / Z.AI Web Prompt**; full-ecosystem install line (`npx skills add pixzdev/skills`); **Runtime Profiles** section; scenario count 4→15; version 1.0.1→1.1.0.
-4. `scripts/validate.py` — new: SKILL.md frontmatter cross-check (`id`/`version`/`triggers`/`compatible_runtimes` vs registry, hard error); profile presence + required-section checks; README prompt-section checks.
-5. All 28 SKILL.md frontmatters synced to registry (D-1/D-2); orchestrator SKILL.md loop aligned to canonical 11 phases with explicit substep mapping (D-6) + one-line profile pointer in Runtime Notes.
-6. `AGENTS.md` — Runtime Profiles section; frontmatter contract documented; scenario count 4→15; prompt pointers; version 1.1.0.
-7. `llms.txt` — version 1.1.0; profiles line; README prompt mention.
-8. `adapters/README.md` — stale `SKILL_TEMPLATE.md` removed (D-4); OpenCode/Hermes install paths aligned to verified matrix (D-7).
-9. `adapters/*/install.sh` ×4 — repo-root resolution from script location (D-5); regression-tested from `adapters/claude/`.
-10. `agents/orchestrator.yaml` / `agents/specialist.yaml` — runtimes → 6; `max_skill_chain_depth` 12→15 (D-8).
-11. `docs/evaluation.md` — layer 1 list updated (frontmatter + profile/README contracts).
-12. `docs/self-audit.md` — v1.1.0 audit section (findings table + anti-confirmation check).
-13. Version bump 1.0.1 → 1.1.0 across `VERSION`, `registry.json` (1+28), 28 `metadata.yaml`, 28 SKILL.md, `scripts/resolve.py`, current-state doc references. Historical reports (repair-report, anti-slop-audit, v1.0.0 final report) **not** rewritten.
-14. `docs/final-report.md` → archived as `docs/history/final-report-v1.0.0.md` (git mv).
+## New PixzFlow Model
 
-## 5. Skills added / removed / consolidated
+- **AGENTS.md** — canonical operating contract: entry protocol, modes, assessment bands, activation protocol, state/continuity, evidence + source-of-record, verification triggers, delegation economics, challenge, recovery, stopping, repo ops, pointers.
+- **ZAI.md** — isolated runtime overlay (Super Z / GLM / Z.AI Web): mandatory mode question (default Balanced), mode semantics, compute policy ("generous compute is not permission to waste compute"), never-list, graceful degradation. SPECIFIED; behaviorally UNVERIFIED.
+- **Skills** — 28 stable IDs, unchanged for the 14 domain skills; 13 core + anti-ai-slop rewritten to the 2.0 mechanisms (version 2.0.0 where contract changed).
+- **State** — `.pixz/task-state.json` per task (schema-validated); checkpoint discipline; deterministic resume protocol; decisions marked, never deleted.
+- **Evidence** — typed findings with explicit transitions; typed evidence with source-of-record weighting; the "graph" is references, not a database.
+- **Agents** — orchestrator + specialist role contracts updated (loop, handoff, no recursion); challenger/verifier/researcher roles conditional on the economics test.
+- **Tools/MCP** — selected by fit/cost/risk; listed before use; local inspection before research.
+- **Verification** — loop with explicit triggers and six kinds; proven/trusted/unknown distinction; residual risks always reported.
 
-- **Added: 0. Removed: 0. Consolidated: 0.** Total stays **28**.
-- The Super Z profile was **deliberately not made a skill**: it fails the 7 standalone-skill criteria as a universal capability (no universal methodology, no runtime-neutral invocation), and the taxonomy + mission §19/§18 require runtime-specific behavior to stay isolated from universal design. It is a PROFILE (restricted POLICY), machine-checked but registry-free. **INFERRED** correct under `docs/taxonomy.md`; **SPECIFIED** by mission.
+## Major Changes
 
-## 6. Dependency changes
+1. Identity: PixzFlow (README, AGENTS.md, llms.txt, docs, agents).
+2. `AGENTS.md` rewritten as operating contract (~160 lines; no duplicated capability table).
+3. `ZAI.md` created (top-level overlay); `profiles/super-z/PROFILE.md` consolidated and deleted.
+4. `schemas/task-state.schema.json` + `schemas/handoff.schema.json` created; `schemas/workflow.schema.json` deleted (migration mapping in `docs/versioning.md`).
+5. Orchestrator redesigned as adaptive operating system (assessment → mode → activation → budget → decision loop); aggregates 8→1.
+6. Core skills rewritten: capability-discovery (activation lifecycle), workflow-continuity (state/checkpoint/resume), verification (source-of-record + triggers + kinds), epistemic-reasoning (taxonomy + transitions), epistemic-challenger (intensity + stop rule), planning (mode-sized), replanning (recovery ladder), context-engineering (lifecycle), delegation-handoff (economics + contract), quality-gate (stop decision), change-safety (static policy restated), environment-awareness (ORIENT hook), anti-ai-slop ("never slop merely because…").
+7. `registry.json` 2.0.0: graph change + 7 protocols + 5 policies (incl. new Orchestration Budget).
+8. `scripts/validate.py`: ZAI.md + AGENTS.md + new-schema checks; 2.0 migration guards (old files must be absent).
+9. Evals: runner upgraded (mode invariants + registry invariants + scenario context); 8 new behavioral scenarios (skill-discovery, skill-persistence, continuation-resume, source-of-record, requirement-change, anti-delegation, tool-failure, compaction).
+10. Docs: architecture (layers + delta), routing (activation), evaluation (layers + successor benchmark), GLM benchmark record, research findings, successor benchmark (ablation A–H), versioning migration, dependency-model update, taxonomy 2.0 decisions, getting-started, troubleshooting, examples, agents, profiles contract.
+11. README rewritten around PixzFlow with the two required copy-paste prompts (AI Agent Installation Prompt — 9-step evidence-based; Super Z / GLM Install & Activation Prompt — 8-step).
 
-- **None.** `requires`/`aggregates`/`optional`/`conflicts` graph unchanged; cycle check re-run clean (0 cycles); resolver re-verified: 10 nodes mandatory, 12 with `--with-optional`, all 6 runtimes (`claude`, `openclaw`, `opencode`, `hermes`, `codex`, `generic`). Mission §24: preserve working behavior — the graph was already correct.
-- `compatible_runtimes` data unchanged (still 6 per skill). **No `zai`/`glm` runtime added** — that would claim unverified runtime compatibility; the profile covers Super Z via the generic adapter path instead (honesty per §7/§23).
+## Deleted / Reduced Complexity
 
-## 7. Runtime adapter changes
+- **`schemas/workflow.schema.json`** — deleted (superseded by task-state schema; 11-phase enum retired).
+- **`profiles/super-z/PROFILE.md`** — deleted (consolidated into ZAI.md).
+- **Orchestrator mandatory aggregates: 8 → 1** (10-node install → 4-node closure) — benchmark-grounded (B≈B1, C≈A, 1.48× overhead).
+- **AGENTS.md 28-row discovery table** — removed (single projection in llms.txt; no triple duplication).
+- **No new skills created** (anti-overengineering gate applied): source-of-record = protocol inside verification; capability activation = protocol inside capability-discovery; task state = schema + workflow-continuity; evidence graph = references inside task-state (no graph DB); challenger redesign = existing skill upgraded (no new agent type).
 
-- `install.sh` ×4: path robustness only (D-5). Semantics unchanged (resolve + pointer).
-- `adapters/README.md`: removed reference to non-existent file (D-4); OpenCode canonical singular `.opencode/skill/` + Hermes `~/.hermes/skills/` global / `skills/` project aligned with the verified matrix (D-7).
-- No new adapter for Z.AI / GLM: **UNKNOWN** — no verified install/discovery mechanism exists for it; the profile is a runtime-level overlay, not an install claim. Adding an unverified adapter would violate §23 (documentation as executable contract).
+## Validation (exact results, run 2026-09-22 on this checkout)
 
-## 8. AGENTS.md changes
+```
+validator (scripts/validate.py):        PASS — 0 errors, 0 warnings; 28 skills, version 2.0.0
+registry consistency:                   PASS — id/version/triggers/runtime frontmatter ↔ registry cross-check
+dependency resolution:                  PASS — no cycles (check-cycles.py); orchestrator → 4 nodes (14 with --with-optional); agent-design → 7 nodes
+skill tests (layer 2 doc eval):         15/15 (heuristic)
+behavioral evals (layer 3 smoke):       23/23 (heuristic) + 2/2 registry invariants (evidence floor PASS; trivial-task budget 4 nodes PASS)
+persistence evals:                      DESIGN ONLY — task-state/handoff schemas JSON-valid; resume protocol specified; no in-repo model runs (UNRUN — see limitations)
+runtime adapter tests (layer 4):        integration-smoke.sh PASS (structural+doc+behavioral re-run; installer paths VERIFIED-via-docs where CLI absent — clean env, as documented)
+benchmark regression:                   GLM v1 record preserved in docs/benchmark/GLM-benchmark-findings.md; successor benchmark cells A–H UNRUN by design (no model access in-repo); trivial-task overhead guard now machine-checked (budget invariant)
+```
 
-- New "Runtime Profiles (isolated — not skills)" section: class, current profile, epistemic status, machine check, README entry points.
-- Validation section now states what `validate.py` checks (frontmatter consistency + contracts).
-- Frontmatter convention: `id`/`version`/`triggers`/`compatible_runtimes` must equal registry (hard error).
-- "4 scenarios" → "15 scenarios"; version line → 1.1.0; install section now lists the inline README prompts first.
+No "everything works" claims: layers 1–3 prove structure, documentation, and heuristic routing consistency only; behavioral effectiveness on real models is the successor benchmark's job.
 
-## 9. README.md changes
+## Known Limitations
 
-- **AI Agent Installation Prompt** (inline, copy-paste, runtime-agnostic; uses repo's official installer/resolver; preserves user config; evidence-based verification + structured report; no invented formats).
-- **Super Z / GLM / Z.AI Web Prompt** (inline, copy-paste: recognize → AskUserQuestion mode selection (default BALANCED) → discover/install/verify → mode behavior → compute policy → never-override list).
-- Full-ecosystem install line; Runtime Profiles section; scenario count fix; version 1.1.0; repo-structure tree updated (`profiles/`, adapter note).
+1. **Behavioral evals are heuristics** — keyword routing + static invariants; not model-graded. Successor benchmark cells are UNRUN.
+2. **ZAI.md behavioral effect is UNVERIFIED** (SPECIFIED only) — the mode ritual's actual effect on GLM/Super Z is a hypothesis.
+3. **Bands-over-numbers is a HYPOTHESIS** — qualitative assessment assumed more robust across models; untested cross-model.
+4. **Amortization (T12) is a HYPOTHESIS** — state structure reducing phase-2 tokens untested at scale.
+5. `pinned` channel still future-only (no `pixz.lock`).
+6. Generic runtime still PARTIALLY VERIFIED.
+7. The 4-node evidence floor still pulls a 3-skill chain (verification→epistemic-reasoning→context-engineering); a future ablation could test a thinner floor.
+8. No hosted marketplace; install via skills.sh or manual copy.
 
-## 10. Super Z / GLM profile changes
+## Hypotheses Still Unverified (explicit)
 
-- **New** `profiles/super-z/PROFILE.md`:
-  - Identification: applies only when the agent self-identifies as Super Z / GLM / Z.AI Web from observable identity signals; otherwise inapplicable.
-  - **Mandatory** `AskUserQuestion` mode selection before substantive work: FAST / BALANCED / DEEP / AUTONOMOUS; **default BALANCED**; graceful degradation (states + proceeds at BALANCED) when the capability is absent.
-  - Mode semantics mapped onto the existing depth axis (MINIMAL→DEEP VERIFICATION): target depth is an upper tendency, never minimum ceremony — trivial tasks still route minimal.
-  - Compute policy (DEEP/AUTONOMOUS): exploit generous compute **only when it materially improves the task** (discover skills before implementation, complementary multi-skill use with stated reasons, rich structured handoffs, parallel independent investigations, independent verification, risk-scaled challenge, evidence preservation, iterate while EV positive).
-  - Never-list: auto-invoke all skills; subagents without independent responsibility; researching trivial facts; ceremony for trivial changes; continuing past justified stop.
-  - Principle: *maximum useful intelligence, not maximum activity*.
-  - Never-overrides: skill semantics, dependency resolution, change-safety confirmations, verification layers, honest reporting.
-- **New** `profiles/README.md`: isolation contract (5 rules), profile table, machine check, extension rules.
-- Wiring: README prompts, AGENTS.md section, llms.txt line, one-line pointer in orchestrator Runtime Notes.
+| # | Hypothesis | Evidence for | Test |
+|---|-----------|--------------|------|
+| H1 | Source-of-record discipline measurably improves evidence integrity (T11, n=2) | v1 benchmark T11 | Successor cell: false-authority × n≥5, cells B/G |
+| H2 | Persistent task-state amortizes over long-horizon continuation (T12) | v1 benchmark T12 (phase-2 tokens) | Successor cell: long-horizon + compaction + restart, cells B/E |
+| H3 | Adaptive activation (vs v1's 8-aggregate bundle) matches quality at lower token cost | v1 overhead 1.48×; B≈B1, C≈A | Successor cells A/B/B′/D across model classes |
+| H4 | ZAI.md overlay (mode ritual + compute policy) is behaviorally effective on Super Z/GLM | none (SPECIFIED) | Successor cell H vs C |
+| H5 | Qualitative bands beat numeric scoring across model classes | inference from model-agnostic instruction guidance | cross-model successor runs |
+| H6 | Anti-delegation evals catch over-orchestration regressions | v1 overhead on trivial tasks | successor trivial cells, cell B vs A |
 
-## 11. Installation prompt
+## Next Experiments (by expected information gain)
 
-- Location: `README.md` (inline blocks) — the copy-paste surface for agents.
-- Flow enforced: `IDENTIFY RUNTIME → INSPECT ENVIRONMENT → LOCATE SKILLS → DISCOVER INSTALLATION METHOD (docs/install/README.md matrix + adapters/) → RESOLVE DEPENDENCIES (scripts/resolve.py) → INSTALL (exactly one official mechanism; clone ≠ install) → VERIFY (discovery output, installed path) → REPORT (structured, no fabrication)`.
-- Guarantees: no single runtime hard-coded; official installer/resolver preferred; existing user configuration never overwritten (same-name skill → stop + report); no success claim without step 7 evidence; honest FAILED acceptable.
-- Full runtime-adaptive version remains at `docs/prompts/install-skill-agent.md` (unchanged); short version at `docs/install-as-skill.md` (unchanged).
-
-## 12. Verification performed (all executed this session)
-
-| Check | Result |
-|-------|--------|
-| `python3 scripts/validate.py` (incl. new frontmatter + profile/README contract checks) | **PASS — 0 errors, 0 warnings, 28 skills, v1.1.0** |
-| `python3 scripts/check-cycles.py` | **PASS — 0 cycles, limits 15/6/8** |
-| `python3 evals/runner.py` (layer 2, 15 cases) | **PASS 15/15** (heuristic, disclosed) |
-| `python3 evals/behavioral/runner.py` (layer 3, 15 scenarios) | **PASS 15/15** (heuristic smoke, disclosed) |
-| Resolver: orchestrator @ claude / generic / openclaw / opencode / hermes / codex | **PASS — 10 nodes each** |
-| Resolver: `--with-optional` | **PASS — 12 nodes** |
-| Resolver: `pixz.ai.agent-design` (transitive orchestrator dep) | **PASS — 11 nodes** |
-| `adapters/claude/install.sh` from `adapters/claude/` (D-5 regression) | **PASS** |
-| **Negative tests (validator is real, not documentary):** injected frontmatter trigger drift → hard error + exit 1; deleted profile → error; removed README prompt sections → errors; all restored → exit 0 | **PASS** |
-
-## 13. Evaluation performed
-
-- Layer 2 (documentary) and layer 3 (behavioral smoke) re-run after changes: **15/15 + 15/15** — confirms no regression from frontmatter sync, loop rewrite, or doc changes.
-- The new Super Z profile is **not** covered by behavioral evaluation (none exists that can judge profile-driven depth selection without a model grader). It is covered by **structural** checks only (presence + required sections).
-- No new eval cases were added to `evals/cases/`: that harness is keyed by registry `skill_id`; a profile is not a skill, so forcing it there would misrepresent the eval layer (see `docs/evaluation.md`).
-
-## 14. Tests that remain documentary-only
-
-- **All 15 layer-2 cases** — keyword/section presence heuristics; they prove documentation shape, not behavior.
-- **All 15 layer-3 scenarios** — heuristic keyword-overlap router simulation; disclosed as smoke, not model-graded.
-- **`scripts/integration-smoke.sh`** (layer 4) — where runtime CLIs are absent (this sandbox: no `openclaw`/`hermes`/`claude` binaries; `npx skills` not exercised), it captures skip evidence and marks PARTIALLY VERIFIED. **OBSERVED** in prior sessions per its own docs; not re-run end-to-end against live runtimes this session.
-- **New profile checks** — documentary (section presence), by design; behavioral effect is UNVERIFIED.
-
-## 15. Known limitations
-
-- `pinned` channel: **DOCUMENTED ONLY** (no `pixz.lock`) — unchanged from v1.0.1.
-- Behavioral eval: heuristic smoke; no LLM-judged trigger accuracy (standing TODO).
-- Generic runtime (Codex/Cursor): PARTIALLY VERIFIED (spec + manual only).
-- Super Z / GLM / Z.AI Web profile: **SPECIFIED, behaviorally UNVERIFIED** — no evaluation demonstrates an agent operating differently/better under it.
-- Z.AI / GLM has no verified install/discovery mechanism in `docs/install/README.md` — not claimed.
-- Eval coverage: 15 of 28 skills have a dedicated layer-2 case (~54%); standing TODO.
-- `adapters/*/install.sh` resolve-only by design; actual copy is documented manual steps (SPECIFIED behavior, unchanged).
-
-## 16. Remaining unknowns
-
-- **UNKNOWN**: actual discovery/invocation behavior of the Super Z / GLM / Z.AI Web runtime (this session ran in a different runtime; the profile's identification signals are SPECIFIED, not tested).
-- **UNKNOWN**: whether `AskUserQuestion` is present in the real Super Z / GLM / Z.AI Web runtime (profile degrades to BALANCED default if absent — SPECIFIED behavior).
-- **UNKNOWN**: live skills.sh `npx skills` end-to-end on this repo state (not executed this session).
-- **UNKNOWN**: whether the runtime frontmatter `triggers` list (now registry-equal) affects any runtime's description matching (INFERRED: runtimes index `name`/`description`; the `triggers` key is a repo-local aid).
-
-## 17. Risks
-
-- **Low**: frontmatter sync changed what some runtimes see in frontmatter `triggers` (20/28 were supersets). Risk: a runtime that indexes `triggers` (none known to) would match fewer keywords. Mitigation: registry values are the declared truth; description fields unchanged; layer 1+2 pass.
-- **Low**: README inline prompts duplicate (condensed) content in `docs/prompts/install-skill-agent.md` — divergence risk over time. Mitigation: README block is explicitly the condensed surface; full doc remains canonical for details; validate.py pins the section presence.
-- **Medium**: profile is unverified behaviorally — an agent could follow it performatively without the intended depth/compute discipline. Mitigation: isolation contract + explicit UNVERIFIED label + next-iteration behavioral eval (below).
-- **Low**: version bump requires consumers on `stable` to re-resolve; no breaking ID/schema/graph changes, so SemVer-minor is safe.
-
-## 18. Recommended next iteration
-
-1. **Behavioral evaluation for the Super Z profile** (highest value): LLM-judged scenarios comparing an agent with vs. without the profile under DEEP/AUTONOMOUS — does it actually use more complementary skills, richer handoffs, independent verification, and stop at justified conditions? Until then the profile stays labeled UNVERIFIED.
-2. **Lockfile writer/reader for `pinned`** (long-standing TODO; unblocks reproducible installs).
-3. **LLM-judged layer 3** (machine-grade trigger accuracy) to replace the keyword heuristic.
-4. **Per-skill layer-2 coverage to 28/28** (remotion, kubernetes, etc. lack dedicated cases).
-5. **Live integration in CI** for at least one runtime (skills.sh `npx skills` end-to-end) to move layer 4 from "where CLI available" to scheduled.
-6. **Z.AI / GLM install verification**: obtain the runtime, run the actual discovery/invocation, then (and only then) add a real adapter row to `docs/install/README.md` — do not pre-claim.
-7. Filesystem workflow persistence example (`.pixz/workflow.json`) — standing TODO.
+1. **H1 replication at n≥5** (false-authority tasks; cell B vs G vs A) — validates the evidence-architecture investment; highest gain.
+2. **H2** (long-horizon + forced compaction + session restart; cell B vs E) — decides the task-state protocol's worth.
+3. **H3** (full ablation A/B/B′/C/D on ≥2 model classes, n≥5) — the central "which mechanisms contribute" question.
+4. **H4** (ZAI overlay on GLM/Super Z; cell H vs C) — first behavioral evidence for the overlay.
+5. **H6 + overhead guard** (trivial cells: token overhead ratio B/A must stay ≈1.0) — regression guard for the performance target.
+6. Thin-floor ablation (4-node vs 2-node evidence floor) — possible further context reduction.
 
 ---
 
-### Ship verdict (per §26 quality gate)
-
-| Gate | Status |
-|------|--------|
-| Requirements satisfied (mission §19 profile, §20/§21 README prompts, §22 integrity, §23 doc-as-contract) | ✅ |
-| Architecture coherent (orchestrator/skill/agent/tool/policy/protocol/infra/profile separation intact) | ✅ |
-| Implementation verified (layers 1–3 executed; negative tests prove new checks) | ✅ |
-| Documentation synchronized (drift D-1…D-8 fixed; validator prevents recurrence) | ✅ |
-| Runtime compatibility verified | ✅ where previously VERIFIED; Z.AI explicitly NOT claimed |
-| Dependency graph valid (0 cycles, caps, runtime gates re-run) | ✅ |
-| Evaluation passes (15/15 + 15/15) | ✅ (heuristic, disclosed) |
-| Known limitations disclosed (§15) | ✅ |
-| Residual risk acceptable (§17) | ✅ |
-
-**SHIP v1.1.0** — with the disclosed limitations and the next-iteration list above.
-
-*The system moves an agent from "I have a task" to "I know what I need, what I can use, what I selected and why, what I verified, and what remains uncertain — and I know when to stop." That is now also true for Super Z / GLM / Z.AI Web, with a mode the user controls.*
+*Optimize for observable agent performance. A model that ignores an unnecessary skill is better than one that invokes ten ceremonially.*

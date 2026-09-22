@@ -1,74 +1,88 @@
-# Example — Full Orchestrated Task (production design)
+# Example — Full Orchestrated Task (production design, mode deep)
 
 > Goal: design and ship a rate-limited public API for a Next.js monorepo.
 
-## 1. UNDERSTAND (orchestrator)
+## 1. ORIENT & MODEL (orchestrator)
 
+- **State?** None (new task). **Environment?** `package.json` → Next.js 15, `pnpm-lock.yaml` → pnpm. `git status` clean.
 - **Requested:** “public API for external partners”
 - **Necessary:** contract, rate-limit, auth, audit, tests, docs, security review
 - **Optional:** SDK generation (deferred)
 - **Out-of-scope:** rewrite auth system without evidence
+- **Objective (restate):** expose rate-limited public endpoints with per-key quotas, verified and shipped.
 
-Stop conditions: contract reviewed + security review pass + tests green + challenger upheld + quality-gate ship.
+## 2. ASSESS → MODE
 
-## 2. DISCOVER
+| Band | Value | Note |
+|------|-------|------|
+| complexity | high | multi-file, new surface |
+| risk | high | public auth + billing adjacency |
+| uncertainty | medium | rate-limit semantics partially specified |
+| reversibility | partially | contract + schema |
+| horizon | medium | multi-phase |
 
-```bash
-python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
-# → resolves 10 skills
-cat package.json          # Next.js 15, pnpm
-ls apps/web/src/app/api   # existing internal routes
-```
+→ **mode deep.** Stop conditions declared: contract reviewed + security pass + tests green + challenger upheld + gate ship.
 
-**Skills selected:** `planning`, `context-engineering`, `environment-awareness`, `api-design`, `security.review`, `threat-modeling`, `verification`, `epistemic-challenger`, `quality-gate`, `anti-ai-slop` (docs).
+## 3. PLAN (pixz.core.planning, deep)
 
-Complexity: `full` → full loop with challenge.
+| Step | Owner | Verification that closes it |
+|------|-------|------------------------------|
+| 1. Contract | api-design | review vs existing routes |
+| 2. Impl | self/engineering | unit + integration |
+| 3. Security | security.review + threat-modeling | repro each finding |
+| 4. Docs | anti-ai-slop | no generic SaaS filler |
+| 5. Verify | verification (floor) | source-of-record + regression |
+| 6. Gate | quality-gate | diminishing-returns check |
 
-## 3. PLAN (pixz.core.planning)
+Plan stored in `.pixz/task-state.json` (`plan.steps`, `stop_conditions`).
 
-| Step | Owner | Inputs | Outputs | Verification |
-|------|-------|--------|---------|--------------|
-| 1. Contract | api-design | requirements | OpenAPI + error schema | review vs existing routes |
-| 2. Impl | engineering | contract | handlers + middleware | unit + integration |
-| 3. Security | security.review + threat-modeling | contract + code | STRIDE + findings | repro each finding |
-| 4. Docs | anti-ai-slop | contract | public docs | no generic SaaS filler |
-| 5. Verify | verification | artifact | report + residual Risks | challenger interrogation |
-| 6. Ship | quality-gate | all above | gate verdict | diminishing returns check |
-
-## 4. DELEGATE (pixz.core.delegation-handoff)
-
-Each delegation carries:
-```json
-{
-  "objective": "...",
-  "constraints": ["no breaking internal API", "p95 <200ms"],
-  "phase": "EXECUTE",
-  "context_packet": { "facts": [...], "sources": [...] },
-  "expected_outputs": ["OpenAPI YAML", "verification block"],
-  "success_criteria": ["review pass", "no critical residual"]
-}
-```
-
-## 5. INSPECT & CHALLENGE
-
-Challenger (intensity high due to public auth impact):
-- “How could rate-limit be bypassed?” → found missing per-API-key partition → revised.
-- Falsification test: `100 rps with 10 keys, expect 429 after quota`.
-
-## 6. VERIFY → QUALITY-GATE
+## 4. ACTIVATE CAPABILITIES (persistent)
 
 ```yaml
-checks_performed: ["inspection vs contract", "regression: existing routes", "failure-mode: replay", "change-impact: billing"]
-evidence: [{claim: "All specs green", source: "pnpm test", strength: high}]
+capabilities:
+  - {id: pixz.engineering.api-design,      status: active, reason: "contract step"}
+  - {id: pixz.security.review,             status: active, reason: "public auth, risk=high",
+     reactivation_conditions: ["authentication changes", "deployment changes"]}
+  - {id: pixz.core.verification,           status: active, reason: "mandatory evidence floor"}
+  - {id: pixz.core.epistemic-challenger,   status: activated, reason: "high impact auth design"}
+  - {id: pixz.quality.anti-ai-slop,        status: active, reason: "public docs"}
+```
+Rejected with reason: `pixz.devops.kubernetes` (no deploy target in scope), `pixz.motion.gsap` (no UI motion in scope).
+
+## 5. DELEGATE (pixz.core.delegation-handoff — economics passed: independent security review)
+
+Dispatch per `schemas/handoff.schema.json`:
+```json
+{
+  "objective": "Security review of the rate-limit + auth contract",
+  "constraints": ["no breaking internal API", "p95 <200ms", "read-only, do not modify"],
+  "context_packet": { "decisions": ["per-key quota"], "evidence_refs": ["contract.yaml"] },
+  "success_criteria": ["STRIDE covered", "each finding reproducible"]
+}
+```
+Return **must** include work_performed, findings, evidence, assumptions, unknowns, decisions, tests, verification, remaining_work, recommended_next_action — parent inspects and records `accepted`.
+
+## 6. ACT → OBSERVE → VERIFY → CHALLENGE
+
+Challenger (intensity ≈ risk high × uncertainty medium × impact high × irreversibility partial = **high**):
+- “How could rate-limit be bypassed?” → found missing per-API-key partition → **revised**.
+- Falsification test: `100 rps with 10 keys, expect 429 after quota`.
+- Stop rule met: disconfirming evidence found; verdict `revised`, recorded.
+
+Verification (source-of-record applied to the deploy/contract claims):
+```yaml
+checks_performed: ["source-of-record: contract file vs described behavior", "regression: existing routes", "failure-mode: replay", "change-impact: billing"]
+evidence:
+  - {id: e1, kind: test_result, source: "pnpm test", summary: "142 passed"}
+  - {id: e2, kind: artifact, source: "openapi/public.yaml", summary: "3 endpoints, quota headers"}
 residual_risks: ["partner clock-skew not load-tested at 10k rps"]
-verdict: conditional_ship  # with monitoring task
 ```
 
-Ledger records: decisions, counterarguments, confidence basis, iteration history (2 iterations).
+## 7. DECIDE → GATE → SHIP
 
-## 7. SHIP
+Quality-gate (all five with evidence refs): requirements satisfied ✓ · verification sufficient ✓ · critical risks addressed ✓ · uncertainty acceptable ✓ · diminishing returns ✓ → **SHIP**, with a follow-up task (load test at 10k rps) recorded in `next_action` and the follow-up task's state.
 
-Quality-gate: requirements satisfied + verification sufficient + critical risks addressed + remaining uncertainty acceptable → **SHIP** with follow-up task for load test at 10k rps.
+Task-state left for continuation: decisions (marked, not deleted), findings (typed, with transitions), evidence ledger, capability states, residual risks.
 
 ---
-*Workflow state conforms to `schemas/workflow.schema.json`; resolver validated no cycles.*
+*Task state conforms to `schemas/task-state.schema.json`; handoff to `schemas/handoff.schema.json`; resolver validated no cycles. Mode deep was chosen by assessment, not habit — a trivial rename in the same repo would run `fast` with zero activations.*

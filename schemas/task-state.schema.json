@@ -1,0 +1,200 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://pixz.dev/schemas/task-state.schema.json",
+  "title": "PixzFlow Task State",
+  "description": "Compact persistent task state — the continuity substrate of PixzFlow 2.0. Replaces schemas/workflow.schema.json (11-phase model). Principle: state over phase. status tracks liveness; plan/findings/evidence/capabilities track content. One file per task (e.g. .pixz/task-state.json). Designed to survive context compaction, session restart, subagent handoff, model change, and runtime change. Keep entries short: summaries + references, never transcripts.",
+  "type": "object",
+  "required": ["task_id", "objective", "status"],
+  "properties": {
+    "task_id": { "type": "string", "description": "Stable identifier for this task." },
+    "schema_version": { "const": "2.0" },
+    "objective": { "type": "string", "description": "Verifiable goal in one or two sentences. Restate on resume — drift counter." },
+    "acceptance_criteria": { "type": "array", "items": { "type": "string" }, "description": "Observable conditions that mean done." },
+    "requirements": { "type": "array", "items": { "type": "string" } },
+    "constraints": { "type": "array", "items": { "type": "string" }, "description": "Scope, authority, budget, non-goals." },
+    "status": {
+      "type": "string",
+      "enum": ["new", "active", "blocked", "verifying", "done", "failed", "escalated"],
+      "description": "Liveness only — not a phase list. 'verifying' is a liveness state, not a ceremony."
+    },
+    "mode": {
+      "type": "string",
+      "enum": ["fast", "balanced", "deep", "autonomous"],
+      "description": "Operating depth selected during ASSESS; see AGENTS.md#operating-modes."
+    },
+    "assessment": {
+      "type": "object",
+      "description": "Qualitative bands, not numeric scores. Reassess when material new information arrives.",
+      "properties": {
+        "complexity": { "$ref": "#/$defs/band" },
+        "risk": { "$ref": "#/$defs/band" },
+        "uncertainty": { "$ref": "#/$defs/band" },
+        "reversibility": { "type": "string", "enum": ["reversible", "partially", "irreversible"] },
+        "horizon": { "type": "string", "enum": ["short", "medium", "long"] },
+        "rationale": { "type": "string" }
+      }
+    },
+    "plan": {
+      "type": "object",
+      "description": "Minimal execution plan. fast mode: 0-2 steps or omitted. Each step independently verifiable.",
+      "properties": {
+        "strategy": { "type": "string" },
+        "iteration": { "type": "integer", "minimum": 1, "description": "Bumped on replan; cap via registry limits.max_iterations." },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["description", "status"],
+            "properties": {
+              "description": { "type": "string" },
+              "owner": { "type": "string", "description": "skill id / agent / self." },
+              "status": { "type": "string", "enum": ["pending", "in_progress", "done", "blocked", "skipped"] },
+              "verification": { "type": "string", "description": "What evidence closes this step." }
+            }
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["what", "why"],
+        "properties": {
+          "what": { "type": "string" },
+          "why": { "type": "string" },
+          "alternatives": { "type": "array", "items": { "type": "string" } },
+          "status": { "type": "string", "enum": ["active", "superseded", "revoked"], "description": "Never delete a decision — mark it. Drift counter." }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "description": "Claim ledger (the epistemic state engine). Label where uncertainty matters; do not label every trivial sentence.",
+      "items": {
+        "type": "object",
+        "required": ["claim", "type"],
+        "properties": {
+          "claim": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": ["fact", "observed", "source_claim", "inference", "assumption", "hypothesis", "unknown", "unverified", "contradicted", "verified", "falsified"]
+          },
+          "evidence_refs": { "type": "array", "items": { "type": "string" }, "description": "IDs into evidence[]. This is the claim→evidence edge." },
+          "confidence": { "type": "string", "enum": ["low", "medium", "high"] },
+          "confidence_basis": { "type": "string", "description": "Required whenever confidence is asserted." },
+          "status": {
+            "type": "string",
+            "enum": ["active", "challenged", "tested", "supported", "verified", "falsified", "superseded", "rejected"],
+            "description": "Transitions: unknown→hypothesis→tested→supported/verified; assumption→challenged→falsified/supported; claim→tested→verified/falsified."
+          },
+          "falsification": { "type": "array", "items": { "type": "string" }, "description": "What observation would break this claim." }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "description": "Compact evidence ledger. The 'graph' is the set of references: findings.evidence_refs, evidence.verified_against. No graph database.",
+      "items": {
+        "type": "object",
+        "required": ["id", "kind", "summary"],
+        "properties": {
+          "id": { "type": "string" },
+          "kind": {
+            "type": "string",
+            "enum": ["artifact", "filesystem", "git", "command_output", "test_result", "external_source", "agent_report", "log", "documentation", "user_statement"],
+            "description": "kind drives source-of-record weighting: artifact/filesystem/git/test_result/command_output are primary for system state; agent_report/log/documentation are descriptive."
+          },
+          "source": { "type": "string", "description": "Where it lives / how it was produced (path, command, URL)." },
+          "recorded_at": { "type": "string" },
+          "verified_against": { "type": "string", "description": "If a descriptive record was checked against a primary artifact, name the artifact here. Empty = unverified record." },
+          "summary": { "type": "string" }
+        }
+      }
+    },
+    "capabilities": {
+      "type": "array",
+      "description": "Persistent skill/capability activation state. Survives phase transitions and compaction. state_digest is compact — never full skill text.",
+      "items": {
+        "type": "object",
+        "required": ["id", "status"],
+        "properties": {
+          "id": { "type": "string", "description": "pixz.* skill id." },
+          "status": {
+            "type": "string",
+            "enum": ["available", "discovered", "considered", "activated", "active", "suspended", "reactivation_required", "completed"],
+            "description": "Lifecycle per AGENTS.md#capability-activation. Re-enter 'reactivation_required' when listed conditions fire."
+          },
+          "reason": { "type": "string", "description": "Why activated (budget accountability)." },
+          "state_digest": { "type": "string", "description": "One-to-three lines: what this capability established." },
+          "findings": { "type": "array", "items": { "type": "string" } },
+          "unresolved": { "type": "array", "items": { "type": "string" } },
+          "required_verification": { "type": "array", "items": { "type": "string" } },
+          "last_verified": { "type": "string" },
+          "reactivation_conditions": { "type": "array", "items": { "type": "string" }, "description": "e.g. 'architecture changes', 'auth changes', 'deployment changes'." }
+        }
+      }
+    },
+    "failures": {
+      "type": "array",
+      "description": "Failure ledger. Every retry must add information — this is where it is recorded.",
+      "items": {
+        "type": "object",
+        "required": ["what"],
+        "properties": {
+          "what": { "type": "string" },
+          "classification": { "type": "string", "enum": ["environment", "assumption", "specification", "implementation", "external", "unknown"] },
+          "hypothesis": { "type": "string", "description": "Root-cause hypothesis tested next." },
+          "tested": { "type": "boolean" },
+          "resolution": { "type": "string" },
+          "lesson": { "type": "string", "description": "What the next attempt must not repeat." }
+        }
+      }
+    },
+    "unknowns": { "type": "array", "items": { "type": "string" } },
+    "verification": {
+      "type": "object",
+      "properties": {
+        "checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["what", "result"],
+            "properties": {
+              "what": { "type": "string" },
+              "when": { "type": "string", "description": "Trigger: before-irreversible / after-mutation / before-claim / before-handoff / before-completion / regression." },
+              "result": { "type": "string", "enum": ["pass", "fail", "conditional", "skipped"] },
+              "evidence_ref": { "type": "string" }
+            }
+          }
+        },
+        "residual_risks": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "delegations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "to": { "type": "string" },
+          "objective": { "type": "string" },
+          "status": { "type": "string", "enum": ["dispatched", "returned", "inspected", "rejected"] },
+          "return_ref": { "type": "string", "description": "Where the structured handoff return is stored." }
+        }
+      }
+    },
+    "next_action": { "type": "string", "description": "The single recommended next step. Required on resume — makes continuation deterministic." },
+    "checkpoint": {
+      "type": "object",
+      "description": "Last checkpoint. Written before long substeps, before irreversible actions, and at phase boundaries.",
+      "properties": {
+        "at": { "type": "string" },
+        "summary": { "type": "string" },
+        "restored_from": { "type": "string" }
+      }
+    }
+  },
+  "$defs": {
+    "band": { "type": "string", "enum": ["low", "medium", "high", "critical"] }
+  }
+}

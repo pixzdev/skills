@@ -1,7 +1,7 @@
 {
   "id": "eval.workflow.handoff-01",
   "skill_id": "pixz.core.workflow-continuity",
-  "description": "Child inherits parent workflow and returns structured handoff",
+  "description": "Child inherits parent task state and returns structured handoff per schemas/handoff.schema.json",
   "category": "method",
   "input": {
     "prompt": "Continue workflow in subagent for API design",
@@ -12,7 +12,7 @@
     "must_contain": [
       "inherit",
       "handoff",
-      "schemas/workflow.schema.json"
+      "schemas/handoff.schema.json"
     ],
     "must_not_contain": [],
     "verifies": [

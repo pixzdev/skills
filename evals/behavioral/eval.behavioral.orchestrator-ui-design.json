@@ -13,5 +13,7 @@
   "should_not_select": [
     "pixz.devops.kubernetes"
   ],
-  "verifies": "domain routing"
+  "verifies": "domain routing",
+  "expected_mode": "balanced",
+  "context": "UI design task for a dashboard. Do ui design and ux review, define a design system with tokens, and avoid generic AI slop."
 }

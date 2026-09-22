@@ -1,0 +1,16 @@
+{
+  "id": "eval.behavioral.orchestrator-skill-persistence",
+  "skill": "pixz.core.capability-discovery",
+  "scenario": "A security review was completed earlier in this task. Now the token architecture changes; re-check the security review scope and verify.",
+  "risk": "high",
+  "expected_mode": "deep",
+  "expected_challenge": "high",
+  "should_select": [
+    "pixz.security.review",
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes"
+  ],
+  "verifies": "skill persistence: an activated capability stays active across phase transitions; reactivation_conditions fire (benchmark: T12 continuation)"
+}

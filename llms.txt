@@ -1,48 +1,93 @@
-# PIXZ.DEV Skills — Map for LLMs
+# PixzFlow — Map for LLMs
 
-> 28 portable skills for Claude, OpenClaw, OpenCode, Hermes. Source ≠ install.
+> A persistent, adaptive, model-agnostic operating layer for capable AI agents. PIXZ.DEV is the brand; PixzFlow is the system.
 
 ## Identity
 - Repo: https://github.com/pixzdev/skills
-- Version: 1.1.0 (VERSION file; registry.json)
-- Entry: AGENTS.md (agent registry) / README.md (human, includes copy-paste AI Agent Installation Prompt + Super Z / GLM / Z.AI Web Prompt) / registry.json (machine)
+- Version: 2.0.0 (VERSION file; registry.json)
+- Entry (agents): `AGENTS.md` — canonical operating contract (entry protocol, modes, activation, state, evidence, delegation, verification, stopping)
+- Entry (humans): `README.md` — overview + copy-paste **AI Agent Installation Prompt** + **Super Z / GLM / Z.AI Web Prompt**
+- Machine registry: `registry.json` (source of truth for capabilities)
+- Runtime overlay (Super Z / GLM / Z.AI Web only): `ZAI.md` — mode selection + compute policy; does not change universal semantics
+
+## Layers
+L0 model-native (irreplaceable) → L1 runtime → L2 PixzFlow operating layer (this repo: AGENTS.md, modes, state, evidence, policies) → L2.5 runtime overlays (ZAI.md) → L3 capabilities (skills) → L4 dynamic execution (agents, subagents, tools, MCP) → L5 task state/evidence.
+
+## Operating model (state + transitions, not phases)
+`ORIENT → MODEL → ASSESS → MODE → PLAN → ACT → OBSERVE → VERIFY → DECIDE{done|continue|replan|delegate|research|challenge|escalate|stop}`
+Modes: `fast | balanced | deep | autonomous` (user > overlay > balanced default; upper tendency, never minimum ceremony).
+Assessment bands: low/medium/high/critical over complexity, risk, uncertainty, reversibility, horizon.
+
+## Capability activation (persistent)
+`DISCOVER → MATCH → LOAD (progressive) → ACTIVATE → USE → VERIFY → PERSIST → REINVOKE → COMPLETE`
+Statuses: available → discovered → considered → activated → active → suspended | reactivation_required → completed.
+State lives in task-state `capabilities[]` (compact digest, never full skill text). Every activation needs a reason (budget rule).
 
 ## Install (not clone)
-- Matrix: docs/install/README.md
-- Agent prompt (copy-paste): docs/install-as-skill.md
-- Full runtime-adaptive prompt: docs/prompts/install-skill-agent.md
-- CLI: npx skills add pixzdev/skills --skill <folder> (skills.sh, VERIFIED)
-- Claude: ~/.claude/skills/ or .claude/skills/ (VERIFIED)
-- OpenClaw: openclaw skills install (VERIFIED)
-- OpenCode: .opencode/skill/ (VERIFIED)
-- Hermes: ~/.hermes/skills/ (VERIFIED)
+- Matrix: `docs/install/README.md`
+- Agent prompt (copy-paste): README inline + `docs/prompts/install-skill-agent.md` (runtime-adaptive full)
+- CLI: `npx skills add pixzdev/skills --skill <folder>` (skills.sh, VERIFIED)
+- Claude: `~/.claude/skills/` or `.claude/skills/` (VERIFIED)
+- OpenClaw: `openclaw skills install` (VERIFIED)
+- OpenCode: `.opencode/skill/` (VERIFIED)
+- Hermes: `~/.hermes/skills/` (VERIFIED)
+- Resolver: `python scripts/resolve.py --install pixz.core.orchestrator --runtime <rt>` → 4 nodes (14 with `--with-optional`)
 
-## Registry / Discovery
-- AGENTS.md (projection) ; registry.json (source) ; */AGENTS.md (nav)
-- Schemas: schemas/skill.schema.json, registry.schema.json, workflow.schema.json, eval.schema.json
-- Discovery: scan AGENTS.md trigger table → registry.json → <path>/SKILL.md
+## Schemas
+- `schemas/task-state.schema.json` — persistent task state (successor of v1 workflow.schema.json)
+- `schemas/handoff.schema.json` — delegation contract (mandatory structured return)
+- `schemas/skill.schema.json`, `schemas/registry.schema.json`, `schemas/eval.schema.json`
 
-## Architecture
-- docs/architecture.md (core → adapter, workflow state vs methodological)
-- docs/dependency-model.md (requires/aggregates/optional opt-in/conflicts, limits 15/6/8)
-- docs/architecture/routing.md (task→skill routing, under/over, circular safety mitigation)
-- docs/taxonomy.md (7 criteria, merged concepts)
-- docs/versioning.md (latest/stable VERIFIED, pinned future)
-- profiles/ (isolated runtime overlays, NOT skills; super-z = Super Z / GLM / Z.AI Web: FAST/BALANCED/DEEP/AUTONOMOUS modes, default BALANCED, mandatory AskUserQuestion mode selection; SPECIFIED, behaviorally UNVERIFIED; contract: profiles/README.md)
+## Capability map (28 skills; registry.json is authoritative — this is a projection)
+
+### Core (13)
+| ID | Path | Triggers |
+|----|------|----------|
+| `pixz.core.orchestrator` | `core/orchestrator/` | orchestrate, coordinate, delegate, complex task, multi-step |
+| `pixz.core.planning` | `core/planning/` | plan, roadmap, break down task, milestone |
+| `pixz.core.context-engineering` | `core/context-engineering/` | context, requirements, gather context, compaction |
+| `pixz.core.environment-awareness` | `core/environment-awareness/` | environment, stack detection, runtime, package manager, git state |
+| `pixz.core.capability-discovery` | `core/capability-discovery/` | discover, available tools, find skill, activate skill |
+| `pixz.core.workflow-continuity` | `core/workflow-continuity/` | workflow, continue, resume, handoff, task state, checkpoint |
+| `pixz.core.delegation-handoff` | `core/delegation-handoff/` | delegate, handoff, subagent, dispatch task |
+| `pixz.core.epistemic-reasoning` | `core/epistemic-reasoning/` | reason, evidence, assumption, confidence, uncertainty, claim |
+| `pixz.core.epistemic-challenger` | `core/epistemic-challenger/` | challenge, falsify, red team |
+| `pixz.core.verification` | `core/verification/` | verify, inspect, validate, source of record |
+| `pixz.core.change-safety` | `core/change-safety/` | safe change, risk, reversible, scope control |
+| `pixz.core.replanning` | `core/replanning/` | replan, pivot, failure, recovery |
+| `pixz.core.quality-gate` | `core/quality-gate/` | quality gate, ship check, done criteria |
+
+### Domain (15)
+| ID | Path | Triggers |
+|----|------|----------|
+| `pixz.quality.anti-ai-slop` | `quality/anti-ai-slop/` | anti slop, generic design, boilerplate |
+| `pixz.engineering.api-design` | `engineering/api-design/` | api design, openapi |
+| `pixz.engineering.system-design` | `engineering/system-design/` | system design |
+| `pixz.security.review` | `security/review/` | security review, audit |
+| `pixz.security.threat-modeling` | `security/threat-modeling/` | threat model, STRIDE |
+| `pixz.design.uiux` | `design/uiux/` | ui design, ux review |
+| `pixz.design.design-system` | `design/design-system/` | design system, tokens |
+| `pixz.frontend.react` | `frontend/react/` | react, next.js |
+| `pixz.frontend.accessibility` | `frontend/accessibility/` | a11y, wcag |
+| `pixz.motion.gsap` | `motion/gsap/` | gsap, scrolltrigger |
+| `pixz.motion.remotion` | `motion/remotion/` | remotion |
+| `pixz.devops.docker` | `devops/docker/` | docker |
+| `pixz.devops.kubernetes` | `devops/kubernetes/` | k8s, helm |
+| `pixz.ai.rag` | `ai/rag/` | rag, retrieval |
+| `pixz.ai.agent-design` | `ai/agent-design/` | agent design |
+
+Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor). The other 12 core capabilities are on-demand activations.
+
+## Protocols & policies (registry.json)
+- Context Protocol (lifecycle + acquisition order) · Task State & Continuity · Capability Activation · Source-of-Record · Argumentation (typed claims + transitions) · Handoff Contract · Failure Recovery & Escalation
+- Policies: Scope Control · Simplicity (incl. anti-overengineering gate) · Change Safety (static) · Orchestration Budget · Anti-AI Slop (diagnostic)
+
+## Verification (4 layers, never conflate)
+1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (15, heuristic) · 3 behavioral `evals/behavioral/runner.py` (23 + registry invariants, heuristic) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H; UNRUN until executed).
 
 ## Limitations (honest)
 - pinned channel: DOCUMENTED ONLY (no pixz.lock)
-- behavioral eval: PARTIALLY VERIFIED (heuristic smoke)
-- generic runtime: PARTIALLY VERIFIED (spec, no CI smoke)
+- behavioral eval: heuristic smoke, not model-graded
+- ZAI.md overlay: SPECIFIED; behavioral effect UNVERIFIED
+- generic runtime: PARTIALLY VERIFIED
 - needs npx (Node 18+) or manual cp -r
-
-## Verification
-- docs/evaluation.md (4 layers: structural / documentary / behavioral / integration)
-- Scripts: scripts/validate.py, check-cycles.py, resolve.py, integration-smoke.sh
-- Evals: evals/cases/, evals/behavioral/
-
-## Getting Started
-- docs/getting-started.md
-- examples/basic-usage.md, orchestrated-task.md, custom-skill.md
-- docs/development/creating-a-skill.md, testing.md
-- docs/troubleshooting.md

@@ -1,0 +1,15 @@
+{
+  "id": "eval.behavioral.orchestrator-requirement-change",
+  "skill": "pixz.core.replanning",
+  "scenario": "Mid-implementation the requirement changes: rate limiting must be per-IP, not per-user. Replan the remaining work.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "medium",
+  "should_select": [
+    "pixz.core.replanning"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes"
+  ],
+  "verifies": "replanning: mid-task requirement change triggers minimal-delta replan, old plan marked superseded, iteration bumped"
+}

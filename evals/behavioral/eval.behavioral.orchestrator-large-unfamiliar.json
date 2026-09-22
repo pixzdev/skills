@@ -10,5 +10,7 @@
     "pixz.core.capability-discovery"
   ],
   "should_not_select": [],
-  "verifies": "repo scan"
+  "verifies": "repo scan",
+  "expected_mode": "balanced",
+  "context": "First task in a large unfamiliar repository. Inspect the environment: package manager, runtime, git state. Discover available tools before acting."
 }

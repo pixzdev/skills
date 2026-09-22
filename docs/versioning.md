@@ -1,4 +1,15 @@
-# Versioning — PIXZ Skills
+# Versioning — PixzFlow
+
+## 2.0.0 Migration Notes (breaking)
+
+| 1.1.0 | 2.0.0 | Migration |
+|-------|-------|-----------|
+| `schemas/workflow.schema.json` (11-phase enum) | `schemas/task-state.schema.json` (+ `schemas/handoff.schema.json`) | Field mapping: `phase` → retired (use `status` + `plan.steps`); `completed_work`/`pending_work` → `plan.steps[].status`; `arguments[]` → `findings[]` (typed, with transitions); `evidence: [string]` → `evidence[]` (typed entries + `verified_against`); `assumptions[]` → `findings[]` with `type: assumption`; new: `capabilities[]`, `failures[]`, `delegations[]`, `next_action`, `checkpoint`, `assessment`, `mode`. |
+| `profiles/super-z/PROFILE.md` | top-level `ZAI.md` | Read `ZAI.md`; content consolidated, isolation contract in `profiles/README.md`. |
+| orchestrator aggregates 8 (10-node install) | aggregates 1 = `pixz.core.verification` (4-node closure) | Re-run `scripts/resolve.py`; activate other capabilities at runtime per the capability-activation protocol. |
+| "PIXZ Skills" identity | "PixzFlow" operating layer | Docs/identity rename only — skill IDs unchanged. |
+
+Skill IDs are **stable** across this migration (no renames). Skill versions bumped to 2.0.0 only where contract/methodology changed (13 core + anti-ai-slop); unchanged domain skills remain 1.1.0.
 
 ## Model
 

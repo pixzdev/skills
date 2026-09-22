@@ -10,5 +10,6 @@
     "pixz.core.orchestrator",
     "pixz.ai.agent-design"
   ],
-  "verifies": "avoids over-orchestration for typo"
+  "verifies": "avoids over-orchestration for typo",
+  "expected_mode": "fast"
 }

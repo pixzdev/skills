@@ -10,5 +10,7 @@
     "pixz.core.environment-awareness"
   ],
   "should_not_select": [],
-  "verifies": "unknown requires discovery"
+  "verifies": "unknown requires discovery",
+  "expected_mode": "balanced",
+  "context": "Unknown repository bug with no context. Gather context on requirements and inspect the environment: runtime, package manager."
 }

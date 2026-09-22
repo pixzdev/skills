@@ -1,4 +1,4 @@
-# Taxonomy Normalization — PIXZ Skills
+# Taxonomy Normalization — PixzFlow Skills
 
 ## Method
 Each proposed concept was classified as exactly one of:
@@ -74,3 +74,23 @@ A standalone SKILL requires: distinct objective + reusable methodology + indepen
 
 ## Skill Count Rationale
 28 skills: small enough to be coherent, large enough to cover critical paths. Adding a skill must pass the seven criteria above; removing one must not break dependency or leave a methodology gap.
+
+## 2.0.0 Decisions
+
+### New concepts classified as PROTOCOL / POLICY (not skills)
+- **Source-of-Record** → `pixz.protocol.source-of-record` (a verification protocol, not a skill — it has no independent invocation triggers beyond verification; merging into `pixz.core.verification` methodology keeps the graph lean).
+- **Capability Activation** → `pixz.protocol.capability-activation` (the persistent invocation lifecycle — it is *how* capabilities are used, owned by `capability-discovery`, not a separate capability).
+- **Task State & Continuity** → `pixz.protocol.task-state` (the state model is a schema + `workflow-continuity` methodology, not a skill).
+- **Orchestration Budget** → `pixz.policy.orchestration-budget` (a global constraint on activation/delegation, not a skill).
+- **Handoff Contract** → `pixz.protocol.handoff-contract` (a schema + `delegation-handoff` methodology).
+
+### Kept Distinct (2.0)
+- **verification** (evidence gathering + source-of-record) vs **quality-gate** (the done-decision) — separation preserves inspect-vs-decide clarity.
+- **capability-discovery** (activation lifecycle) vs **orchestrator** (decides which/how-deeply/for-how-long) — discovery is the mechanism, orchestration is the decision.
+
+### Anti-Overengineering Gate applied (things NOT built in 2.0)
+- No separate "evidence graph database" — the graph is references inside `task-state.schema.json` (simpler, same benefit).
+- No numeric task-scoring engine — qualitative bands (hypothesis, to be validated by successor benchmark).
+- No per-phase sub-skills — the 11-phase model was retired for state+transitions.
+- No new "challenger agent" type beyond the existing role — intensity + stop rule added to the existing skill instead.
+- No duplicate "workflow" skill alongside `workflow-continuity` — one lifecycle skill owns state.

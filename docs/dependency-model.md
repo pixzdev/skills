@@ -1,4 +1,4 @@
-# Dependency Model — PIXZ Skills
+# Dependency Model — PixzFlow Skills
 
 ## Types — Explicit Semantics
 
@@ -27,32 +27,28 @@ install <skill-id> [--with-optional]
 
 Fail conditions are explicit — no silent omission of hard deps. Optional omission is explicit and inspectable.
 
-## Example — Verified Output (v1.0.1)
+## Example — Verified Output (v2.0.0)
+
+> **2.0.0 change:** the orchestrator's mandatory aggregates dropped from 8 to **1** (`pixz.core.verification`, the evidence floor). The other 12 capabilities are `optional` — activated **at runtime** by the capability-activation protocol, not force-installed. Evidence: GLM benchmark (B≈B1, C≈A, 1.48× trivial-task overhead) — see `docs/benchmark/GLM-benchmark-findings.md`.
 
 ```bash
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
-# → 10 nodes (mandatory only)
+# → 4 nodes (mandatory only = the evidence-floor chain)
 # python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional
-# → 12 nodes (+ pixz.core.epistemic-challenger + pixz.quality.anti-ai-slop)
+# → 14 nodes (+ all 12 on-demand capabilities)
 ```
 
-**Breakdown mandatory (10):**
+**Breakdown mandatory (4):**
 ```
 pixz.core.orchestrator
- ├── pixz.core.planning → requires pixz.core.context-engineering
- ├── pixz.core.context-engineering
- ├── pixz.core.environment-awareness
- ├── pixz.core.capability-discovery
- ├── pixz.core.workflow-continuity → requires pixz.core.context-engineering
- ├── pixz.core.epistemic-reasoning → requires pixz.core.context-engineering
- ├── pixz.core.verification → requires pixz.core.epistemic-reasoning
- └── pixz.core.quality-gate → requires pixz.core.verification, pixz.core.change-safety → requires pixz.core.environment-awareness
-# count: orchestrator + planning + context + environment + capability-discovery + workflow-continuity + epistemic-reasoning + verification + quality-gate + change-safety = 10
+ └── pixz.core.verification (aggregate — evidence floor)
+      └── pixz.core.epistemic-reasoning (requires)
+           └── pixz.core.context-engineering (requires)
 ```
 
-**With `--with-optional` (+2):** adds `pixz.core.epistemic-challenger` (requires epistemic-reasoning) and `pixz.quality.anti-ai-slop` (requires verification) → **12**.
+**With `--with-optional` (+10 new):** planning, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-challenger, replanning, quality-gate, change-safety, anti-ai-slop → **14**.
 
-**Agent-design (11 mandatory):** `pixz.ai.agent-design` → requires `pixz.core.orchestrator` + `pixz.core.change-safety` → expands to same 10 + agent-design itself = **11** (12 with optional). This corrects audit finding #7 where docs incorrectly said 12 mandatory.
+**Agent-design:** `pixz.ai.agent-design` → requires `pixz.core.orchestrator` + `pixz.core.change-safety` → 5 nodes (6 with `--with-optional`).
 
 ## Cycles
 

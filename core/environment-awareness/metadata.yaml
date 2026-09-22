@@ -1,33 +1,11 @@
 id: pixz.core.environment-awareness
 name: Environment Awareness
+version: 2.0.0
 category: core
-version: 1.1.0
-status: stable
-description: Inspects actual OS, runtime, framework, package manager, git, filesystem,
-  and tooling before acting.
-triggers:
-- environment
-- stack detection
-- runtime
-- package manager
-- git state
+description: Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling during ORIENT.
+triggers: [environment, stack detection, runtime, package manager, git state]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires: []
 aggregates: []
 optional: []
 conflicts: []
-compatible_runtimes:
-- claude
-- openclaw
-- opencode
-- hermes
-- codex
-- generic
-inputs:
-- objective
-- constraints
-- context
-outputs:
-- artifact
-- findings
-- verification
-tools: []
