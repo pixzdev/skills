@@ -5,7 +5,9 @@ Self-learning lifecycle tests — deterministic, model-free, subprocess-isolated
 What this layer VERIFIES (state-machine depth of the verification-depth ladder):
   first activation · duplicate-setup refusal · persisted state reload (fresh process)
   · skill version change · newly discovered skill · failed adaptation (no evidence /
-  corrupt state) · regression of a READY adaptation after drift.
+  corrupt state) · regression of a READY adaptation after drift · doctor measured
+  baseline · installed-copy integrity · sitrep · adoption assessment (auto-run at
+  first-run completion) · runtime hooks wiring.
 
 What this layer does NOT verify (honest limits): that a real model reading AGENTS.md
 actually performs the behavioral half of the lifecycle. That belongs to the behavioral
@@ -203,6 +205,111 @@ def test_task_state_adaptation_pointer(tmp):
                  ok, f"adaptation.status enum={statuses}")
 
 
+def run_script(tmp, name, *args, root=None):
+    script = ROOT / "scripts" / name
+    cmd = [sys.executable, str(script)] + list(args)
+    return subprocess.run(cmd, capture_output=True, text=True, timeout=120)
+
+
+def test_doctor_measured_baseline(tmp):
+    state = tmp / "doc" / "state.json"
+    r = run_script(tmp, "doctor.py", "--root", str(tmp / "pixzroot"), "--state", str(state), "--json")
+    rep = json.loads(r.stdout) if r.returncode == 0 and r.stdout.strip().startswith("{") else {}
+    dims = rep.get("dimensions", {})
+    ok = (r.returncode == 0
+          and dims.get("state_persistence") in ("yes", "no")      # measured, not assumed
+          and dims.get("verification") in ("yes", "no")
+          and dims.get("delegation") == "unknown"                  # unmeasurable stays unknown
+          and dims.get("research") == "unknown")
+    # --write fills only unknowns and never invents the unmeasurable
+    run(state, "init", "--runtime", "claude", root=tmp / "pixzroot")
+    run_script(tmp, "doctor.py", "--root", str(tmp / "pixzroot"), "--state", str(state), "--write")
+    st = json.loads(state.read_text())
+    d = st.get("dimensions", {})
+    ok = ok and d.get("delegation") == "unknown" and d.get("state_persistence") in ("yes", "no")
+    return check("lifecycle.doctor-measured-baseline",
+                 "doctor measures baseline dimensions; unmeasurable stay unknown (never invented)",
+                 ok, f"dims={dims}; after --write: state_persistence={d.get('state_persistence')}, delegation={d.get('delegation')}")
+
+
+def test_verify_installed_integrity(tmp):
+    root = tmp / "pixzroot"
+    state = tmp / "vi" / "state.json"
+    run(state, "init", root=root)
+    inst = tmp / "vi" / "installed" / "orchestrator"
+    inst.mkdir(parents=True)
+    import shutil as _sh
+    _sh.copy(root / "core" / "orchestrator" / "SKILL.md", inst / "SKILL.md")
+    _sh.copy(root / "core" / "orchestrator" / "metadata.yaml", inst / "metadata.yaml")
+    r1 = run(state, "verify-installed", "--runtime", "generic",
+             "--search-dir", str(tmp / "vi" / "installed"), root=root)
+    clean_ok = r1.returncode == 0 and "match" in r1.stdout and "pixz.core.orchestrator" in r1.stdout
+    (inst / "SKILL.md").write_text((inst / "SKILL.md").read_text() + "\n<!-- tampered -->\n")
+    r2 = run(state, "verify-installed", "--runtime", "generic",
+             "--search-dir", str(tmp / "vi" / "installed"), root=root)
+    tamper_ok = r2.returncode == 10 and "MODIFIED" in r2.stdout
+    return check("lifecycle.verify-installed-integrity",
+                 "installed-copy integrity: clean copy matches (exit 0); tampered copy detected (exit 10)",
+                 clean_ok and tamper_ok, f"clean exit={r1.returncode}; tampered exit={r2.returncode}")
+
+
+def test_sitrep_orientation(tmp):
+    root = tmp / "pixzroot"
+    state = tmp / "sr" / "state.json"
+    task = tmp / "sr" / "task-state.json"
+    run(state, "init", root=root)
+    run(state, "mark-adapted", "--evidence", "fixture", root=root)
+    task.write_text(json.dumps({"task_id": "t-1", "objective": "Ship the adapter", "status": "active",
+                                "mode": "balanced", "next_action": "run integration smoke",
+                                "capabilities": [{"id": "pixz.core.verification", "status": "active"}]}))
+    r = run_script(tmp, "sitrep.py", "--root", str(root), "--state", str(state), "--task-state", str(task))
+    ok = (r.returncode == 0 and "STATE=READY" in r.stdout and "Ship the adapter" in r.stdout
+          and "run integration smoke" in r.stdout and "pixz.core.verification" in r.stdout)
+    return check("lifecycle.sitrep-orientation",
+                 "sitrep: one block reports adaptation + task objective + next_action + active capabilities",
+                 ok, f"exit={r.returncode}; lines={len(r.stdout.splitlines())}")
+
+
+def test_adoption_assessment(tmp):
+    root = tmp / "pixzroot"
+    state = tmp / "as" / "state.json"
+    # fresh environment: source present but nothing adopted -> must NOT score high
+    r0 = run_script(tmp, "assess.py", "--root", str(root), "--state", str(state))
+    fresh_score = int(r0.stdout.split("score:")[1].split("/")[0]) if "score:" in r0.stdout else -1
+    fresh_ok = 0 <= fresh_score < 70 and "NOT ADOPTED" in r0.stdout or "PARTIALLY ADOPTED" in r0.stdout
+    # full first-run: init (+ recorded dim) -> mark-installed -> mark-adapted auto-runs assessment
+    run(state, "init", "--runtime", "claude", "--dim", "delegation=yes", root=root)
+    run(state, "mark-installed", "--all", root=root)
+    r1 = run(state, "mark-adapted", "--evidence", "fixture adoption", root=root)
+    auto_ok = "ADOPTION ASSESSMENT" in r1.stdout and "score:" in r1.stdout
+    adopted_score = int(r1.stdout.split("score:")[1].split("/")[0]) if "score:" in r1.stdout else -1
+    st = json.loads(state.read_text())
+    history_ok = any(h.get("summary", "").startswith("adoption assessment") for h in st.get("history", []))
+    ok = fresh_ok and auto_ok and adopted_score >= 90 and history_ok
+    return check("lifecycle.adoption-assessment",
+                 "adoption score: fresh env scores low; first-run completion auto-assesses >=90 and records it in history",
+                 ok, f"fresh={fresh_score}; after first-run={adopted_score}; auto-run={auto_ok}; history={history_ok}")
+
+
+def test_hooks_wiring(tmp):
+    root = tmp / "hooksroot"
+    root.mkdir()
+    (root / "AGENTS.md").write_text("# test contract\n")
+    r1 = run_script(tmp, "hooks.py", "check", "--runtime", "claude", "--root", str(root))
+    gap_ok = r1.returncode == 10 and "GAP" in r1.stdout
+    r2 = run_script(tmp, "hooks.py", "install", "--runtime", "claude", "--root", str(root))
+    wired = (root / "CLAUDE.md").read_text() if (root / "CLAUDE.md").exists() else ""
+    install_ok = r2.returncode == 0 and "@AGENTS.md" in wired
+    r3 = run_script(tmp, "hooks.py", "install", "--runtime", "claude", "--root", str(root))
+    idempotent = r3.returncode == 0 and wired.count("@AGENTS.md") == (root / "CLAUDE.md").read_text().count("@AGENTS.md") == 1
+    r4 = run_script(tmp, "hooks.py", "check", "--runtime", "openclaw", "--root", str(root))
+    native_ok = r4.returncode == 0 and "natively" in r4.stdout
+    return check("lifecycle.hooks-wiring",
+                 "hooks: claude gap detected (exit 10) -> install wires @AGENTS.md once (idempotent); native runtimes pass without wiring",
+                 gap_ok and install_ok and idempotent and native_ok,
+                 f"gap exit={r1.returncode}; install exit={r2.returncode}; re-install exit={r3.returncode}; native exit={r4.returncode}")
+
+
 def main():
     print("=== PixzFlow self-learning lifecycle tests (deterministic, subprocess-isolated) ===")
     with tempfile.TemporaryDirectory(prefix="pixz-lifecycle-") as td:
@@ -217,6 +324,11 @@ def main():
         test_failed_adaptation(tmp)
         test_regression_after_adaptation(tmp)
         test_task_state_adaptation_pointer(tmp)
+        test_doctor_measured_baseline(tmp)
+        test_verify_installed_integrity(tmp)
+        test_sitrep_orientation(tmp)
+        test_adoption_assessment(tmp)
+        test_hooks_wiring(tmp)
     passed = sum(1 for r in RESULTS if r[2])
     print(f"\n{passed}/{len(RESULTS)} lifecycle tests passed.")
     print("limits: state-machine depth only (verification-depth ladder). The behavioral half —")
