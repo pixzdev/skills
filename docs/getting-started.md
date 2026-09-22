@@ -10,9 +10,11 @@ Agents fail when they guess *what* capability to use, *when* to activate it, *ho
 
 ## 3. Choose a skill
 
-Scan `registry.json` (machine) or `llms.txt` (LLM map) — the AGENTS.md contract tells the model how to match triggers:
+Scan `registry.json` (machine) or `llms.txt` (LLM map) — the AGENTS.md contract tells the model how to match triggers.
 
-- `coordinate, complex task` → `pixz.core.orchestrator`
+**Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills answer HOW. If you want more practical multi-step methodology, activate the orchestrator; load `core/orchestrator/references/operating-methodology.md` when the work is complex.
+
+- `coordinate, complex task` → `pixz.core.orchestrator` (MAIN)
 - `plan, roadmap` → `pixz.core.planning`
 - `security review, audit` → `pixz.security.review`
 - `gsap, scrolltrigger` → `pixz.motion.gsap`

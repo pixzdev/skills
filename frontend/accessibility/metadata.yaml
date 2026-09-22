@@ -1,9 +1,9 @@
 id: pixz.frontend.accessibility
 name: Accessibility
 category: frontend
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: WCAG-grounded auditing and remediation for perceivable, operable, understandable
+description: WCAG-grounded auditing and remediation — perceivable, operable, understandable, robust. Use for UI that people must use. Do not skip keyboard or screen-reader checks. For full product work, use MAIN skill pixz.core.orchestrator.
   and robust UIs.
 triggers:
 - a11y

@@ -1,6 +1,8 @@
 # Example — Full Orchestrated Task (production design, mode deep)
 
 > Goal: design and ship a rate-limited public API for a Next.js monorepo.
+>
+> This is the **MAIN skill** (`pixz.core.orchestrator`) in action. Specialist skills answer HOW. For the full practical operating loop, see `core/orchestrator/references/operating-methodology.md`.
 
 ## 1. ORIENT & MODEL (orchestrator)
 

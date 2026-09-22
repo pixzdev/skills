@@ -1,7 +1,7 @@
 ---
 name: Capability Discovery
 description: Persistent capability discovery and invocation — progressive loading of skills, agents, tools, MCP servers and libraries, with tracked activation state that survives phase transitions.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.capability-discovery
 category: core
 triggers: [discover, what can I use, available tools, find skill, activate skill]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Capability Discovery — `pixz.core.capability-discovery`
 
+> **Specialist HOW skill (discovery/activation).** The **MAIN skill** is `pixz.core.orchestrator` — it decides WHEN/WHICH/HOW DEEPLY to activate. If you want more practical operating methodology, use that skill and load `core/orchestrator/references/operating-methodology.md`.
+>
 > "Discover first, select second, use third — and keep using." Skills are persistent capabilities, not one-time prompt attachments.
 
 ## Purpose

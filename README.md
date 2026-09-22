@@ -30,7 +30,7 @@ STATE     continuity              (L5 — task-state + adaptation-state + eviden
 | `llms.txt` | LLM map (projection of the registry) |
 | `schemas/` | `task-state` · `adaptation-state` · `handoff` · `skill` · `registry` · `eval` |
 | `scripts/` | `validate.py` · `check-cycles.py` · `resolve.py` · `activation.py` (incl. `verify-installed`) · `doctor.py` · `assess.py` · `sitrep.py` · `hooks.py` · `integration-smoke.sh` |
-| `evals/` | documentary (18) + behavioral (33) + lifecycle (14) |
+| `evals/` | documentary (19) + behavioral (33) + lifecycle (14) |
 | `adapters/` | Thin runtime translators (claude, openclaw, opencode, hermes) |
 | `core/` + domains | 14 core + 15 domain skills (`pixz.<domain>.<name>` IDs) |
 
@@ -108,6 +108,8 @@ Entries are summaries + references — never transcripts, never hidden chain-of-
 
 29 skills, stable `pixz.<domain>.<name>` IDs, dependency-aware (`requires` / `aggregates` / `optional` / `conflicts`). 14 core: orchestrator, planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-reasoning, epistemic-challenger, verification, change-safety, replanning, quality-gate, **self-learning**. 15 domain: quality, engineering, security, design, frontend, motion, devops, ai.
 
+**Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills answer HOW. If you want more practical multi-step methodology, activate the orchestrator; load `core/orchestrator/references/operating-methodology.md` when the work is complex.
+
 ```
 DISCOVER (metadata only) → MATCH → LOAD (progressive) → ACTIVATE → USE → VERIFY → PERSIST → REINVOKE → COMPLETE
 ```
@@ -134,7 +136,7 @@ Never: `file exists = valid` · `command succeeded = correct` · `test passed = 
 | Layer | Harness | Proves |
 |---|---|---|
 | 1 Structural | `scripts/validate.py` + `check-cycles.py` | registry/metadata/schemas consistent; contracts hold |
-| 2 Documentary | `evals/runner.py` (18, heuristic) | skills document required methodology |
+| 2 Documentary | `evals/runner.py` (19, heuristic) | skills document required methodology |
 | 3 Behavioral | `evals/behavioral/runner.py` (33 + invariants, heuristic) | routing/activation smoke, evidence floor, trivial-task budget, mode consistency |
 | 3b Lifecycle | `evals/lifecycle/run_tests.py` (14, deterministic) | self-learning state machine + 2.2 tooling: activation, reload, drift, failed adaptation, regression, doctor, integrity, sitrep, assessment, hooks |
 | 4 Integration | `scripts/integration-smoke.sh` | installer → discovery → invocation where runtimes exist |
@@ -227,7 +229,7 @@ docs/                                     # architecture, evaluation, taxonomy, 
 
 ## Evaluation
 
-See `docs/evaluation.md`. Per-layer results, never cross-layer inflation: structural PASS/FAIL · documentary `X/18 heuristic` · behavioral `X/33` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime. The behavioral E-series covers: first activation · existing runtime (no duplicate setup) · skill upgrade · failed assumption · self-improvement · anti-overengineering · regression · persistence · validation depth · contradictory evidence · trivial-task budget · high-risk escalation.
+See `docs/evaluation.md`. Per-layer results, never cross-layer inflation: structural PASS/FAIL · documentary `X/19 heuristic` · behavioral `X/33` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime. The behavioral E-series covers: first activation · existing runtime (no duplicate setup) · skill upgrade · failed assumption · self-improvement · anti-overengineering · regression · persistence · validation depth · contradictory evidence · trivial-task budget · high-risk escalation.
 
 ## Benchmarks
 

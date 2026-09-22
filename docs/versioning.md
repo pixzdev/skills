@@ -1,5 +1,18 @@
 # Versioning — PixzFlow
 
+## 2.3.0 Notes (non-breaking, additive)
+
+| Change | Detail |
+|---|------|
+| Main skill | `pixz.core.orchestrator` 2.0.0 → **2.1.0** is documented as the **MAIN practical operating skill**. Specialist skills answer HOW; the orchestrator answers WHEN/WHY/WHICH/HOW DEEPLY. |
+| Progressive disclosure | Full practical operating loop lives in `core/orchestrator/references/operating-methodology.md` (loaded only for complex/high-risk work). SKILL.md body stays invocation-sized. |
+| Domain skills | All 15 domain skills 1.1.0 → **1.2.0** — stubs expanded to executable methodology (when/not, steps, examples, verification, failure conditions, structured output). |
+| Core skills | Remaining core skills + `anti-ai-slop` bumped (2.0.0 → 2.1.0; verification 2.1.0 → 2.2.0; self-learning 2.1.0 → 2.2.0) with a main-skill pointer and practical additions. |
+| Routing copy | Every SKILL.md tells the agent: if you want more practical multi-step methodology, use `pixz.core.orchestrator`. |
+| Evals | Documentary cases 18 → 19 (`eval.orchestrator.main-skill-01`). Mandatory orchestrator closure unchanged (4 nodes; budget invariant holds). |
+
+No IDs renamed, no triggers removed, no hard `requires` added — minor bump.
+
 ## 2.2.0 Notes (non-breaking, additive)
 
 | Change | Detail |

@@ -1,7 +1,7 @@
 ---
 name: Workflow Continuity
 description: Persistent task state, checkpointing, and resumability across compaction, session restart, subagent handoff, model change and runtime change.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.workflow-continuity
 category: core
 triggers: [workflow, continue, resume, handoff, persist state, task state, checkpoint]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Workflow Continuity — `pixz.core.workflow-continuity`
 
+> **Specialist HOW skill (state).** For practical multi-step operating methodology, activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` for long-horizon / second-pass work that must survive compaction.
+>
 > Continuity is a **file-based substrate**, not a conversation habit. Context compaction, session restarts, model changes and runtime changes all destroy conversation; they do not destroy a well-formed state file.
 
 ## Purpose

@@ -1,9 +1,9 @@
 id: pixz.engineering.api-design
 name: API Design
 category: engineering
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Methodology for consistent, versioned, secure and observable API contracts.
+description: Design consistent, versioned, secure, observable API contracts (REST/GraphQL/OpenAPI). Use when adding or changing endpoints. Do not use for unrelated UI work. For multi-step shipping, activate the MAIN skill pixz.core.orchestrator.
 triggers:
 - api design
 - rest

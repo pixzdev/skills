@@ -1,5 +1,5 @@
 {
-  "version": "2.2.0",
+  "version": "2.3.0",
   "channel": "stable",
   "limits": {
     "max_skill_chain_depth": 15,
@@ -10,7 +10,7 @@
     {
       "id": "pixz.protocol.context",
       "name": "Context Protocol",
-      "description": "Lifecycle discover→filter→prioritize→load→compress→pin→update→evict→restore; acquisition order task-state→repo→tools/MCP→docs→research→user; sufficiency stops acquisition.",
+      "description": "Lifecycle discover\u2192filter\u2192prioritize\u2192load\u2192compress\u2192pin\u2192update\u2192evict\u2192restore; acquisition order task-state\u2192repo\u2192tools/MCP\u2192docs\u2192research\u2192user; sufficiency stops acquisition.",
       "path": "core/context-engineering/SKILL.md"
     },
     {
@@ -22,7 +22,7 @@
     {
       "id": "pixz.protocol.capability-activation",
       "name": "Capability Activation",
-      "description": "Persistent skill invocation: discover→match→load (progressive)→activate→use→verify→persist→reinvoke; activation state lifecycle; budget rule — every activation earns its context cost.",
+      "description": "Persistent skill invocation: discover\u2192match\u2192load (progressive)\u2192activate\u2192use\u2192verify\u2192persist\u2192reinvoke; activation state lifecycle; budget rule \u2014 every activation earns its context cost.",
       "path": "core/capability-discovery/SKILL.md"
     },
     {
@@ -34,7 +34,7 @@
     {
       "id": "pixz.protocol.argumentation",
       "name": "Argumentation",
-      "description": "Typed claims with explicit transitions (unknown→hypothesis→tested→supported; assumption→challenged→falsified; claim→evidence→verified); position change attribution.",
+      "description": "Typed claims with explicit transitions (unknown\u2192hypothesis\u2192tested\u2192supported; assumption\u2192challenged\u2192falsified; claim\u2192evidence\u2192verified); position change attribution.",
       "path": "core/epistemic-reasoning/SKILL.md"
     },
     {
@@ -46,19 +46,19 @@
     {
       "id": "pixz.protocol.escalation",
       "name": "Failure Recovery & Escalation",
-      "description": "FAIL→CLASSIFY→INSPECT→ISOLATE→HYPOTHESIS→TEST→REPAIR→REGRESSION CHECK→CONTINUE; each retry adds information; ladder retry→inspect→alternate→research→specialist→challenge→parent→user.",
+      "description": "FAIL\u2192CLASSIFY\u2192INSPECT\u2192ISOLATE\u2192HYPOTHESIS\u2192TEST\u2192REPAIR\u2192REGRESSION CHECK\u2192CONTINUE; each retry adds information; ladder retry\u2192inspect\u2192alternate\u2192research\u2192specialist\u2192challenge\u2192parent\u2192user.",
       "path": "core/replanning/SKILL.md"
     },
     {
       "id": "pixz.protocol.self-learning",
       "name": "Self-Learning Lifecycle",
-      "description": "Post-install lifecycle DETECT→INVENTORY→BASELINE→ADAPT→VERIFY→PERSIST→READY plus in-work improvement loop OBSERVE→DIAGNOSE→CHALLENGE→IMPROVE→VERIFY→REGRESS→PERSIST→REUSE; adaptation state in .pixz/adaptation-state.json; second activation is a check, never a re-run; drift re-adapts only the delta.",
+      "description": "Post-install lifecycle DETECT\u2192INVENTORY\u2192BASELINE\u2192ADAPT\u2192VERIFY\u2192PERSIST\u2192READY plus in-work improvement loop OBSERVE\u2192DIAGNOSE\u2192CHALLENGE\u2192IMPROVE\u2192VERIFY\u2192REGRESS\u2192PERSIST\u2192REUSE; adaptation state in .pixz/adaptation-state.json; second activation is a check, never a re-run; drift re-adapts only the delta.",
       "path": "core/self-learning/SKILL.md"
     },
     {
       "id": "pixz.protocol.verification-depth",
       "name": "Verification Depth",
-      "description": "Verification depth must match the claim: EXISTS→existence check, PARSES→parser, SCHEMA-COMPLIANT→schema validation, CORRECT→behavioral verification, INTEGRATED→integration test, RUNTIME-ACTIVE→runtime invocation, PERSISTENT→repeated/delayed observation, IMPROVED→baseline comparison. Never substitute a weaker rung (file exists = valid, command succeeded = correct, test passed = requirement satisfied, agent said success = verified).",
+      "description": "Verification depth must match the claim: EXISTS\u2192existence check, PARSES\u2192parser, SCHEMA-COMPLIANT\u2192schema validation, CORRECT\u2192behavioral verification, INTEGRATED\u2192integration test, RUNTIME-ACTIVE\u2192runtime invocation, PERSISTENT\u2192repeated/delayed observation, IMPROVED\u2192baseline comparison. Never substitute a weaker rung (file exists = valid, command succeeded = correct, test passed = requirement satisfied, agent said success = verified).",
       "path": "core/verification/SKILL.md"
     }
   ],
@@ -98,7 +98,7 @@
     {
       "id": "pixz.policy.anti-ai-slop",
       "name": "Anti-AI Slop",
-      "description": "Diagnostic criteria, not dogmatic bans; never classify by surface trait alone — judge purpose and value.",
+      "description": "Diagnostic criteria, not dogmatic bans; never classify by surface trait alone \u2014 judge purpose and value.",
       "enforces": [
         "design",
         "frontend",
@@ -111,9 +111,9 @@
       "id": "pixz.core.orchestrator",
       "name": "Orchestrator",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "PixzFlow's adaptive agent operating system — assess, mode, activate, delegate, decide — with an explicit orchestration budget.",
+      "description": "MAIN PixzFlow operating skill. Assesses the task, selects mode, activates capabilities, delegates, inspects, challenges, verifies, replans, and ships. Use for complex/multi-step work. Do not use for trivial reversible edits. Load references/operating-methodology.md for the full practical loop.",
       "triggers": [
         "orchestrate",
         "coordinate",
@@ -166,9 +166,9 @@
       "id": "pixz.core.planning",
       "name": "Planning",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Minimal, mode-sized execution plans with verifiable steps and defined stop conditions.",
+      "description": "Minimal, mode-sized execution plans with verifiable steps, explicit assumptions (deep mode), and defined stop conditions. Use before substantial multi-step work. Do not write a 10-step plan for a rename. Operating loop lives in MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "plan",
         "roadmap",
@@ -208,9 +208,9 @@
       "id": "pixz.core.context-engineering",
       "name": "Context Engineering",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Explicit context lifecycle — discover, filter, prioritize, load, compress, pin, update, evict, restore.",
+      "description": "Explicit context lifecycle \u2014 discover, filter, prioritize, load, compress, pin, update, evict, restore \u2014 maximizing useful information per context token.",
       "triggers": [
         "context",
         "requirements",
@@ -247,9 +247,9 @@
       "id": "pixz.core.environment-awareness",
       "name": "Environment Awareness",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling during ORIENT.",
+      "description": "Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling during ORIENT \u2014 before any environment-dependent decision.",
       "triggers": [
         "environment",
         "stack detection",
@@ -286,9 +286,9 @@
       "id": "pixz.core.capability-discovery",
       "name": "Capability Discovery",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Persistent capability discovery and invocation with progressive loading and tracked activation state.",
+      "description": "Persistent capability discovery and invocation \u2014 progressive loading of skills, agents, tools, MCP servers and libraries, with tracked activation state that survives phase transitions.",
       "triggers": [
         "discover",
         "what can I use",
@@ -325,9 +325,9 @@
       "id": "pixz.core.workflow-continuity",
       "name": "Workflow Continuity",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Persistent task state, checkpointing and resumability across compaction, restart, handoff, model and runtime change.",
+      "description": "Persistent task state, checkpointing, and resumability across compaction, session restart, subagent handoff, model change and runtime change.",
       "triggers": [
         "workflow",
         "continue",
@@ -368,9 +368,9 @@
       "id": "pixz.core.delegation-handoff",
       "name": "Delegation & Handoff",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Bounded delegation with economics test, structured contract, mandatory return, parent inspection.",
+      "description": "Bounded delegation with an explicit economics test, structured dispatch contract, mandatory structured return, and parent inspection \u2014 no \"looks good\" returns.",
       "triggers": [
         "delegate",
         "handoff",
@@ -409,9 +409,9 @@
       "id": "pixz.core.epistemic-reasoning",
       "name": "Epistemic Reasoning",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Epistemic state engine — typed claims, explicit transitions, calibrated confidence, position integrity.",
+      "description": "The epistemic state engine \u2014 typed claims with explicit transitions (unknown\u2192hypothesis\u2192tested\u2192supported), assumption tracking, calibrated confidence, position integrity.",
       "triggers": [
         "reason",
         "evidence",
@@ -451,9 +451,9 @@
       "id": "pixz.core.epistemic-challenger",
       "name": "Epistemic Challenger",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Intensity-scaled adversarial challenge with explicit stop rule — no always-challenge, no debate loops.",
+      "description": "Intensity-scaled adversarial challenge (risk \u00d7 uncertainty \u00d7 impact \u00d7 irreversibility) with an explicit stop rule \u2014 no always-challenge, no debate loops.",
       "triggers": [
         "challenge",
         "counterargument",
@@ -492,9 +492,9 @@
       "id": "pixz.core.verification",
       "name": "Verification",
       "category": "core",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "status": "stable",
-      "description": "Evidence-based verification as a continuous loop with source-of-record discipline, the verification-depth ladder and typed checks.",
+      "description": "Evidence-based verification as a continuous loop \u2014 source-of-record discipline, the verification-depth ladder (claim depth must match evidence depth), triggered checks, typed verification, residual risks.",
       "triggers": [
         "verify",
         "inspect",
@@ -533,9 +533,9 @@
       "id": "pixz.core.change-safety",
       "name": "Change Safety",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Static pre-mutation policy — reversible/partially/irreversible tiers, authority, scope; irreversible always confirmed.",
+      "description": "Static pre-mutation policy \u2014 classifies every change (reversible / partially / irreversible), checks authority and scope; irreversible actions require confirmation in every mode. Use before mutations. Main operating loop is pixz.core.orchestrator.",
       "triggers": [
         "safe change",
         "risk",
@@ -574,9 +574,9 @@
       "id": "pixz.core.replanning",
       "name": "Replanning",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Failure recovery ladder and bounded replanning — each retry adds information.",
+      "description": "Failure recovery and structured replanning \u2014 classify, hypothesize, test, repair, regression-check; each retry must add information; bounded escalation ladder.",
       "triggers": [
         "replan",
         "pivot",
@@ -617,9 +617,9 @@
       "id": "pixz.core.quality-gate",
       "name": "Quality Gate",
       "category": "core",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "The done-decision — consolidates verification, risk and orchestration budget into stop/ship/revise/replan.",
+      "description": "The done-decision \u2014 consolidates acceptance criteria, verification, challenge verdicts, residual risks and the orchestration budget into stop/ship/revise/replan. Use before claiming done. Operating methodology lives in MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "quality gate",
         "ship check",
@@ -658,9 +658,9 @@
       "id": "pixz.quality.anti-ai-slop",
       "name": "Anti-AI Slop",
       "category": "quality",
-      "version": "2.0.0",
+      "version": "2.1.0",
       "status": "stable",
-      "description": "Diagnostic (not dogmatic) detection of generic, decorative, boilerplate or hallucinated artifacts — judges purpose and value, never surface traits alone.",
+      "description": "Diagnostic (not dogmatic) detection of generic, decorative, boilerplate or hallucinated artifacts \u2014 judges purpose and value, never surface traits alone.",
       "triggers": [
         "anti slop",
         "generic design",
@@ -698,9 +698,9 @@
       "id": "pixz.engineering.api-design",
       "name": "API Design",
       "category": "engineering",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Methodology for consistent, versioned, secure and observable API contracts.",
+      "description": "Design consistent, versioned, secure, observable API contracts (REST/GraphQL/OpenAPI). Use when adding or changing endpoints. Do not use for unrelated UI work. For multi-step shipping, activate the MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "api design",
         "rest",
@@ -741,9 +741,9 @@
       "id": "pixz.engineering.system-design",
       "name": "System Design",
       "category": "engineering",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Structures system tradeoffs, constraints, failure domains and verification for architecture decisions.",
+      "description": "Make architecture tradeoffs explicit and verifiable \u2014 constraints, failure domains, ADRs, SLIs. Use for cross-service or scale decisions. Do not use for a single-function refactor. For multi-step shipping, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "system design",
         "architecture",
@@ -782,9 +782,9 @@
       "id": "pixz.security.review",
       "name": "Security Review",
       "category": "security",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Checklist-driven security review covering auth, authz, input, secrets, deps and architecture.",
+      "description": "Checklist-driven security review covering auth, authz, input, secrets, deps and architecture \u2014 scoped to authorized environments. Use before shipping auth, payments, PII, or public APIs. Never test production without authority.",
       "triggers": [
         "security review",
         "threat model",
@@ -824,9 +824,9 @@
       "id": "pixz.security.threat-modeling",
       "name": "Threat Modeling",
       "category": "security",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Systematic threat enumeration, impact scoring and mitigation mapping.",
+      "description": "STRIDE-based threat enumeration, impact scoring and mitigation mapping. Use before new trust boundaries, auth, or public surfaces. Do not use for a local-only helper with no data flow. Pair with MAIN skill pixz.core.orchestrator on high-risk systems.",
       "triggers": [
         "threat model",
         "STRIDE",
@@ -865,9 +865,9 @@
       "id": "pixz.design.uiux",
       "name": "UI/UX Design",
       "category": "design",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Human-centered interface methodology: flows, hierarchy, affordance and usability verification.",
+      "description": "Human-centered interface methodology \u2014 flows, hierarchy, affordance, states, and usability verification. Use when designing or reviewing UI. Do not use for backend-only work. For multi-step product work, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "ui design",
         "ux review",
@@ -907,9 +907,9 @@
       "id": "pixz.design.design-system",
       "name": "Design System",
       "category": "design",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Defines and enforces tokens, components, patterns and governance for consistent UIs.",
+      "description": "Define and enforce tokens, components, patterns and governance for consistent UIs. Use when creating or extending a system. Do not invent a second button. For product-wide rollouts, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "design system",
         "tokens",
@@ -947,9 +947,9 @@
       "id": "pixz.frontend.react",
       "name": "React Engineering",
       "category": "frontend",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "React/Next.js methodology: composition, state, boundaries, performance and verification.",
+      "description": "React/Next.js methodology \u2014 composition, server vs client boundaries, state, data fetching, performance and verification. Use for React/Next work. Do not use for non-React UI. For multi-step features, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "react",
         "next.js",
@@ -988,9 +988,9 @@
       "id": "pixz.frontend.accessibility",
       "name": "Accessibility",
       "category": "frontend",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "WCAG-grounded auditing and remediation for perceivable, operable, understandable and robust UIs.",
+      "description": "WCAG-grounded auditing and remediation \u2014 perceivable, operable, understandable, robust. Use for UI that people must use. Do not skip keyboard or screen-reader checks. For full product work, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "a11y",
         "accessibility",
@@ -1029,9 +1029,9 @@
       "id": "pixz.motion.gsap",
       "name": "GSAP Motion",
       "category": "motion",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "GSAP timeline and ScrollTrigger methodology with performance and accessibility constraints.",
+      "description": "GSAP timeline and ScrollTrigger methodology with performance and accessibility constraints. Use when motion must aid comprehension. Do not animate layout properties. For multi-step UI work, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "gsap",
         "scrolltrigger",
@@ -1069,9 +1069,9 @@
       "id": "pixz.motion.remotion",
       "name": "Remotion",
       "category": "motion",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Declarative video composition with timeline verification and render-pipeline discipline.",
+      "description": "Declarative video composition with timeline verification and render-pipeline discipline. Use for programmatic video at edit-scale. Do not stand up Remotion for a one-off clip. For pipeline work, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "remotion",
         "programmatic video",
@@ -1108,9 +1108,9 @@
       "id": "pixz.devops.docker",
       "name": "Docker & Containers",
       "category": "devops",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Reproducible container construction, layering, supply-chain and runtime verification.",
+      "description": "Reproducible container construction \u2014 digest-pinned bases, multi-stage builds, non-root runtime, supply-chain and runtime verification. Use for images and Dockerfiles. Never unpinned latest tags. For rollout work, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "docker",
         "container",
@@ -1148,9 +1148,9 @@
       "id": "pixz.devops.kubernetes",
       "name": "Kubernetes",
       "category": "devops",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Declarative Kubernetes delivery with rollout, health-check and failure-mode discipline.",
+      "description": "Declarative Kubernetes delivery with rollout, probes, PDBs, resource limits and rollback. Use for k8s/helm manifests. Do not force-apply. For multi-step delivery, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "kubernetes",
         "k8s",
@@ -1189,9 +1189,9 @@
       "id": "pixz.ai.rag",
       "name": "RAG Systems",
       "category": "ai",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Grounded retrieval-augmented generation: chunking, grounding, citation discipline and eval.",
+      "description": "Grounded retrieval-augmented generation \u2014 chunking, hybrid retrieval, citation, UNKNOWN handling and eval. Use when answers must come from a corpus. Do not invent citations. For system-level RAG work, use MAIN skill pixz.core.orchestrator.",
       "triggers": [
         "rag",
         "retrieval",
@@ -1231,9 +1231,9 @@
       "id": "pixz.ai.agent-design",
       "name": "Agent Design",
       "category": "ai",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "status": "stable",
-      "description": "Designs tool-enabled agents with bounded autonomy, verification and escalation.",
+      "description": "Design tool-enabled agents with bounded autonomy, tool contracts, verification and escalation. Use when specifying an agent. Do not grant unbounded tools. The runtime operating layer is MAIN skill pixz.core.orchestrator \u2014 use it for practical operation.",
       "triggers": [
         "agent design",
         "tool calling",
@@ -1272,9 +1272,9 @@
       "id": "pixz.core.self-learning",
       "name": "Self-Learning",
       "category": "core",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "status": "stable",
-      "description": "Post-install activation and self-learning — detect the installed workflow, baseline the runtime, adapt behavior, verify the adaptation, persist verified lessons, convert recurring failures into the smallest challenged mechanism.",
+      "description": "Post-install activation and self-learning \u2014 detect the installed PixzFlow workflow, baseline the runtime, adapt behavior, verify the adaptation, persist verified lessons, and convert recurring failures into the smallest reusable mechanism that survives challenge.",
       "triggers": [
         "self-train",
         "self-learn",

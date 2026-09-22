@@ -1,8 +1,8 @@
 id: pixz.core.epistemic-reasoning
 name: Epistemic Reasoning
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Epistemic state engine — typed claims, explicit transitions, calibrated confidence, position integrity.
+description: The epistemic state engine — typed claims with explicit transitions (unknown→hypothesis→tested→supported), assumption tracking, calibrated confidence, position integrity.
 triggers: [reason, evidence, assumption, confidence, uncertainty, claim]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

@@ -4,7 +4,7 @@
 
 ## Identity
 - Repo: https://github.com/pixzdev/skills
-- Version: 2.2.0 (VERSION file; registry.json)
+- Version: 2.3.0 (VERSION file; registry.json)
 - Entry (agents): `AGENTS.md` — canonical operating contract (entry protocol, modes, activation, self-learning, state, evidence, delegation, verification, stopping)
 - Entry (humans): `README.md` — overview + copy-paste **AI Agent Installation Prompt** + **Super Z / GLM / Z.AI Web Prompt**
 - Machine registry: `registry.json` (source of truth for capabilities)
@@ -46,6 +46,8 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 - `schemas/skill.schema.json`, `schemas/registry.schema.json`, `schemas/eval.schema.json`
 
 ## Capability map (29 skills; registry.json is authoritative — this is a projection)
+
+**Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills answer HOW. If you want more practical multi-step methodology, activate orchestrator and load `core/orchestrator/references/operating-methodology.md` when the work is complex.
 
 ### Core (14)
 | ID | Path | Triggers |
@@ -91,7 +93,7 @@ Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor; 4-
 - Policies: Scope Control · Simplicity (incl. anti-overengineering gate + improvement-economy/anti-proliferation gate) · Change Safety (static) · Orchestration Budget · Anti-AI Slop (diagnostic)
 
 ## Verification (layers, never conflate)
-1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (18, heuristic) · 3 behavioral `evals/behavioral/runner.py` (33 + registry invariants, heuristic) · 3b lifecycle `evals/lifecycle/run_tests.py` (14, deterministic state machine + 2.2 tooling) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H + I/J/K self-learning; UNRUN until executed).
+1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (19, heuristic) · 3 behavioral `evals/behavioral/runner.py` (33 + registry invariants, heuristic) · 3b lifecycle `evals/lifecycle/run_tests.py` (14, deterministic state machine + 2.2 tooling) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H + I/J/K self-learning; UNRUN until executed).
 
 ## Limitations (honest)
 - pinned channel: DOCUMENTED ONLY (no pixz.lock)

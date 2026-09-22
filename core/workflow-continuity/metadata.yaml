@@ -1,8 +1,8 @@
 id: pixz.core.workflow-continuity
 name: Workflow Continuity
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Persistent task state, checkpointing and resumability across compaction, restart, handoff, model and runtime change.
+description: Persistent task state, checkpointing, and resumability across compaction, session restart, subagent handoff, model change and runtime change.
 triggers: [workflow, continue, resume, handoff, persist state, task state, checkpoint]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

@@ -1,7 +1,7 @@
 ---
 name: Anti-AI Slop
 description: Diagnostic (not dogmatic) detection of generic, decorative, boilerplate or hallucinated artifacts — judges purpose and value, never surface traits alone.
-version: 2.0.0
+version: 2.1.0
 id: pixz.quality.anti-ai-slop
 category: quality
 triggers: [anti slop, generic design, boilerplate, AI slop]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Anti-AI Slop — `pixz.quality.anti-ai-slop`
 
+> **Specialist HOW skill (quality).** For practical multi-step operating methodology, activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` when slop review is one gate in a larger ship.
+>
 > Diagnostic criteria, not dogmatic bans. Every critique must have a communicative/functional justification.
 
 ## Purpose

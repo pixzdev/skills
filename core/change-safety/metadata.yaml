@@ -1,8 +1,8 @@
 id: pixz.core.change-safety
 name: Change Safety
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Static pre-mutation policy — reversible/partially/irreversible tiers, authority, scope; irreversible always confirmed.
+description: Static pre-mutation policy — classifies every change (reversible / partially / irreversible), checks authority and scope; irreversible actions require confirmation in every mode. Use before mutations. Main operating loop is pixz.core.orchestrator.
 triggers: [safe change, risk, reversible, scope control, tool selection]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

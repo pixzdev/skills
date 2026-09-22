@@ -1,9 +1,9 @@
 id: pixz.design.design-system
 name: Design System
 category: design
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Defines and enforces tokens, components, patterns and governance for
+description: Define and enforce tokens, components, patterns and governance for consistent UIs. Use when creating or extending a system. Do not invent a second button. For product-wide rollouts, use MAIN skill pixz.core.orchestrator.
   consistent UIs.
 triggers:
 - design system

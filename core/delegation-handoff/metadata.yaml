@@ -1,8 +1,8 @@
 id: pixz.core.delegation-handoff
 name: Delegation & Handoff
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Bounded delegation with economics test, structured contract, mandatory return, parent inspection.
+description: Bounded delegation with an explicit economics test, structured dispatch contract, mandatory structured return, and parent inspection — no "looks good" returns.
 triggers: [delegate, handoff, subagent, dispatch task]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:

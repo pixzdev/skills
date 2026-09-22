@@ -1,8 +1,8 @@
 id: pixz.core.context-engineering
 name: Context Engineering
-version: 2.0.0
+version: 2.1.0
 category: core
-description: Explicit context lifecycle — discover, filter, prioritize, load, compress, pin, update, evict, restore.
+description: Explicit context lifecycle — discover, filter, prioritize, load, compress, pin, update, evict, restore — maximizing useful information per context token.
 triggers: [context, requirements, what do we know, gather context, compaction]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires: []

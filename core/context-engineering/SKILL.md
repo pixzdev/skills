@@ -1,7 +1,7 @@
 ---
 name: Context Engineering
 description: Explicit context lifecycle — discover, filter, prioritize, load, compress, pin, update, evict, restore — maximizing useful information per context token.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.context-engineering
 category: core
 triggers: [context, requirements, what do we know, gather context, compaction]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Context Engineering — `pixz.core.context-engineering`
 
+> **Specialist HOW skill (context).** For practical multi-step operating methodology, activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` when the task is long-horizon (research, pin, restore).
+>
 > Context is a precious, lossy, expensive resource. The goal: **maximize useful information per context token** — and make everything that must survive, survive in a file.
 
 ## Purpose

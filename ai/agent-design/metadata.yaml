@@ -1,9 +1,9 @@
 id: pixz.ai.agent-design
 name: Agent Design
 category: ai
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Designs tool-enabled agents with bounded autonomy, verification and escalation.
+description: Design tool-enabled agents with bounded autonomy, tool contracts, verification and escalation. Use when specifying an agent. Do not grant unbounded tools. The runtime operating layer is MAIN skill pixz.core.orchestrator — use it for practical operation.
 triggers:
 - agent design
 - tool calling

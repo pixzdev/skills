@@ -1,7 +1,7 @@
 ---
 name: Replanning
 description: Failure recovery and structured replanning — classify, hypothesize, test, repair, regression-check; each retry must add information; bounded escalation ladder.
-version: 2.0.0
+version: 2.1.0
 id: pixz.core.replanning
 category: core
 triggers: [replan, pivot, strategy failed, alternative approach, failure, recovery]
@@ -10,6 +10,8 @@ compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 
 # Replanning — `pixz.core.replanning`
 
+> **Specialist HOW skill (recovery).** For practical multi-step operating methodology — when to re-plan vs re-initiate vs iterate — activate the **MAIN skill** `pixz.core.orchestrator`. Load `core/orchestrator/references/operating-methodology.md` for the full re-plan / re-initiate / super-iteration rules.
+>
 > No blind retry. A retry that changes nothing is a loop, not a recovery. Each retry must **add information** — recorded in task-state `failures[]`.
 
 ## Purpose

@@ -1,9 +1,9 @@
 id: pixz.motion.remotion
 name: Remotion
 category: motion
-version: 1.1.0
+version: 1.2.0
 status: stable
-description: Declarative video composition with timeline verification and render-pipeline
+description: Declarative video composition with timeline verification and render-pipeline discipline. Use for programmatic video at edit-scale. Do not stand up Remotion for a one-off clip. For pipeline work, use MAIN skill pixz.core.orchestrator.
   discipline.
 triggers:
 - remotion
