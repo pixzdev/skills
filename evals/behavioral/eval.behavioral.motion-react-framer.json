@@ -1,0 +1,18 @@
+{
+  "id": "eval.behavioral.motion-react-framer",
+  "skill": "pixz.motion.framer-motion",
+  "scenario": "react component animation with framer motion",
+  "expected_routing": "framer-motion specialist, not GSAP (wrong library for React declarative style)",
+  "expected_challenge": "none",
+  "risk": "low",
+  "should_select": [
+    "pixz.motion.framer-motion"
+  ],
+  "should_not_select": [
+    "pixz.motion.gsap",
+    "pixz.core.orchestrator"
+  ],
+  "verifies": "motion library routing (Framer for React, GSAP excluded)",
+  "expected_mode": "fast",
+  "context": "React landing page: staggered entrance for hero cards, hover springs on buttons, exit on modal close, scroll-driven parallax via useScroll. Library: Framer Motion."
+}

@@ -1,0 +1,30 @@
+{
+  "id": "eval.uiuxpro.design-01",
+  "skill_id": "pixz.frontend.ui-ux-pro",
+  "description": "UI/UX Pro skill enforces contrast-computed palettes, type scale caps, project Design DNA reuse, and anti-slop",
+  "category": "method",
+  "input": {
+    "prompt": "Design the color palette and typography for a fintech dashboard",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "4.5:1",
+      "Design DNA",
+      "2 typefaces",
+      "Anti-slop"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "contrast math as hard gate",
+      "project-adaptive first",
+      "type scale discipline",
+      "a11y-first UX priority"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

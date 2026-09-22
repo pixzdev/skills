@@ -16,7 +16,7 @@
 
 ## 3. What did I fail to inspect?
 - Actual runtime smoke tests (Claude Code reading `.claude/skills/`, OpenClaw `openclaw skills install`). Could not run those CLIs in sandbox; relied on docs.
-- Version channel `pinned` lockfile format not yet implemented (documented as concept; resolver accepts flag but does not write lockfile). TODO.
+- Version channel `pinned` lockfile format not yet implemented (documented as concept; resolver accepts flag but does not write lockfile). — **CLOSED in 2.5.0**: `resolve.py --lock pixz.lock` writes/updates the lock; `--channel pinned` verifies against it (`LOCK_MISMATCH`/`LOCK_MISSING_ENTRY` = hard fail); repo ships `pixz.lock`.
 
 ## 4. Which requirements may be unmet?
 - `schemas/workflow.schema.json` persistence abstraction is logical only — no file-based `.pixz/workflow.json` example. Added conceptual but not concrete adapter implementation of state file.

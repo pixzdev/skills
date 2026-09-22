@@ -1,0 +1,18 @@
+{
+  "id": "eval.behavioral.debug-flaky-repro",
+  "skill": "pixz.core.repro",
+  "scenario": "flaky test reduce to minimal repro before fix",
+  "expected_routing": "repro specialist + verification; no orchestrator ceremony",
+  "expected_challenge": "none",
+  "risk": "medium",
+  "should_select": [
+    "pixz.core.repro",
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.core.orchestrator"
+  ],
+  "verifies": "repro-before-fix routing on flaky tests",
+  "expected_mode": "balanced",
+  "context": "CI: the payment retry test fails about 1 in 10 runs. Reduce it to a minimal repro, classify the failure, then fix and verify with repeated runs."
+}

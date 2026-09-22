@@ -73,7 +73,7 @@ A standalone SKILL requires: distinct objective + reusable methodology + indepen
 - Dozens of niche personas (e.g., “Vue expert”, “Svelte expert”) — each must prove methodology; curated set proves pattern.
 
 ## Skill Count Rationale
-29 skills (28 in 2.0.0; +self-learning in 2.1.0): small enough to be coherent, large enough to cover critical paths. Adding a skill must pass the seven criteria above; removing one must not break dependency or leave a methodology gap.
+35 skills (28 in 2.0.0; +self-learning in 2.1.0; +mcp in 2.4.0; +framer-motion, ui-ux-pro, project-adapt, repro, commit-hygiene in 2.5.0): small enough to be coherent, large enough to cover critical paths. Adding a skill must pass the seven criteria above; removing one must not break dependency or leave a methodology gap.
 
 ## 2.0.0 Decisions
 
@@ -108,6 +108,54 @@ Deterministic state machine (probe/init/mark-adapted/sync/mark-installed) — th
 
 ### Intentionally NOT created in 2.1
 No "memory" skill (adaptation-state + task-state already cover it) · no self-improvement *agent* type (the loop is methodology, not a role) · no separate validation-depth skill (protocol + verification skill suffice) · no re-training scheduler (probe-at-ORIENT + drift detection suffice) · no lesson database (compact JSON ledger suffices).
+
+## 2.5.0 Decisions (motion & frontend design intelligence + held-ideas batch)
+
+### New SKILL — `pixz.motion.framer-motion`
+React/Next.js declarative motion is a **different methodology** from the existing `pixz.motion.gsap` (vanilla JS / Vue / Webflow, pinning, horizontal-scroll hijack): different library, different mental model (variants/props vs timeline API), different failure modes (`AnimatePresence` exits, hydration, `useTransform` binding). One skill per library avoids cross-wiring the wrong patterns; the **routing table (when Framer vs when GSAP)** lives inside the new skill and cross-references the GSAP skill. `optional` on `pixz.core.verification` only.
+
+### New SKILL — `pixz.frontend.ui-ux-pro`
+Design intelligence for frontend *builds*: product-type style direction, contrast-**computed** color roles, type-scale discipline, tokens, iconography, chart selection, a11y-first UX priority. **Kept distinct from `pixz.design.uiux`** (interaction/UX *quality critique* — review-oriented): uiux owns "is this usable/well-structured", ui-ux-pro owns "what should the visual system be + how do I implement it". Overlapping trigger (`ui design`) is deliberate — both should fire on UI work and they answer different questions; the boundary is documented in each skill's When NOT table. Differentiated from the community `ui-ux-pro-max` by being project-adaptive (Design DNA first), evidence-checked (contrast computed, not vibes), and integrated with the MCP set (better-icons, chrome-devtools, animation-inspector); its dataset is an optional quarantine import, never a copy.
+
+### New SKILL — `pixz.design.project-adapt` (Design DNA)
+The token-extraction + enforcement protocol as a standalone capability: INVENTORY → EXTRACT (typed, evidence-backed) → PROFILE (`.pixz/design-dna.json`) → constrained GENERATE → DRIFT CHECK → REPORT. Reused by ui-ux-pro (project-adaptive first step) and any future design work — a methodology with its own invocation, not a section of another skill.
+
+### New SKILL — `pixz.core.repro`
+Repro-before-fix is a **core** discipline (applies to every failure class, not just one domain): REPRO → CLASSIFY → MINIMIZE → FREEZE → FIX → VERIFY; a fix without a repro is a failure unless `NOT_REPRODUCIBLE` with an attempt log. `optional` on the orchestrator (mandatory closure stays 4 nodes).
+
+### New SKILL — `pixz.security.commit-hygiene`
+Security gate at the **commit boundary** (pre-publication): secrets in the staged diff (BLOCK, values never echoed), manifest/lockfile drift, stray artifacts, message↔diff consistency. Kept in `security` (not `core`) — it is a domain gate; `pixz.core.change-safety` stays the pre-change gate. No overlap with `pixz.security.review` (deep review) — commit-hygiene is a fast tripwire.
+
+### New TOOLS — `scripts/vet-skill.py` · `mcp.py usage` · `resolve.py --lock`
+- **vet-skill.py** — quarantine scanner for external skill bundles (injection/exfiltration/secret blockers → exit 1; consistency + budget warnings → exit 10; frontmatter structure; script inventory; `--json`). Deterministic half of the skill-import quarantine protocol (which stays agent-driven for the judgment calls). TOOL, not skill: no triggers, no invocation of its own.
+- **mcp.py usage** — per-server usage report (task-state `mcp.<id>` activations × check evidence × catalog → keep/verify/vet/suspend/check/idle). Extends the existing maintenance step with evidence instead of memory.
+- **resolve.py --lock / `pixz.lock`** — the `pinned` channel becomes real (self-audit TODO #25 closed): lockfile = version snapshot; pinned resolves verify against it, drift = hard fail. Repo ships `pixz.lock`.
+
+### CATALOG — motion & devtools additions
+`chrome-devtools` (T1 official — the strongest RUNTIME-ACTIVE evidence tool: performance traces, network, console, screenshots) and `animation-inspector` (T2 — animation-system detection + frame capture; core keyless). **Excluded on evidence:** `gsap-mcp` (bl00dclot) — capable, but clone+build install with no npx one-liner fails the zero-friction auto-config criterion (watchlist); Framer Motion/Motion MCP — none published at check date (docs via context7).
+
+### Intentionally NOT created in 2.5
+No Three.js/Lottie skills (no verified free no-key MCP + methodology demand; animation-inspector covers verification) · no per-MCP skills for the two new servers (catalog + existing skills cover them) · no copying of the `ui-ux-pro-max` dataset (quarantine-import protocol instead) · no new schemas (design DNA lives in `.pixz/design-dna.json` as a project artifact, not a repo schema).
+
+## 2.4.0 Decisions (MCP + external capability integration)
+
+### New SKILL — `pixz.core.mcp`
+Passed the seven standalone criteria: distinct objective (vetted integration of MCP servers + external skills) · reusable methodology (trust tiers → vetting gate → live-check-first → idempotent auto-config → budgeted activation → untrusted-output rule → maintenance) · independent invocation (runs alone: "add an MCP server") · clear triggers (`mcp`, `mcp server`, `mcpmarket`, `external tools`, …) · meaningful I/O (catalog entries, check evidence, config artifacts, report) · meaningful failure conditions (wiring blind, just-in-case tooling, untrusted output treated as fact, credential leakage, clobbering user config, auto-enabling imports) · verification method (live `initialize`+`tools/list` evidence in `.pixz/mcp-check.json` + documentary/behavioral evals). Kept distinct from capability-discovery because MCP has a **trust boundary + supply-chain surface** (vetting, untrusted output, idempotent config writes) that capability-discovery's invocation lifecycle does not cover — different failure modes. `optional` on the orchestrator (never an aggregate — the 4-node mandatory closure stays intact; trivial tasks stay cheap).
+
+### New TOOL — `scripts/mcp.py`
+Deterministic half of the protocol: catalog listing, tier mapping, live probes (stdio + streamable-HTTP + legacy SSE JSON-RPC), idempotent per-runtime config writers, status/detect. Stdlib-only like the rest of `scripts/`. Evidence file `.pixz/mcp-check.json` makes liveness observable without a model.
+
+### New PROTOCOL — `pixz.protocol.mcp-integration`
+Points at `core/mcp/SKILL.md` (same pattern as Capability Activation → capability-discovery). No new state schema: MCP activations live in task-state `capabilities[]` (`mcp.<server-id>` entries) and the check evidence file — no parallel substrate.
+
+### New POLICY — `pixz.policy.pixzflow-mandate`
+The complex-task obligation (complex work MUST run under the full protocol; skipping it = contractual failure GAGAL; trivial exempt). A policy, not a skill: it constrains *all* work and has no independent invocation.
+
+### NEW CATALOG — `mcp/catalog.json` (+ `mcp/README.md`)
+Machine source of truth for the integration universe: free + no signup + no API key by policy, trust tiers, per-entry verification sources, `excluded_with_reason` for auth-required entries. It is a **projection of curation decisions, not a second registry** — servers are not `registry.json` skills; the skill is `pixz.core.mcp`.
+
+### Intentionally NOT created in 2.4
+No per-server skills (23 servers as 23 skills would be micro-skill proliferation — the catalog + one skill covers them) · no MCP client skill (the runtime *is* the client) · no secrets-manager skill (policy: user-managed credentials, outside this repo's artifacts) · no automatic skill-merger from mcpmarket.com (imports are quarantined + reviewed + explicitly enabled — never auto) · no behavioral eval that fakes a network handshake (the live check runs at setup time on a networked runtime; evals assert routing + documentary gates only).
 
 ## 2.2.0 Decisions (adoption tooling)
 

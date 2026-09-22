@@ -1,0 +1,29 @@
+{
+  "id": "eval.mcp.autocfg",
+  "skill_id": "pixz.core.mcp",
+  "description": "MCP skill documents live-check-first (initialize + tools/list), idempotent auto-config via scripts/mcp.py, and per-runtime config locations",
+  "category": "method",
+  "input": {
+    "prompt": "Auto configure the mcp servers for this project",
+    "runtime": "claude"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "scripts/mcp.py",
+      "initialize",
+      "tools/list",
+      "idempotent",
+      ".mcp.json",
+      "mcp-check.json"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "POUR"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

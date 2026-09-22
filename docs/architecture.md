@@ -1,4 +1,4 @@
-# Architecture — PixzFlow 2.0
+# Architecture — PixzFlow 2.4
 
 > **PixzFlow** = a persistent, adaptive, model-agnostic **operating layer** for capable AI agents. PIXZ.DEV is the brand; this repository is the PixzFlow ecosystem.
 > This document is authoritative for the layer model and the operating model. `AGENTS.md` is the agent-facing contract; `registry.json` is the machine source of truth.

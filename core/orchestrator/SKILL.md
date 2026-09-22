@@ -1,7 +1,7 @@
 ---
 name: Orchestrator
 description: MAIN PixzFlow operating skill. Assesses the task, selects mode, activates capabilities, delegates, inspects, challenges, verifies, replans, and ships. Use for complex/multi-step work. Do not use for trivial reversible edits. Load references/operating-methodology.md for the full practical loop.
-version: 2.1.0
+version: 2.2.0
 id: pixz.core.orchestrator
 category: core
 triggers: [orchestrate, coordinate, delegate, complex task, multi-step]
@@ -147,16 +147,18 @@ Independently check: requirements · correctness · security · reliability · U
 ## Dependencies
 
 - **aggregates (mandatory when installed):** `pixz.core.verification` — the evidence floor. Even a mis-routed task keeps verification.
-- **optional (activated on demand via the capability protocol):** `pixz.core.planning`, `pixz.core.context-engineering`, `pixz.core.environment-awareness`, `pixz.core.capability-discovery`, `pixz.core.workflow-continuity`, `pixz.core.delegation-handoff`, `pixz.core.epistemic-reasoning`, `pixz.core.epistemic-challenger`, `pixz.core.replanning`, `pixz.core.quality-gate`, `pixz.core.change-safety`, `pixz.quality.anti-ai-slop`, `pixz.core.self-learning`
+- **optional (activated on demand via the capability protocol):** `pixz.core.planning`, `pixz.core.context-engineering`, `pixz.core.environment-awareness`, `pixz.core.capability-discovery`, `pixz.core.workflow-continuity`, `pixz.core.delegation-handoff`, `pixz.core.epistemic-reasoning`, `pixz.core.epistemic-challenger`, `pixz.core.replanning`, `pixz.core.quality-gate`, `pixz.core.change-safety`, `pixz.quality.anti-ai-slop`, `pixz.core.self-learning`, `pixz.core.mcp`
 - **requires:** none (top-level composition) · **conflicts:** none
 - Rationale (2.0.0): v1.1.0 made 8 capabilities mandatory aggregates; the GLM benchmark showed skills-alone ≈ no measurable advantage (B≈B1, C≈A) and 1.48× token overhead, worst on trivial tasks. Mandatory set reduced to the one structural floor; everything else activates on demand. See `docs/benchmark/GLM-benchmark-findings.md`.
 - Rationale (2.1.0): body made executable as the MAIN practical skill; full operating methodology moved to `references/operating-methodology.md` (progressive disclosure — load only when needed).
+- Rationale (2.2.0): `optional` gains `pixz.core.mcp` (external capability integration stays on-demand — the mandatory closure stays at 4 nodes so trivial tasks remain cheap); contractual failure condition added for complex tasks run without the protocol (the PixzFlow Mandate).
 
 ## Constraints & Failure Conditions
 
 - Fails if hard dependency missing, runtime incompatible, cycle detected, or limits exceeded.
 - Fails if a subagent handoff return lacks required contract fields — return it, do not accept.
 - Fails if a position flips without attributable cause (new evidence, better reasoning, changed constraint, failed verification, new requirement).
+- **Fails (contractually — GAGAL) if a complex task (high/critical band on complexity or risk, irreversible action, security/consequential surface, multi-component, long horizon) is executed without the PixzFlow protocol** — no assessment, no plan, no activation record, no task-state, no claim-matched verification. The output is not accepted as complete until the protocol is retrofitted with evidence. See `AGENTS.md#pixzflow-mandate-complex-task-obligation`. Trivial work is exempt.
 - Unbounded recursion forbidden: depth caps from `registry.json#limits`.
 - This skill does **not** supersede higher-priority system, platform, safety, legal, or developer instructions.
 

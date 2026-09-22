@@ -8,6 +8,12 @@ Usage:
   python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional
   python scripts/resolve.py --list --runtime generic
   python scripts/resolve.py --check-cycles
+
+Lockfile (pixz.lock) — the `pinned` channel, now real:
+  python scripts/resolve.py --install X --runtime R --channel stable --lock pixz.lock   # resolve + WRITE/update the lock
+  python scripts/resolve.py --install X --runtime R --channel pinned  --lock pixz.lock  # resolve + VERIFY every version against the lock
+Pinned + missing lock → fail. Pinned + any version drift (LOCK_MISMATCH) or missing entry
+(LOCK_MISSING_ENTRY) → fail. Exit 1. Default lock path: <repo>/pixz.lock.
 """
 import argparse, json, sys
 from pathlib import Path
@@ -22,7 +28,36 @@ def load_registry():
 def build_graph(registry):
     return {s["id"]: s for s in registry.get("skills", [])}
 
-def resolve(install_id, runtime, channel, graph, limits, registry, with_optional=False):
+def load_lock(path):
+    p = Path(path)
+    if not p.exists():
+        return None
+    try:
+        doc = json.loads(p.read_text(encoding="utf-8"))
+        doc["_source"] = str(p)
+        return doc
+    except Exception as e:
+        return {"skills": None, "_source": str(p), "_error": str(e)}
+
+
+def save_lock(path, graph_versions, install_id, runtime, channel):
+    from datetime import datetime, timezone
+    p = Path(path)
+    doc = load_lock(p)
+    skills = (doc or {}).get("skills") or {}
+    skills.update(graph_versions)
+    p.write_text(json.dumps({
+        "schema": "pixz/lock/1",
+        "channel": "pinned",
+        "created_at": doc.get("created_at") if doc and doc.get("created_at") else datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "pinned_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "pinned_by": f"resolve.py --install {install_id} --runtime {runtime} --channel {channel}",
+        "skills": dict(sorted(skills.items())),
+    }, indent=2, ensure_ascii=True) + "\n", encoding="utf-8")
+    return str(p)
+
+
+def resolve(install_id, runtime, channel, graph, limits, registry, with_optional=False, lock=None):
     if install_id not in graph:
         return None, f"Skill not found: {install_id}"
 
@@ -116,10 +151,18 @@ def resolve(install_id, runtime, channel, graph, limits, registry, with_optional
     topo = list(reversed(order)) if not errors else []
     topo = [x for x in topo if x in visited_ids]
 
-    # Channel validation (warn, not fail) — pinned is future
-    if channel == "pinned":
-        # Documented as future: no lockfile yet
-        pass
+    # Channel validation — pinned verifies against the lockfile (pixz.lock)
+    if channel == "pinned" and lock is not None:
+        if lock.get("skills") is None:
+            errors.append(f"LOCK_INVALID: {lock.get('_source', 'lockfile')} has no skills map")
+        else:
+            for sid in visited_ids:
+                locked = lock["skills"].get(sid)
+                current = graph[sid].get("version")
+                if locked is None:
+                    errors.append(f"LOCK_MISSING_ENTRY: {sid} resolved but not in lock (add it or re-pin)")
+                elif locked != current:
+                    errors.append(f"LOCK_MISMATCH: {sid} locked at {locked}, registry has {current}")
 
     if errors:
         return None, "\n".join(errors)
@@ -131,6 +174,7 @@ def resolve(install_id, runtime, channel, graph, limits, registry, with_optional
         "with_optional": with_optional,
         "graph": topo,
         "total": len(topo),
+        "versions": {sid: graph[sid].get("version") for sid in topo},
         "excluded_optional": excluded_optional,
         "excluded_incompatible": excluded_incompatible,
     }, None
@@ -139,7 +183,9 @@ def main():
     p = argparse.ArgumentParser(description="PixzFlow Skill Resolver (v2.0.0)")
     p.add_argument("--install", help="skill id to install")
     p.add_argument("--runtime", default="generic", choices=["claude","openclaw","opencode","hermes","codex","cursor","generic"])
-    p.add_argument("--channel", default="stable", choices=["latest","stable","pinned"], help="pinned is documented as future — no lockfile yet")
+    p.add_argument("--channel", default="stable", choices=["latest","stable","pinned"],
+                   help="pinned verifies the resolved graph against --lock (pixz.lock); non-pinned + --lock writes/updates the lock")
+    p.add_argument("--lock", help="path to pixz.lock (default: ./pixz.lock when used)")
     p.add_argument("--with-optional", action="store_true", help="include optional dependencies (otherwise they are reported as excluded)")
     p.add_argument("--list", action="store_true", help="list all skills")
     p.add_argument("--check-cycles", action="store_true", help="check all cycles")
@@ -188,7 +234,15 @@ def main():
         p.print_help()
         sys.exit(2)
 
-    result, err = resolve(args.install, args.runtime, args.channel, graph, limits, reg, with_optional=args.with_optional)
+    lock_path = args.lock or (str(ROOT / "pixz.lock") if args.channel == "pinned" else None)
+    lock = load_lock(lock_path) if lock_path else None
+    if args.channel == "pinned" and lock is None:
+        print(f"RESOLVE FAILED: --channel pinned requires a lockfile (expected {lock_path}); "
+              f"run once with --channel stable --lock {lock_path} to pin, or pass --lock PATH", file=sys.stderr)
+        sys.exit(1)
+
+    result, err = resolve(args.install, args.runtime, args.channel, graph, limits, reg,
+                          with_optional=args.with_optional, lock=lock)
     if err:
         print(f"RESOLVE FAILED for {args.install} (runtime={args.runtime}, channel={args.channel}, with_optional={args.with_optional})", file=sys.stderr)
         print(err, file=sys.stderr)
@@ -207,7 +261,10 @@ def main():
             if not result["with_optional"]:
                 print(f"    → Re-run with --with-optional to include them (if compatible & non-conflicting).")
         if result["channel"] == "pinned":
-            print(f"\n  Note: --channel pinned is DOCUMENTED ONLY (no pixz.lock yet) — see docs/versioning.md")
+            print(f"\n  Pinned channel: graph verified against {lock_path} (all locked versions match the registry).")
+        elif lock_path:
+            written = save_lock(lock_path, result["versions"], args.install, args.runtime, args.channel)
+            print(f"\n  Lock written: {written} ({len(result['versions'])} skill versions pinned)")
 
 if __name__ == "__main__":
     main()

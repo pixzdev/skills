@@ -1,8 +1,8 @@
 {
-  "version": "2.3.0",
+  "version": "2.5.0",
   "channel": "stable",
   "limits": {
-    "max_skill_chain_depth": 15,
+    "max_skill_chain_depth": 20,
     "max_orchestration_depth": 6,
     "max_iterations": 8
   },
@@ -60,6 +60,12 @@
       "name": "Verification Depth",
       "description": "Verification depth must match the claim: EXISTS\u2192existence check, PARSES\u2192parser, SCHEMA-COMPLIANT\u2192schema validation, CORRECT\u2192behavioral verification, INTEGRATED\u2192integration test, RUNTIME-ACTIVE\u2192runtime invocation, PERSISTENT\u2192repeated/delayed observation, IMPROVED\u2192baseline comparison. Never substitute a weaker rung (file exists = valid, command succeeded = correct, test passed = requirement satisfied, agent said success = verified).",
       "path": "core/verification/SKILL.md"
+    },
+    {
+      "id": "pixz.protocol.mcp-integration",
+      "name": "MCP & External Capability Integration",
+      "description": "Free + no-signup-first MCP servers and external agent skills from vetted sources (mcp/catalog.json, mcpmarket.com, skills.sh): trust tiers (T1 official / T2 catalog-verified / T3 unvetted), security vetting gate, live-check-first (initialize + tools/list) before wiring, idempotent runtime-agnostic auto-config (scripts/mcp.py), budgeted activation recorded in task-state, and tool output treated as untrusted data (SOURCE CLAIM, never FACT). Skill-import quarantine: download \u2192 security review \u2192 install \u2192 discover \u2192 enable (never auto-enable).",
+      "path": "core/mcp/SKILL.md"
     }
   ],
   "policies": [
@@ -104,6 +110,14 @@
         "frontend",
         "engineering"
       ]
+    },
+    {
+      "id": "pixz.policy.pixzflow-mandate",
+      "name": "PixzFlow Mandate (complex-task obligation)",
+      "description": "Complex tasks (high/critical complexity or risk, irreversible/high-impact action, security/consequential surface, multi-component or external integration, long horizon, continuation of prior work) MUST run under the full PixzFlow protocol (entry protocol, assessment, plan, capability activation, task-state, typed evidence, verification at claim-matching depth). A complex task completed without the protocol is a contractual failure (GAGAL): the output is not accepted as complete until the protocol is retrofitted with evidence, and the gap is documented in task-state. Trivial reversible work stays exempt \u2014 the mandate adds no ceremony to cheap work (the orchestration budget still applies).",
+      "enforces": [
+        "all"
+      ]
     }
   ],
   "skills": [
@@ -111,7 +125,7 @@
       "id": "pixz.core.orchestrator",
       "name": "Orchestrator",
       "category": "core",
-      "version": "2.1.0",
+      "version": "2.2.0",
       "status": "stable",
       "description": "MAIN PixzFlow operating skill. Assesses the task, selects mode, activates capabilities, delegates, inspects, challenges, verifies, replans, and ships. Use for complex/multi-step work. Do not use for trivial reversible edits. Load references/operating-methodology.md for the full practical loop.",
       "triggers": [
@@ -138,7 +152,9 @@
         "pixz.core.quality-gate",
         "pixz.core.change-safety",
         "pixz.quality.anti-ai-slop",
-        "pixz.core.self-learning"
+        "pixz.core.self-learning",
+        "pixz.core.mcp",
+        "pixz.core.repro"
       ],
       "conflicts": [],
       "compatible_runtimes": [
@@ -1314,6 +1330,202 @@
       ],
       "tools": [],
       "path": "core/self-learning"
+    },
+    {
+      "id": "pixz.core.mcp",
+      "name": "MCP Integration",
+      "category": "core",
+      "version": "1.1.0",
+      "status": "stable",
+      "description": "Vetted, free + no-signup-first integration of MCP servers and external agent skills: trust tiers + security vetting gate, live-check-first (initialize + tools/list) before wiring, idempotent runtime-agnostic auto-config (scripts/mcp.py), budgeted activation, tool output treated as untrusted data. Catalog: mcp/catalog.json (23 servers + 4 skill sources, incl. mcpmarket.com).",
+      "triggers": [
+        "mcp",
+        "model context protocol",
+        "mcp server",
+        "mcp config",
+        "mcpmarket",
+        "external tools"
+      ],
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.core.verification",
+        "pixz.core.change-safety"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "inputs": [
+        "capability_need",
+        "runtime",
+        "setup_tier",
+        "catalog"
+      ],
+      "outputs": [
+        "artifact",
+        "findings",
+        "verification"
+      ],
+      "tools": [
+        "scripts/mcp.py"
+      ],
+      "path": "core/mcp"
+    },
+    {
+      "id": "pixz.motion.framer-motion",
+      "name": "Framer Motion",
+      "description": "Framer Motion (Motion v12) for React/Next.js: declarative animations, variants, layout animations, scroll motion (useScroll/useTransform/useSpring), AnimatePresence exits, springs vs tweens, transform/opacity-only performance, prefers-reduced-motion, GSAP-vs-Framer decision, and browser-verified RUNTIME-ACTIVE evidence.",
+      "version": "1.0.0",
+      "category": "motion",
+      "path": "motion/framer-motion",
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.core.verification"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "triggers": [
+        "framer motion",
+        "motion animation",
+        "useScroll",
+        "AnimatePresence",
+        "spring animation",
+        "layout animation"
+      ]
+    },
+    {
+      "id": "pixz.frontend.ui-ux-pro",
+      "name": "UI/UX Pro",
+      "description": "UI/UX design intelligence for frontend builds: product-type-driven style direction, contrast-computed color roles (4.5:1/3:1 gates), modular type scales (max 2 typefaces), spacing/radius/shadow tokens, iconography rules, chart-type selection, a11y-first UX priority checklist, anti-slop pass. Project-adaptive: reuses the project Design DNA before recommending anything new.",
+      "version": "1.0.0",
+      "category": "frontend",
+      "path": "frontend/ui-ux-pro",
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.design.project-adapt",
+        "pixz.quality.anti-ai-slop"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "triggers": [
+        "ui design",
+        "color palette",
+        "typography",
+        "landing page design",
+        "dashboard design",
+        "design tokens"
+      ]
+    },
+    {
+      "id": "pixz.design.project-adapt",
+      "name": "Project Adapt \u2014 Design DNA",
+      "description": "Extract a typed, evidence-backed design DNA from an existing project (palette/typography/spacing/radii/shadows/motion/density/iconography), persist it as .pixz/design-dna.json, constrain generation to it (off-DNA needs approval), run drift detection, and report per-surface consistency.",
+      "version": "1.0.0",
+      "category": "design",
+      "path": "design/project-adapt",
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.frontend.ui-ux-pro",
+        "pixz.design.design-system"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "triggers": [
+        "design dna",
+        "match project style",
+        "design drift",
+        "project design system",
+        "consistent design"
+      ]
+    },
+    {
+      "id": "pixz.core.repro",
+      "name": "Repro \u2014 Minimal Repro Constructor",
+      "description": "REPRO\u2192CLASSIFY\u2192MINIMIZE\u2192FREEZE\u2192FIX\u2192VERIFY: reduce a failing/flaky behavior to the smallest reliably reproducing case, freeze it as the acceptance test, then fix and verify against it. A fix without a repro is a failure unless the repro is proven impossible (NOT_REPRODUCIBLE with attempt log).",
+      "version": "1.0.0",
+      "category": "core",
+      "path": "core/repro",
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.core.verification"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "triggers": [
+        "repro",
+        "minimal repro",
+        "flaky test",
+        "bisect",
+        "reduce test case"
+      ]
+    },
+    {
+      "id": "pixz.security.commit-hygiene",
+      "name": "Commit Hygiene",
+      "description": "Pre-commit/pre-push gate: block real secrets in the staged diff (never echo values), review manifest/lockfile diff for unintended dependency changes, flag stray artifacts, verify commit message matches the diff. PASS/WARN/BLOCK verdict with file+reason evidence.",
+      "version": "1.0.0",
+      "category": "security",
+      "path": "security/commit-hygiene",
+      "requires": [],
+      "aggregates": [],
+      "optional": [
+        "pixz.core.change-safety",
+        "pixz.security.review"
+      ],
+      "conflicts": [],
+      "compatible_runtimes": [
+        "claude",
+        "openclaw",
+        "opencode",
+        "hermes",
+        "codex",
+        "generic"
+      ],
+      "triggers": [
+        "pre-commit",
+        "secret scan",
+        "commit hygiene",
+        "dependency review",
+        "supply chain"
+      ]
     }
   ]
 }

@@ -1,6 +1,6 @@
 id: pixz.core.orchestrator
 name: Orchestrator
-version: 2.1.0
+version: 2.2.0
 category: core
 description: MAIN PixzFlow operating skill. Assesses the task, selects mode, activates capabilities, delegates, inspects, challenges, verifies, replans, and ships. Use for complex/multi-step work. Do not use for trivial reversible edits. Load references/operating-methodology.md for the full practical loop.
 triggers: [orchestrate, coordinate, delegate, complex task, multi-step]
@@ -22,4 +22,5 @@ optional:
   - pixz.core.change-safety
   - pixz.quality.anti-ai-slop
   - pixz.core.self-learning
+  - pixz.core.mcp
 conflicts: []

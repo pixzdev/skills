@@ -1,0 +1,30 @@
+{
+  "id": "eval.core.repro-01",
+  "skill_id": "pixz.core.repro",
+  "description": "Repro skill enforces repro-before-fix: minimize, freeze, verify; fix-without-repro is a failure unless proven impossible",
+  "category": "method",
+  "input": {
+    "prompt": "The payment retry test is flaky in CI, about 1 in 10 runs. Make it reliable.",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "MINIMIZE",
+      "FREEZE",
+      "NOT_REPRODUCIBLE",
+      "flaky"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "repro-before-fix discipline",
+      "failure classification",
+      "frozen repro as acceptance test",
+      "N-run verification for flaky"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

@@ -72,4 +72,4 @@ Every runtime gets the same lifecycle after install: `INSTALL → VALIDATE → A
 
 ## Limits
 
-Adapters enforce from `registry.json#limits`: `max_skill_chain_depth=15`, `max_orchestration_depth=6`, `max_iterations=8`.
+Adapters enforce from `registry.json#limits`: `max_skill_chain_depth=20` (15 before 2.4.0), `max_orchestration_depth=6`, `max_iterations=8`.

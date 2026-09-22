@@ -27,7 +27,7 @@ install <skill-id> [--with-optional]
 
 Fail conditions are explicit — no silent omission of hard deps. Optional omission is explicit and inspectable.
 
-## Example — Verified Output (v2.0.0)
+## Example — Verified Output (v2.5.0)
 
 > **2.0.0 change:** the orchestrator's mandatory aggregates dropped from 8 to **1** (`pixz.core.verification`, the evidence floor). The other 12 capabilities are `optional` — activated **at runtime** by the capability-activation protocol, not force-installed. Evidence: GLM benchmark (B≈B1, C≈A, 1.48× trivial-task overhead) — see `docs/benchmark/GLM-benchmark-findings.md`.
 
@@ -35,7 +35,7 @@ Fail conditions are explicit — no silent omission of hard deps. Optional omiss
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
 # → 4 nodes (mandatory only = the evidence-floor chain)
 # python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional
-# → 15 nodes (+ all 13 on-demand capabilities)
+# → 17 nodes (+ all 18 on-demand capabilities)
 ```
 
 **Breakdown mandatory (4):**
@@ -46,9 +46,9 @@ pixz.core.orchestrator
            └── pixz.core.context-engineering (requires)
 ```
 
-**With `--with-optional` (+11 new):** planning, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-challenger, replanning, quality-gate, change-safety, anti-ai-slop, self-learning → **15**.
+**With `--with-optional` (+12 new):** planning, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-challenger, replanning, quality-gate, change-safety, anti-ai-slop, self-learning, mcp → **16** (epistemic-reasoning and context-engineering are already in the mandatory floor, so 12 *new* nodes).
 
-**Agent-design:** `pixz.ai.agent-design` → requires `pixz.core.orchestrator` + `pixz.core.change-safety` → 5 nodes (6 with `--with-optional`).
+**Agent-design:** `pixz.ai.agent-design` → requires `pixz.core.orchestrator` + `pixz.core.change-safety` (which requires `pixz.core.environment-awareness`) → 7 nodes (17 with `--with-optional`).
 
 ## Cycles
 
