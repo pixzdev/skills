@@ -70,7 +70,8 @@ Super Z / GLM / Z.AI Web runtimes may provide unusually generous context, subage
 - Verification triggers (before irreversible action, after significant mutation, before claims/handoff/completion);
 - Source-of-record discipline (actual artifacts over descriptive records);
 - Context acquisition order (task state → repo/local → tools/MCP → docs → official research → user last);
-- Honest reporting (FACT / OBSERVED / SOURCE CLAIM / INFERENCE / ASSUMPTION / HYPOTHESIS / UNKNOWN / VERIFIED / FALSIFIED labels where uncertainty matters).
+- Honest reporting (FACT / OBSERVED / SOURCE CLAIM / INFERENCE / ASSUMPTION / HYPOTHESIS / UNKNOWN / VERIFIED / FALSIFIED labels where uncertainty matters);
+- Post-install self-learning lifecycle (probe → baseline → adapt → verify → persist) and the automatic adoption assessment (`scripts/assess.py`, 0–100, evidence-backed checks only) run identically under this overlay — the overlay changes mode/compute policy, never adaptation discipline.
 
 ## Discovery
 

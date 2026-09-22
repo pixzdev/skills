@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PixzFlow Activation — post-install self-learning state machine (2.1.0).
+PixzFlow Activation — post-install self-learning state machine (2.2.0).
 
 The machine-verifiable half of `pixz.core.self-learning`: it detects whether the
 current environment has adapted to the installed PixzFlow workflow, baselines the
@@ -14,9 +14,11 @@ State file: .pixz/adaptation-state.json (schemas/adaptation-state.schema.json).
 Commands:
   status        probe: STATE=NEW|BASELINED|READY|STALE, drift report
   init          create the baseline (refuses if state exists, unless --force)
-  mark-adapted  baselined|stale -> ready; REQUIRES --evidence (anti-fake gate)
+  mark-adapted  baselined|stale -> ready; REQUIRES --evidence (anti-fake gate);
+                then AUTO-RUNS scripts/assess.py (adoption assessment 0-100)
   sync          accept current inventory after inspecting a delta (records drift)
   mark-installed  record that capabilities were verified at their install location
+  verify-installed  integrity check: installed copies vs source digests (tamper/corruption)
 
 Exit codes: 0 = READY (no drift) · 10 = attention (new/baselined/stale/drift)
             · 1 = error (bad state, bad registry) · 2 = usage error.
@@ -257,6 +259,17 @@ def cmd_mark_adapted(args):
     add_history(st, "adapted", f"adaptation verified: {args.evidence.strip()[:140]}")
     save_state(path, st)
     print("STATE=READY — adaptation recorded with evidence.")
+    # Auto-assessment at first-run completion (mission: score adoption 0-100 after self-improve).
+    # Informational — the exit code above already reflects READY; assessment never blocks it.
+    try:
+        import assess as _assess
+        t, _ = _assess.assess(root, path, runtime=st.get("runtime", {}).get("name"))
+        out, score, verdict = _assess.render(t, [], st.get("runtime", {}).get("name"))
+        print("\n" + out)
+        add_history(st, "note", f"adoption assessment after adaptation: {score}/100 ({verdict})")
+        save_state(path, st)
+    except Exception as e:  # assessment failure must never break the transition
+        print(f"\n(assessment skipped: {e})")
     return EXIT_READY
 
 
@@ -327,8 +340,87 @@ def cmd_mark_installed(args):
     return EXIT_READY
 
 
+INSTALL_PATHS = {
+    "claude": [".claude/skills", "~/.claude/skills"],
+    "opencode": [".opencode/skill", "~/.config/opencode/skill"],
+    "hermes": ["skills", "~/.hermes/skills"],
+    "openclaw": ["skills", "~/.openclaw/skills"],
+    "codex": [".agents/skills"],
+    "cursor": [".agents/skills", ".cursor/skills"],
+    "generic": [".agents/skills", "skills"],
+}
+
+
+def file_digest(path):
+    parts = []
+    for fname in ("SKILL.md", "metadata.yaml"):
+        f = path / fname
+        if not f.exists():
+            return None
+        parts.append(f.read_bytes())
+    return hashlib.sha256(b"\x00".join(parts)).hexdigest()
+
+
+def cmd_verify_installed(args):
+    """F2 integrity: compare installed skill copies against source digests."""
+    root = Path(args.root) if args.root else ROOT
+    try:
+        reg, cur_inv = current_inventory(root)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        print(f"VERIFY-INSTALLED FAILED — {e}")
+        return EXIT_ERROR
+    dirs = []
+    for d in (args.search_dir or []):
+        dirs.append(Path(d).expanduser())
+    for p in INSTALL_PATHS.get(args.runtime, INSTALL_PATHS["generic"]):
+        full = Path(p).expanduser()
+        if not full.is_absolute():
+            full = root / p
+        dirs.append(full)
+    source_digest = {e["id"]: e["digest"] for e in cur_inv}
+    name_to_id = {}
+    for s in reg.get("skills", []):
+        base = Path(s.get("path", "")).name
+        name_to_id[base] = s["id"]
+        name_to_id[f"pixz-{base}"] = s["id"]
+    results = {}
+    for d in dirs:
+        if not d.is_dir():
+            continue
+        for child in sorted(d.iterdir()):
+            if not child.is_dir():
+                continue
+            sid = name_to_id.get(child.name)
+            if sid and sid not in results:
+                digest = file_digest(child)
+                if digest is None:
+                    results[sid] = ("incomplete", str(child))
+                elif digest == source_digest.get(sid):
+                    results[sid] = ("match", str(child))
+                else:
+                    results[sid] = ("MODIFIED", str(child))
+    print(f"=== verify-installed (runtime={args.runtime}, searched {len(dirs)} dir(s)) ===")
+    matched = modified = incomplete = 0
+    for sid, entry in sorted(source_digest.items()):
+        if sid in results:
+            kind, where = results[sid]
+            print(f"  {kind:>10}  {sid}  ({where})")
+            matched += kind == "match"
+            modified += kind == "MODIFIED"
+            incomplete += kind == "incomplete"
+        else:
+            print(f"  {'missing':>10}  {sid}  (not installed here — fine if not requested)")
+    print(f"summary: {matched} match · {modified} modified · {incomplete} incomplete · "
+          f"{len(source_digest) - len(results)} not installed")
+    if modified or incomplete:
+        print("MODIFIED/incomplete installed skills detected — inspect before trusting them "
+              "(skills are an attack surface; see docs/research/self-learning-findings.md §4.4).")
+        return EXIT_ATTENTION
+    return EXIT_READY
+
+
 def main():
-    p = argparse.ArgumentParser(description="PixzFlow post-install activation state machine (2.1.0)")
+    p = argparse.ArgumentParser(description="PixzFlow post-install activation state machine (2.2.0)")
     p.add_argument("--state", help="adaptation-state path (default <root>/.pixz/adaptation-state.json)")
     p.add_argument("--root", help="PixzFlow source root containing registry.json (default: this repo)")
     sub = p.add_subparsers(dest="cmd")
@@ -355,9 +447,15 @@ def main():
     pmi.add_argument("--id", action="append", help="skill id (repeatable)")
     pmi.add_argument("--all", action="store_true")
 
+    pvi = sub.add_parser("verify-installed", help="integrity check: installed copies vs source digests")
+    pvi.add_argument("--runtime", default="generic",
+                     choices=list(INSTALL_PATHS.keys()), help="runtime whose install paths to search")
+    pvi.add_argument("--search-dir", action="append", help="extra directory to search (repeatable)")
+
     args = p.parse_args()
     handlers = {"status": cmd_status, "init": cmd_init, "mark-adapted": cmd_mark_adapted,
-                "sync": cmd_sync, "mark-installed": cmd_mark_installed}
+                "sync": cmd_sync, "mark-installed": cmd_mark_installed,
+                "verify-installed": cmd_verify_installed}
     if args.cmd not in handlers:
         p.print_help()
         return 2
