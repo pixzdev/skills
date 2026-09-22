@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.selflearn-persistence-reload",
+  "skill": "pixz.core.workflow-continuity",
+  "scenario": "Session restarted after compaction. Reload the persisted task state and the post-install adaptation state from .pixz/, re-establish active capabilities and continue from next_action without redoing setup.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "low",
+  "should_select": [
+    "pixz.core.workflow-continuity",
+    "pixz.core.self-learning"
+  ],
+  "should_not_select": [
+    "pixz.core.delegation-handoff",
+    "pixz.devops.kubernetes"
+  ],
+  "setup": ".pixz/task-state.json (active task) and .pixz/adaptation-state.json (ready) exist on disk; conversation context is gone.",
+  "expected_behavior": "E8 persistence: learning survives the session boundary — state is read from disk first, objective restated, next_action honored, ready adaptation honored (no re-setup), active capabilities re-established from state.",
+  "failure_condition": "Agent re-derives state from memory, re-runs post-install setup, or loses the ready adaptation across the boundary.",
+  "verification": "lifecycle.persisted-reload passes in a fresh process; resume follows task-state resume protocol; adaptation probe exit 0.",
+  "verifies": "self-learning survives compaction/restart via the file substrate (mission E8, §13)"
+}

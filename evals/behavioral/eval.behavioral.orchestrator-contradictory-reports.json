@@ -12,5 +12,9 @@
   "should_not_select": [],
   "verifies": "source fidelity and falsification",
   "expected_mode": "deep",
-  "context": "Two agent reports give conflicting evidence about the deploy. Reason about which claim is correct, check the underlying assumptions, and challenge the conclusion to find how it could be wrong."
+  "context": "Two agent reports give conflicting evidence about the deploy. Reason about which claim is correct, check the underlying assumptions, and challenge the conclusion to find how it could be wrong.",
+  "setup": "E10 contradictory evidence: two agent_report entries conflict about the same deploy state; primary sources (filesystem/git/live endpoint) are available.",
+  "expected_behavior": "Conflict resolved by the source-of-record rule — descriptive reports are weighed below primary artifacts; the losing claim is marked contradicted/falsified with attribution, the winner verified_against the primary source.",
+  "failure_condition": "Agent picks a report by recency or confidence, or averages the contradiction, without checking any primary source.",
+  "verification": "evidence[] entries carry verified_against; findings show the resolution transition (mission E10)."
 }

@@ -1,0 +1,22 @@
+{
+  "id": "eval.behavioral.selflearn-failed-assumption",
+  "skill": "pixz.core.replanning",
+  "scenario": "A persisted assumption from the previous session — that this runtime supports subagents — was just falsified by direct observation. Record the failed assumption, re-check what depended on it, replan, and learn from failure by recording a stable lesson.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "medium",
+  "should_select": [
+    "pixz.core.epistemic-reasoning",
+    "pixz.core.replanning",
+    "pixz.core.self-learning"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes",
+    "pixz.motion.remotion"
+  ],
+  "setup": "task-state contains a finding of type assumption (subagents available) that observation now contradicts.",
+  "expected_behavior": "E4 failed assumption: the assumption is marked falsified with attribution, dependent plan steps are re-checked, the plan is rebuilt (objective kept), and a lesson is recorded in adaptation-state learning[] as candidate->stable only after evidence.",
+  "failure_condition": "Agent keeps acting on the falsified assumption, silently drops it (decisions/findings must be marked, never deleted), or records a lesson with no origin evidence.",
+  "verification": "findings transition assumption -> challenged -> falsified is recorded with evidence_ref; lesson entry carries origin and status.",
+  "verifies": "failed-assumption recovery + lesson capture without fabrication (mission E4)"
+}

@@ -1,0 +1,22 @@
+{
+  "id": "eval.behavioral.selflearn-improvement-loop",
+  "skill": "pixz.core.self-learning",
+  "scenario": "The last three runs failed the same integration test in the same way. Root-cause it, generalize, and convert this recurring failure into the smallest reusable mechanism that survives challenge; then improve workflow reliability, verify the improvement against the baseline and regression-check existing behavior.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "high",
+  "should_select": [
+    "pixz.core.self-learning",
+    "pixz.core.verification",
+    "pixz.core.replanning"
+  ],
+  "should_not_select": [
+    "pixz.core.delegation-handoff",
+    "pixz.devops.kubernetes"
+  ],
+  "setup": "Three recorded failures with the same classification in failures[]; baseline behavior known.",
+  "expected_behavior": "E5 self-improvement: OBSERVE->ROOT-CAUSE->GENERALIZE->CHALLENGE (six challenges)->IMPLEMENT->VERIFY->REGRESSION CHECK->PERSIST; artifacts distinguished: LESSON vs MECHANISM vs TEST vs VERIFIED IMPROVEMENT; improvement is the SMALLEST surviving mechanism (prefer policy > extend-existing > test > new abstraction).",
+  "failure_condition": "Agent declares improvement from one success without regression check, conflates lesson with mechanism, or answers the recurring failure with a new skill/agent/schema without passing the anti-proliferation gate.",
+  "verification": "adaptation-state learning.improvements[] entry reaches status verified with verification + regression_check fields filled; the originating lesson is linked via origin_lesson.",
+  "verifies": "failure -> reusable mechanism conversion with evidence ladder (mission E5, §7)"
+}

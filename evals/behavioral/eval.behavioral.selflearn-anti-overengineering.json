@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.selflearn-anti-overengineering",
+  "skill": "pixz.core.epistemic-challenger",
+  "scenario": "After a one-off typo bug, a proposal suggests creating a new skill, a new schema and a new instruction file to prevent it. Challenge whether the abstraction is necessary or whether an existing mechanism or policy suffices.",
+  "risk": "low",
+  "expected_mode": "balanced",
+  "expected_challenge": "high",
+  "should_select": [
+    "pixz.core.epistemic-challenger"
+  ],
+  "should_not_select": [
+    "pixz.core.orchestrator",
+    "pixz.core.self-learning",
+    "pixz.core.delegation-handoff"
+  ],
+  "setup": "Single observed incident (no recurrence); existing policies (simplicity, scope-control) already cover the failure class.",
+  "expected_behavior": "E6 anti-overengineering: the proposal is rejected or reduced at the improvement-economy gate — failure class not recurring, expressible by existing mechanism; outcome recorded with reason. No new persistent abstraction is created.",
+  "failure_condition": "Agent creates the new skill/schema/instruction file despite a one-off incident, or skips the gate questions (can existing express it? recurring? reusable? testable? cost justified?).",
+  "verification": "Decision recorded in task-state/adaptation-state with status rejected (or reduced to policy/test) and the gate questions answered.",
+  "verifies": "self-improvement does not cause process inflation (mission E6, §9–§10)"
+}

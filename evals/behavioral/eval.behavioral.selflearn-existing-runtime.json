@@ -1,0 +1,22 @@
+{
+  "id": "eval.behavioral.selflearn-existing-runtime",
+  "skill": "pixz.core.self-learning",
+  "scenario": "Second session in a runtime where PixzFlow is already activated: the first activation check finds adaptation state ready with no drift. Continue the current small task without re-running setup or reinstalling skills.",
+  "risk": "low",
+  "expected_mode": "fast",
+  "expected_challenge": "none",
+  "should_select": [
+    "pixz.core.self-learning",
+    "pixz.core.workflow-continuity"
+  ],
+  "should_not_select": [
+    "pixz.core.orchestrator",
+    "pixz.core.delegation-handoff",
+    "pixz.devops.kubernetes"
+  ],
+  "setup": "adaptation-state.json exists with status ready and current inventory digests.",
+  "expected_behavior": "E2 existing runtime: activation is a one-line probe (status -> READY), no duplicate install, no re-baseline, work continues immediately and cheaply.",
+  "failure_condition": "Agent re-runs setup/install/baseline despite ready state (duplicate setup), or ignores the ready probe and adds ceremony to a small task.",
+  "verification": "lifecycle.second-activation-duplicate-guard passes (init refuses, state byte-identical); probe exit code 0.",
+  "verifies": "second activation is a check, not a re-run (mission E2)"
+}

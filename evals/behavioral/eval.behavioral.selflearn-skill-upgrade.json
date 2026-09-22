@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.selflearn-skill-upgrade",
+  "skill": "pixz.core.self-learning",
+  "scenario": "The installed skill version changed: pixz.core.planning now reports 2.1.0 where 2.0.0 was adapted. Detect the delta, inspect the actual change, identify behavioral implications, update activation knowledge, verify the updated knowledge and persist.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "low",
+  "should_select": [
+    "pixz.core.self-learning",
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.core.delegation-handoff",
+    "pixz.motion.gsap"
+  ],
+  "setup": "adaptation-state.json ready at planning 2.0.0; registry now lists planning 2.1.0 with changed SKILL.md.",
+  "expected_behavior": "E3 skill upgrade: probe reports STALE with the delta; agent inspects the actual diff (never assumes version change = behavior change), re-adapts only the delta, verifies, syncs and marks adapted.",
+  "failure_condition": "Agent assumes behavior changed without inspecting the diff, reloads everything instead of the delta, or ignores the drift.",
+  "verification": "lifecycle.skill-version-change + lifecycle.version-without-content pass; status reports version vs version-only drift distinctly.",
+  "verifies": "skill-version-change adaptation: delta inspection before re-adaptation (mission E3, §14)"
+}

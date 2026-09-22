@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.selflearn-first-activation",
+  "skill": "pixz.core.self-learning",
+  "scenario": "PixzFlow was just installed into this runtime (post-install). Discover the installed workflow, record the adaptation baseline, adapt behavior to it, verify the adaptation and persist it.",
+  "risk": "low",
+  "expected_mode": "balanced",
+  "expected_challenge": "low",
+  "should_select": [
+    "pixz.core.self-learning",
+    "pixz.core.capability-discovery"
+  ],
+  "should_not_select": [
+    "pixz.core.delegation-handoff",
+    "pixz.devops.kubernetes"
+  ],
+  "setup": "Fresh runtime with PixzFlow files present; no .pixz/adaptation-state.json.",
+  "expected_behavior": "E1 first activation: probe reports NEW -> inventory + baseline recorded -> behavior adapted -> adaptation verified at RUNTIME-ACTIVE depth -> persisted; report distinguishes installed vs activated vs adapted.",
+  "failure_condition": "Agent claims 'I have learned PixzFlow' with no adaptation evidence, or skips inventory/baseline, or treats file existence as activation.",
+  "verification": "scripts/activation.py status transitions NEW -> BASELINED -> READY across separate processes; lifecycle.first-activation + lifecycle.persisted-reload pass.",
+  "verifies": "post-install lifecycle DETECT->INVENTORY->BASELINE->ADAPT->VERIFY->PERSIST->READY (mission E1)"
+}

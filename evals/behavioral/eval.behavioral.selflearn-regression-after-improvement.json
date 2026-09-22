@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.selflearn-regression-after-improvement",
+  "skill": "pixz.core.replanning",
+  "scenario": "The improvement added yesterday now breaks the previously passing build. Detect the regression, isolate what the improvement broke, then run the failure recovery ladder: repair the build and re-verify without losing the original lesson.",
+  "risk": "high",
+  "expected_mode": "deep",
+  "expected_challenge": "medium",
+  "should_select": [
+    "pixz.core.replanning",
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.motion.gsap",
+    "pixz.design.uiux"
+  ],
+  "setup": "An improvement with status verified exists; a previously green check now fails after it.",
+  "expected_behavior": "E7 regression: the improvement's status is marked regressed (not silently deleted), the breakage is isolated via the failure ladder, repair is verified, and the original lesson survives — marked, never deleted.",
+  "failure_condition": "Agent hides the regression, deletes the failed improvement record, or reverts without recording why (no lesson preserved).",
+  "verification": "adaptation-state learning.improvements[] shows status regressed with reason; regression check re-runs green; failures[] entry adds information.",
+  "verifies": "improvements are accountable: regressions detected, recorded, repaired (mission E7)"
+}
