@@ -1,0 +1,16 @@
+{
+  "id": "eval.behavioral.orchestrator-continuation-resume",
+  "skill": "pixz.core.workflow-continuity",
+  "scenario": "Resume the interrupted database migration. Read the task state, restore context and continue from the next action.",
+  "risk": "high",
+  "expected_mode": "deep",
+  "expected_challenge": "medium",
+  "should_select": [
+    "pixz.core.workflow-continuity"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes",
+    "pixz.motion.gsap"
+  ],
+  "verifies": "continuation: resume is deterministic from persisted task-state (objective restate, next_action, active capabilities re-established)"
+}

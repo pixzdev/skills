@@ -1,45 +1,37 @@
-# Agents — PIXZ Ecosystem
+# Agents — PixzFlow Ecosystem
 
-> Agents PERFORM; skills teach HOW; tools ENABLE; orchestrator COORDINATES.
+> Agents PERFORM; skills teach HOW; tools ENABLE; the orchestrator DECIDES (when/which/how-deeply/under-what-verification/for-how-long).
 
-## Definitions
+## Roles (created only when the economics test passes)
 
-| Agent | Role | When Spawned | Skills It Uses | Limits |
-|-------|------|--------------|----------------|--------|
-| `orchestrator` | Meta-coordinator (human or primary agent) | complex tasks, risk×uncertainty×impact high | `pixz.core.orchestrator` + its aggregates | `max_orchestration_depth=6`, `max_iterations=8` |
-| `specialist` | Domain expert (security, design, motion, etc.) | delegated sub-task with bounded scope | one domain skill + core verification | inherits parent workflow, returns structured handoff |
-| `challenger` | Adversarial reviewer | verification phase, high-risk | `pixz.core.epistemic-challenger` | intensity scaled, must exit |
-| `verifier` | Inspector | pre-ship | `pixz.core.verification` | evidence-required |
-| `researcher` | Source gatherer | external info needed | `pixz.core.capability-discovery` + `context-engineering` | official docs first |
+| Role | When Spawned | Uses | Limits |
+|------|--------------|------|--------|
+| `orchestrator` | complex tasks, high risk×uncertainty×impact, long horizon | `pixz.core.orchestrator` + activated capabilities | `max_orchestration_depth=6`, `max_iterations=8` |
+| `specialist` | delegated sub-task with bounded scope + passed economics test | one domain skill + verification floor | inherits parent state, returns structured handoff |
+| `challenger` | high-stakes verification (intensity > 0) | `pixz.core.epistemic-challenger` | intensity-scaled, **explicit stop rule** |
+| `verifier` | pre-completion / pre-handoff inspection | `pixz.core.verification` | evidence-required |
+| `researcher` | external info needed, local context insufficient | `pixz.core.capability-discovery` + `context-engineering` | official docs first |
+
+Do **not** spawn roles by default. A role must pass: `expected information gain + parallelism + specialization > coordination cost`. Anti-delegation (correctly *not* delegating trivial work) is a first-class behavioral eval. Subagents never spawn subagents.
 
 ## Orchestrator Agent Contract (`agents/orchestrator.yaml`)
 
-- Owns `UNDERSTAND → SHIP` loop
-- Determines WHEN/WHO/WHAT/WHY; never writes HOW (delegates to skills)
-- Never treats subagent output as truth — inspects
-- Tracks argument ledger, position change attribution
-- Enforces depth/iteration caps and cycle detection
+- Runs `ORIENT → MODEL → ASSESS → MODE → PLAN → ACT → OBSERVE → VERIFY → DECIDE`
+- Determines WHEN/WHO/WHAT/WHY/HOW-DEEPLY; never writes HOW (delegates to skills)
+- Activates capabilities per the persistent protocol; records every activation + rejection with reason
+- Never treats subagent output as truth — inspects structured returns
+- Tracks typed findings, position-change attribution, capability state, failures
+- Enforces depth/iteration caps, cycle detection, and the orchestration budget
 
-## Specialist Handoff Contract (`schemas/workflow.schema.json#handoff`)
+## Specialist Handoff Contract (`schemas/handoff.schema.json`)
 
 ```json
 {
-  "payload": { "objective": "...", "constraints": [], "phase": "EXECUTE", "context_packet": {} },
-  "expected": { "artifact": "...", "findings": [], "assumptions": [], "evidence": [], "verification": {} }
+  "objective": "...",
+  "constraints": ["...", "reversibility note", "iteration cap"],
+  "context_packet": { "decisions": [], "assumptions": [], "evidence_refs": [], "verification_requirements": [] },
+  "success_criteria": ["observable ..."]
 }
 ```
 
-Every child inherits: objective, requirements, constraints, phase, decisions, assumptions, evidence, open questions, verification requirements.
-
-## Tool Policy
-
-Agents select tools by task-fit, cost, freshness, reversibility, risk, permissions, availability. Prefer local read before web/model calls. Irreversible mutations require `change-safety` check.
-
-## Example Spawn (conceptual)
-
-```
-orchestrator: PLAN step "API contract" → delegate to specialist(api-design)
-  payload: {objective, constraints, context_packet, success_criteria}
-specialist returns: {artifact: openapi.yaml, findings, evidence, verification}
-orchestrator INSPECTs → CHALLENGEs → VERIFYs → REPLAN if needed
-```
+Return **must** contain: `work_performed, findings, evidence, assumptions, unknowns, decisions, tests, verification{result,checks,residual_risks}, remaining_work, recommended_next_action`. Missing field → rejected. Parent inspection verdict: `accepted | returned_to_agent | escalated`. No vague “looks good.”

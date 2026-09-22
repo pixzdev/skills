@@ -1,10 +1,12 @@
 id: pixz.agent.specialist
 name: Specialist Agent
-role: executor
-description: Bounded executor for a single domain skill. Inherits parent workflow, executes HOW, returns structured handoff with evidence.
+role: bounded executor
+description: Bounded executor for a single domain skill. Inherits relevant parent state, executes HOW, returns the full structured handoff with evidence. No sub-subagents.
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 skills_compatible: [any]
 requires_handoff: true
-inherits: [objective, requirements, constraints, phase, decisions, assumptions, evidence, open_questions, verification_requirements]
-returns: [artifact, findings, assumptions, unknowns, evidence, decisions, verification, residual_risks]
+handoff_contract: schemas/handoff.schema.json
+inherits: [objective, requirements, constraints, relevant_decisions, assumptions, evidence_refs, verification_requirements, success_criteria]
+returns: [work_performed, artifact, findings, evidence, assumptions, unknowns, decisions, tests, verification, remaining_work, recommended_next_action]
 verification_required: true
+no_recursion: true

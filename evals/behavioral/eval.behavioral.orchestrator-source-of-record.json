@@ -1,0 +1,15 @@
+{
+  "id": "eval.behavioral.orchestrator-source-of-record",
+  "skill": "pixz.core.verification",
+  "scenario": "The deploy report claims the API is live on v2. Verify against the actual endpoint and git tag before telling the user.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "low",
+  "should_select": [
+    "pixz.core.verification"
+  ],
+  "should_not_select": [
+    "pixz.devops.kubernetes"
+  ],
+  "verifies": "source-of-record: descriptive record (deploy report) checked against primary artifacts (live probe, git tree) — the T11 differentiator (n=2, hypothesis-generating)"
+}

@@ -1,58 +1,70 @@
 ---
 name: Workflow Continuity
-description: Maintains, persists and propagates workflow state across parent and child agents.
-version: 1.1.0
+description: Persistent task state, checkpointing, and resumability across compaction, session restart, subagent handoff, model change and runtime change.
+version: 2.0.0
 id: pixz.core.workflow-continuity
 category: core
-triggers: [workflow, continue, handoff, persist state, workflow state]
+triggers: [workflow, continue, resume, handoff, persist state, task state, checkpoint]
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Workflow Continuity — `pixz.core.workflow-continuity`
 
-> Every subagent inherits the relevant parent workflow; none behaves as an isolated chatbot.
+> Continuity is a **file-based substrate**, not a conversation habit. Context compaction, session restarts, model changes and runtime changes all destroy conversation; they do not destroy a well-formed state file.
 
 ## Purpose
-Defines the logical workflow model and handoff contract. Persistence mechanism varies per runtime (filesystem, memory, adapter) — the logical model does not.
+Defines the task-state model, checkpoint discipline, and resume protocol. Persistence mechanism varies per runtime (filesystem default, in-memory for constrained runners, MCP state server) — the logical model does not.
 
 ## Triggers
-- Continuation across DEFINE→RESEARCH→PLAN→EXECUTE→VERIFY branches
-- Delegation / subagent dispatch; multi-iteration replanning
+- Continuation of any prior task (session restart, resume, handoff back from a subagent)
+- Long-horizon work; any task expected to outlive one session step
+- Context compaction event; model or runtime switch
 
 ## Methodology
 
-### 1. Model (schemas/workflow.schema.json)
-Persist at minimum:
+### 1. Model (`schemas/task-state.schema.json`)
+One file per task (default: `.pixz/task-state.json`). Required at minimum:
 ```
-objective, requirements, constraints, phase, completed_work, pending_work,
-decisions[], assumptions[], arguments[], evidence[], unknowns[], verification, iteration_history, residual_risks
+task_id, objective, acceptance_criteria, constraints, status, mode, assessment,
+plan, decisions[], findings[], evidence[], capabilities[], failures[],
+unknowns, verification, delegations[], next_action, checkpoint
 ```
+Entries are **summaries + references** — never transcripts. Keep the file small enough to re-inject cheaply.
 
-### 2. Propagation Rule
-Child inherits: objective, requirements, constraints, current phase, decisions, assumptions, evidence, open questions, verification requirements. It MUST continue within compatible workflow semantics under parent’s DEFINITION.
+### 2. Checkpoint Discipline
+Write a checkpoint: before long substeps · before irreversible actions · at phase boundaries · after material findings · before delegation dispatch. A checkpoint = objective + assessment + active plan + key decisions + open items + `next_action`.
 
-### 3. Persistence Abstraction
-- **Define logical state per schema** — universal core.
-- **Adapter implements storage:** `.pixz/workflow.json` on filesystem, or in-memory for constrained runners, or via MCP state server. Inspect `adapters/` for translation.
-- Never require every runtime to share same persistence; require same logical fields.
+### 3. Resume Protocol (deterministic)
+1. Read task-state first — before any other context.
+2. Restate objective + acceptance criteria (goal-drift counter).
+3. Honor `next_action`.
+4. Re-establish all capabilities with status `active` / `reactivation_required` (re-load skill bodies only if needed).
+5. Check for stale assumptions: any `findings` of type `assumption`/`unverified` whose conditions may have changed get re-checked.
+6. Continue. Never re-derive decisions from memory — decisions are **marked, never deleted** (active/superseded/revoked).
 
-### 4. Handoff Contract
-Dispatch includes: `{objective, requirements, constraints, phase, context_packet, expected_outputs, success_criteria}`.
-Return includes: `{artifact, findings, assumptions, unknowns, evidence, decisions, arguments, verification, residual_risks, recommended_next}` (subset of schema; must preserve ledger).
+### 4. Propagation to Children
+Child inherits (via `schemas/handoff.schema.json` context packet): objective, requirements, constraints, relevant decisions, assumptions, evidence refs, verification requirements, success criteria. It does **not** inherit the whole conversation.
 
 ### 5. Iteration & Observability
-Increment `iteration`; cap at `max_iterations=8`. Any observer can answer: current phase, completed vs pending, open decisions, unknowns, verification, residual risks.
+Bump `plan.iteration` on replan; cap at `limits.max_iterations` (8). Any observer reading the state file can answer: what is the objective, what is done, what is pending, which decisions are active, which capabilities are active, what is verified, what remains, what is the next action.
+
+## Persistence Abstraction
+- **Logical state per schema** — universal core.
+- **Adapter implements storage:** `.pixz/task-state.json` on filesystem (default — re-injectable after compaction), in-memory for constrained runners, MCP state server.
+- Never require every runtime to share the same storage; require the same logical fields.
 
 ## Inputs / Outputs
-- **Inputs:** parent workflow state, child task spec
-- **Outputs:** `continuity_envelope` {propagated_state, handoff_payload, persistence_receipt}
+- **Inputs:** existing task state (or task spec), checkpoint trigger, resume trigger
+- **Outputs:** `continuity_envelope` {state_path, checkpoint, propagated_packet, resume_receipt}
 
 ## Failure Conditions
 - Child loses parent constraints or decision history → fail handoff.
-- Workflow state diverges without ledger entry → fail verification.
+- State diverges without an entry (a change happened, state doesn't reflect it) → fail verification.
+- Resume without re-stating objective → drift risk; redo step 2.
 
 ## Verification
-- Handoff round-trip: can parent reconstruct full state from child’s return?
-- Re-entry test: after crash, can workflow resume from persisted state?
+- Handoff round-trip: can the parent reconstruct everything it needs from the child's structured return?
+- Re-entry test: kill the session, resume from state, and confirm the agent continues correctly from `next_action`.
+- Stale-state detection: no `assumption` older than a relevant change survives without re-check.
 
 ---

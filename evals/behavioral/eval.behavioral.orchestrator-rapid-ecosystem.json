@@ -9,5 +9,7 @@
     "pixz.core.capability-discovery"
   ],
   "should_not_select": [],
-  "verifies": "freshness check"
+  "verifies": "freshness check",
+  "expected_mode": "balanced",
+  "context": "Rapidly changing ecosystem, dependency update. Discover available tools and check freshness of the library before upgrading."
 }

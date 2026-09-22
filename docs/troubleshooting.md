@@ -20,15 +20,18 @@
 - Writes via `npx skills` may land in `.claude/skills/` — copy to `.opencode/skill/` if needed (cross-compatible verified).
 
 **`python scripts/resolve.py` fails `LIMIT_EXCEEDED`**
-- With `--with-optional`, `pixz.ai.agent-design` → 13 > `max_skill_chain_depth=15`? Should now pass with 15 limit (v1.0.1). Check `registry.json#limits`.
+- Check `registry.json#limits` (`max_skill_chain_depth=15`). With 2.0.0's slimmer graph the orchestrator resolves to 4 mandatory nodes (14 with `--with-optional`), well under the cap.
 
-## Workflow / routing
+## Workflow / routing / activation
 
 **Orchestrator over-routes trivial task**
-- Minimal workflow should be `UNDERSTAND→EXECUTE→VERIFY` for rename/typo — not full loop. See `docs/architecture/routing.md` under-routing/over-routing table. File an issue with scenario.
+- A trivial task (rename/typo) should be `ORIENT → ACT → VERIFY → done` at mode `fast` — zero skills activated, no orchestrator. See `docs/architecture/routing.md`. File an issue with scenario.
 
 **Verification skipped**
-- `quality-gate` is mandatory via resolver for orchestrated tasks; if gate missing, `scripts/validate.py` should fail. Run `python scripts/validate.py`.
+- `pixz.core.verification` is the orchestrator's mandatory aggregate (evidence floor); the invariant is machine-checked by `python evals/behavioral/runner.py`. If the floor is missing from the registry, `scripts/validate.py` / the behavioral runner should fail.
+
+**Installed skill not used by the model**
+- Availability ≠ invocation (GLM benchmark). Make it discoverable: check the registry entry's `triggers` and the SKILL.md `description` (the model decides from these). Record activations in task-state per the capability-activation protocol.
 
 ## Validation
 

@@ -207,10 +207,17 @@ def validate():
         if not p.exists():
             warnings.append(f"Missing hierarchical registry {domain}/AGENTS.md")
 
-    # check schemas existence
-    for sch in ["skill.schema.json","registry.schema.json","workflow.schema.json","eval.schema.json"]:
+    # check schemas existence (2.0.0: workflow.schema.json replaced by task-state.schema.json + handoff.schema.json)
+    for sch in ["skill.schema.json","registry.schema.json","task-state.schema.json","handoff.schema.json","eval.schema.json"]:
         if not (ROOT / "schemas" / sch).exists():
-            warnings.append(f"Missing schema {sch}")
+            errors.append(f"Missing schema {sch}")
+        elif sch.endswith(".json"):
+            try:
+                json.loads((ROOT / "schemas" / sch).read_text(encoding="utf-8"))
+            except Exception as e:
+                errors.append(f"Schema {sch} is not valid JSON: {e}")
+    if (ROOT / "schemas" / "workflow.schema.json").exists():
+        errors.append("schemas/workflow.schema.json must be removed in 2.0.0 — superseded by task-state.schema.json (see docs/versioning.md)")
 
     # check SKILL.md frontmatter consistency with registry (single source of truth)
     for s in reg["skills"]:
@@ -228,21 +235,24 @@ def validate():
         if "compatible_runtimes" in fm and fm["compatible_runtimes"] != s.get("compatible_runtimes"):
             errors.append(f"{s['id']}: SKILL.md frontmatter compatible_runtimes {fm['compatible_runtimes']} != registry {s.get('compatible_runtimes')}")
 
-    # check runtime-profile + README prompt contracts (docs as executable contract)
-    profile = ROOT / "profiles" / "super-z" / "PROFILE.md"
-    if not (ROOT / "profiles" / "README.md").exists():
-        errors.append("Missing profiles/README.md (profile isolation contract)")
-    if not profile.exists():
-        errors.append("Missing profiles/super-z/PROFILE.md (Super Z / GLM / Z.AI Web profile)")
+    # check runtime-overlay + README prompt contracts (docs as executable contract)
+    # 2.0.0: profiles/super-z/PROFILE.md consolidated into top-level ZAI.md (Level 2.5 overlay)
+    zai = ROOT / "ZAI.md"
+    if (ROOT / "profiles" / "super-z" / "PROFILE.md").exists():
+        errors.append("profiles/super-z/PROFILE.md must be removed in 2.0.0 — consolidated into ZAI.md")
+    if not zai.exists():
+        errors.append("Missing ZAI.md (Super Z / GLM / Z.AI Web runtime overlay)")
     else:
-        ptxt = profile.read_text(encoding="utf-8").lower()
+        ptxt = zai.read_text(encoding="utf-8").lower()
         for req in ["fast", "balanced", "deep", "autonomous", "askuserquestion", "does not change", "unverified"]:
             if req not in ptxt:
-                errors.append(f"profiles/super-z/PROFILE.md missing required content: {req!r}")
+                errors.append(f"ZAI.md missing required content: {req!r}")
+    if not (ROOT / "AGENTS.md").exists():
+        errors.append("Missing AGENTS.md (canonical PixzFlow operating contract)")
     readme = ROOT / "README.md"
     if readme.exists():
         rtxt = readme.read_text(encoding="utf-8")
-        for req in ["AI Agent Installation Prompt", "Super Z / GLM / Z.AI Web Prompt"]:
+        for req in ["AI Agent Installation Prompt", "Super Z / GLM / Z.AI Web Install & Activation Prompt"]:
             if req not in rtxt:
                 errors.append(f"README.md missing required section: {req!r}")
 

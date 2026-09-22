@@ -1,91 +1,66 @@
-# Evaluation — 4 Layers
+# Evaluation — PixzFlow 2.0
 
-> A passing structural check must never be presented as behavioral proof.
+> A passing structural check must never be presented as behavioral proof. A heuristic smoke must never be presented as a benchmark.
 
-## Layers — Separation Required (audit fix #11/#12)
+## Layers — Separation Required
 
-### Layer 1 — Structural validation (VERIFIED, automated)
+### Layer 1 — Structural validation (automated, machine-contract)
+- frontmatter valid + **frontmatter ↔ registry consistency** (id/version/triggers/compatible_runtimes — hard error on drift)
+- required files (`SKILL.md` + `metadata.yaml` per skill); IDs valid (`pixz.<domain>.<name>`, SemVer)
+- registry ↔ metadata ↔ filesystem consistency; no duplicate IDs/paths
+- schemas exist and are valid JSON (`skill`, `registry`, `task-state`, `handoff`, `eval`)
+- dependency graph acyclic (DFS); limits present
+- **overlay contract:** `ZAI.md` exists with required content (4 modes, `AskUserQuestion`, isolation, UNVERIFIED disclosure); `AGENTS.md` exists
+- **README contract:** AI Agent Installation Prompt + Super Z / GLM / Z.AI Web Prompt sections present
+- **2.0 migration guard:** `schemas/workflow.schema.json` and `profiles/super-z/PROFILE.md` must be gone (superseded)
 
-What: machine-contract checks.
+How: `python scripts/validate.py` + `python scripts/check-cycles.py`. Exit non-zero on fail. Result: PASS/FAIL + evidence list.
 
-- frontmatter valid (`name`/`description` present, SKILL.md == SKILL.md)
-- frontmatter consistency: `id`/`version`/`triggers`/`compatible_runtimes` in `SKILL.md` frontmatter equal `registry.json` values (hard error — added v1.1.0 after 28/28 drift was observed)
-- required files exist (`SKILL.md` + `metadata.yaml` per skill)
-- IDs valid (`pixz.<domain>.<name>`, SemVer)
-- registry consistency (`registry.json` ↔ `metadata.yaml`, no duplicate IDs/paths)
-- profile/README contracts (v1.1.0): `profiles/README.md` + `profiles/super-z/PROFILE.md` exist with required sections (modes, `AskUserQuestion`, isolation, UNVERIFIED disclosure); `README.md` contains the AI Agent Installation Prompt and Super Z / GLM / Z.AI Web Prompt sections
-- dependency graph valid, topo-sorted
-- no cycles (DFS)
-- schemas valid (JSON Schema draft-07)
-- limits enforced
+### Layer 2 — Documentary validation (heuristic)
+- required sections in each SKILL.md (Purpose, Triggers/When, Methodology, Verification, Structured output — per category)
+- install commands present where relevant; examples present; metadata complete
 
-How: `python scripts/validate.py` + `python scripts/check-cycles.py` + JSON Schema (manual). Exit non-zero on fail. Result: **PASS/FAIL + evidence list**, not a numeric score.
+How: `python evals/runner.py` — 15 cases, keyword/section presence. **Heuristic, not semantic.** Report as `X/15 heuristic` — no fake precision.
 
-### Layer 2 — Documentary validation (VERIFIED, heuristic)
+### Layer 3 — Behavioral smoke (heuristic + registry invariants)
+What it checks **now (2.0.0)**:
+- **registry invariants:** (1) evidence floor — orchestrator mandatory closure contains `pixz.core.verification`; (2) trivial-task budget — orchestrator mandatory closure ≤ 4 nodes (v1.1.0: 10); (3) mode consistency — low risk never deep/autonomous, high/critical risk never fast
+- **23 scenarios:** 15 v1 routing scenarios + 8 mechanism scenarios — skill-discovery · skill-persistence · continuation-resume · source-of-record · requirement-change · **anti-delegation** · tool-failure · compaction
+- false-positive activations per scenario (`should_not_select`), expected activations (`should_select`)
 
-What: does the skill document what it should?
+How: `python evals/behavioral/runner.py`. **Heuristic keyword routing + static invariants — not model-graded.**
 
-- required sections in SKILL.md (Purpose, Triggers, When to use/NOT, Inputs, Methodology, Verification, Example, Structured output)
-- installation commands present where relevant
-- examples present
-- metadata complete (`triggers`, `compatible_runtimes`)
+### Layer 4 — Integration (where feasible)
+repo → installer → runtime → discovery → invocation: clean-env `npx skills list` before/after, `openclaw skills list/check`, manual `cp -r` + `ls` evidence, resolver dry-runs. Where CI lacks a runtime binary: **manual smoke** with required `ls`/`list` evidence; claim level per runtime VERIFIED vs PARTIALLY VERIFIED (`docs/install/README.md`).
 
-How: `python evals/runner.py` (layer=doc) does keyword/section presence checks on 15 cases (see `evals/cases/*.json`). Heuristic, not semantic. Score is `passed/total` + `weighted 1.00` but **no fake precision** — report is `15/15 heuristic`.
+How: `bash scripts/integration-smoke.sh`.
 
-Limitations: keyword presence ≠ correctness. Layer 2 never implies behavioral success.
+## What this repo's layers prove (and don't)
 
-### Layer 3 — Behavioral evaluation (PARTIALLY VERIFIED, smoke)
+| Proves | Does not prove |
+|--------|----------------|
+| registry/metadata/schemas consistent; no cycles; overlay+README contracts hold | that any model behaves differently |
+| skills document required sections | that the documented behavior is correct |
+| routing smoke + invariants hold for the heuristic router | model-graded activation precision/recall |
+| install path works where the CLI exists | behavioral effectiveness of PixzFlow on real tasks |
 
-What: actually execute skill methodology against controlled tasks; measure:
+**Model-graded behavioral measurement (capability activation, persistence, continuation, verification quality, evidence quality, recovery, delegation, restraint, efficiency) is the successor benchmark** — see `docs/benchmark/successor-benchmark.md`. Cells A–H report `UNRUN` until executed; this repo never fabricates results.
 
-- task success / correctness
-- verification behavior (did it produce evidence, not just claim?)
-- adherence to constraints (scope control)
-- appropriate tool usage (env-awareness prevented npm vs pnpm halluc)
-- appropriate skill selection vs false positives/negatives
-- stopping behavior (quality-gate diminishing returns)
-- uncertainty handling (UNKNOWN labeling)
-- challenge behavior (did challenger run at high risk?)
-- regression detection
+## Regression obligation (against the v1 GLM benchmark)
 
-How: `evals/behavioral/` smoke runner (see below). Each result contains:
+Any 2.0 change must not: make trivial tasks slower (token overhead guard) · create unnecessary subagents (anti-delegation cell) · increase context waste · cause recursive invocation · lower native-model initiative · block useful model-native behavior. A strong model must be able to bypass PixzFlow ceremony for trivial work — **PixzFlow is an enabler, not a cage.**
 
-```yaml
-test_id: eval.behavioral.orchestrator-trivial-rename
-skill: pixz.core.orchestrator
-category: behavioral
-scenario: trivial file rename (should use minimal, not full orchestration)
-expected: selects zero or one skill, no challenger, no full loop
-actual: {selected: [], challenger: not_run, verification: minimal}
-pass: true
-evidence: resolver output, SKILL.md read, overhead measured
-limitations: single scenario, heuristic router simulation
-```
+## Scoring & Reporting
 
-### Layer 4 — Integration evaluation (VERIFIED where possible, PARTIALLY elsewhere)
-
-What: **repository → installer → runtime → discovery → invocation → execution**
-
-- clean env `npx skills list` before/after
-- `npx skills add pixzdev/skills --skill orchestrator` → `npx skills list` shows it
-- `openclaw skills install ...` → `openclaw skills list`/`check`/`verify --card`
-- manual `cp -r` → `ls <installed>/SKILL.md` + `head -20` frontmatter + `/skills` slash
-- execute controlled task (e.g., `python scripts/resolve.py --install pixz.core.orchestrator`)
-
-How: `scripts/integration-smoke.sh` (see `docs/install/README.md#integration`). Where CI cannot test runtime (no OpenClaw/Hermes binary), doc is **manual smoke** with required `ls`/`list`/`verify` evidence. Claim level per runtime: VERIFIED vs PARTIALLY VERIFIED (see `docs/install/README.md` matrix).
-
-## Scoring
-
-- No invented numeric quality score. Report per layer: structural PASS/FAIL, documentary heuristic score, behavioral PASS/FAIL per scenario with evidence, integration PASS/FAIL per runtime with evidence.
-- Runner aggregates: `X/Y passed` per layer, not a single ecosystem score.
+- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/15 heuristic` · behavioral `X/23` + invariants · integration PASS/FAIL per runtime with evidence.
+- Every eval result carries: `test_id`, `scenario`, `expected`, `actual`, `pass`, `evidence`, `limitations`.
+- Layer 1–2 results must never be presented as Layer 3–4 evidence.
 
 ## Artifacts
 
-- `evals/cases/*.json` — layer 2 docs validation (15)
-- `evals/behavioral/` — layer 3 smoke definitions (routing, orchestrator decisions)
-- `scripts/integration-smoke.sh` — layer 4 (where feasible)
-- `docs/architecture/routing.md` — router test results (false pos/neg, under/over-routing)
-
-## Limitations
-
-- Behavioral is smoke, not model-graded; integrations for Hermes/Codex are manual-only (no CI binary). Document in each result's `limitations`.
+- `evals/cases/*.json` — Layer 2 (15)
+- `evals/behavioral/*.json` + `runner.py` — Layer 3 (23 + invariants)
+- `scripts/integration-smoke.sh` — Layer 4
+- `docs/benchmark/GLM-benchmark-findings.md` — v1 empirical record
+- `docs/benchmark/successor-benchmark.md` — model-graded benchmark design (ablation A–H, task classes, metrics)
+- `docs/research/frontier-agent-findings.md` — Phase Zero research with classification labels

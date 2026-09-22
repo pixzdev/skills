@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 PIXZ Skill Resolver — dependency-aware, cycle-safe, runtime-aware.
-v1.1.0: optional deps are opt-in via --with-optional (audit fix #7/#8).
+v2.0.0: optional deps are opt-in via --with-optional (audit fix #7/#8); orchestrator aggregates reduced to the evidence floor.
 
 Usage:
   python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
@@ -136,7 +136,7 @@ def resolve(install_id, runtime, channel, graph, limits, registry, with_optional
     }, None
 
 def main():
-    p = argparse.ArgumentParser(description="PIXZ Skill Resolver (v1.1.0)")
+    p = argparse.ArgumentParser(description="PixzFlow Skill Resolver (v2.0.0)")
     p.add_argument("--install", help="skill id to install")
     p.add_argument("--runtime", default="generic", choices=["claude","openclaw","opencode","hermes","codex","cursor","generic"])
     p.add_argument("--channel", default="stable", choices=["latest","stable","pinned"], help="pinned is documented as future — no lockfile yet")

@@ -1,34 +1,12 @@
 id: pixz.core.workflow-continuity
 name: Workflow Continuity
+version: 2.0.0
 category: core
-version: 1.1.0
-status: stable
-description: Maintains, persists and propagates workflow state across parent and child
-  agents.
-triggers:
-- workflow
-- continue
-- handoff
-- persist state
-- workflow state
+description: Persistent task state, checkpointing and resumability across compaction, restart, handoff, model and runtime change.
+triggers: [workflow, continue, resume, handoff, persist state, task state, checkpoint]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:
-- pixz.core.context-engineering
+  - pixz.core.context-engineering
 aggregates: []
 optional: []
 conflicts: []
-compatible_runtimes:
-- claude
-- openclaw
-- opencode
-- hermes
-- codex
-- generic
-inputs:
-- objective
-- constraints
-- context
-outputs:
-- artifact
-- findings
-- verification
-tools: []

@@ -1,4 +1,4 @@
-# Installation — PIXZ Skills
+# Installation — PixzFlow
 
 > **Source ≠ Install ≠ Discovery ≠ Invocation.** Cloning copies source; installation registers the skill where the runtime discovers it.
 

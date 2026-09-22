@@ -11,5 +11,7 @@
   "should_not_select": [
     "pixz.core.orchestrator"
   ],
-  "verifies": "minimal verification"
+  "verifies": "minimal verification",
+  "expected_mode": "balanced",
+  "context": "Ordinary bug, single file fix. Fix it and verify with a targeted test."
 }

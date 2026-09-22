@@ -1,4 +1,4 @@
-# Contributing — PIXZ.DEV Skills Ecosystem
+# Contributing — PixzFlow
 
 ## Principle
 
@@ -73,7 +73,7 @@ All four must pass. Tag releases `v*.*.*` only after quality-gate.
 2. Implement skill + metadata + eval case
 3. Run `scripts/validate.py` + `scripts/check-cycles.py`
 4. Add entry to hierarchical `*/AGENTS.md` only if it aids navigation (no duplicate truth)
-5. Update `registry.json` (machine truth) — never edit `AGENTS.md` skill table without syncing `registry.json`
+5. Update `registry.json` (machine truth) and keep the `llms.txt` projection in sync — never create a third copy of the capability list
 6. Request review — taxonomy + anti-slop + verification bar
 
 ## Versioning

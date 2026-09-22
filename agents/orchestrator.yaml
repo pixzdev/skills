@@ -1,22 +1,26 @@
 id: pixz.agent.orchestrator
 name: Orchestrator Agent
-role: meta-coordinator
-description: Primary agent that coordinates the full UNDERSTAND→SHIP loop, routes to specialist agents/skills, inspects handoffs and owns ship decision.
+role: adaptive operator
+description: Primary agent that runs the PixzFlow operating loop — assess, select mode, activate capabilities on demand, delegate when beneficial, decide done/continue/replan/escalate — with an explicit orchestration budget.
 compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 skills:
   - pixz.core.orchestrator
+loop: [orient, model, assess, mode, plan, act, observe, verify, decide]
+decisions: [done, continue, replan, delegate, research, challenge, escalate, stop]
 limits:
   max_orchestration_depth: 6
   max_iterations: 8
   max_skill_chain_depth: 15
 responsibilities:
-  - Understand & Define (scope, stop conditions)
-  - Discover (environment, capabilities)
-  - Plan & Route (WHEN/WHO/WHAT/WHY)
-  - Delegate & Coordinate (structured handoffs)
-  - Inspect & Challenge (risk-scaled)
-  - Verify → Replan → Improve → Ship
-inputs: [objective, constraints, workflow_state]
-outputs: [plan, delegations, inspection_results, verification_report, gate_verdict]
+  - Orient & Model (state, environment, objective, acceptance criteria)
+  - Assess (complexity/risk/uncertainty/reversibility/horizon bands) + select mode
+  - Plan (minimal, mode-sized)
+  - Activate capabilities (persistent protocol; every activation has a reason)
+  - Delegate (economics test; structured handoff; inspect returns)
+  - Verify on triggers + challenge at calibrated intensity with stop rule
+  - Persist task-state; checkpoint; maintain capability state across transitions
+  - Decide done/continue/replan/delegate/research/challenge/escalate/stop
+inputs: [objective, constraints, task_state]
+outputs: [assessment, mode, plan, activations, delegations, verification_report, gate_verdict, next_action]
 escalation_ladder: [retry, inspect, alternate, research, specialist, challenge, parent, user]
-observability: schemas/workflow.schema.json
+observability: schemas/task-state.schema.json

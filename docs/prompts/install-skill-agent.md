@@ -116,7 +116,7 @@ Installation: SUCCESS — `openclaw skills install ./core/orchestrator --as pixz
 Installed location: ./skills/pixz-orchestrator/SKILL.md (verified ls)
 Discovery: PASS — `openclaw skills list` shows pixz-orchestrator [eligible]
 Invocation: PASS — read installed SKILL.md, description matches orchestrate
-Smoke test: PASS — `python scripts/resolve.py --install pixz.core.orchestrator --runtime openclaw` → 10 nodes
+Smoke test: PASS — `python scripts/resolve.py --install pixz.core.orchestrator --runtime openclaw` → 4 nodes (14 with --with-optional)
 Version/ref: 1.1.0 / 068ad5d
 Notes: No --global used (workspace scope)
 ```

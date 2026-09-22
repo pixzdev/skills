@@ -1,0 +1,15 @@
+{
+  "id": "eval.behavioral.orchestrator-tool-failure",
+  "skill": "pixz.core.replanning",
+  "scenario": "The pnpm test command fails twice with the same error. Classify the failure, form a hypothesis, test it, and recover without blind retry.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "low",
+  "should_select": [
+    "pixz.core.replanning"
+  ],
+  "should_not_select": [
+    "pixz.core.delegation-handoff"
+  ],
+  "verifies": "failure recovery: FAIL->CLASSIFY->INSPECT->ISOLATE->HYPOTHESIS->TEST ladder; each retry adds information (recorded in failures[])"
+}

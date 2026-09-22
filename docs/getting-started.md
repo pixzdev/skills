@@ -1,16 +1,16 @@
-# Getting Started — PIXZ Skills
+# Getting Started — PixzFlow
 
 ## 1. What it is
 
-A **portable, dependency-aware, versioned** collection of 28 skills for Code/Agent runtimes (Claude, OpenClaw, OpenCode, Hermes, generic). Each skill is a **reusable methodology** (how) — not a persona. See `AGENTS.md` for registry.
+**PixzFlow** is a persistent, adaptive, model-agnostic **operating layer** for capable AI agents: an entry protocol (`AGENTS.md`), operating modes (fast/balanced/deep/autonomous), a persistent task-state + evidence protocol, a skill ecosystem (28 skills with stable IDs and explicit dependencies), and runtime overlays (e.g. `ZAI.md` for Super Z / GLM / Z.AI Web). PIXZ.DEV is the brand.
 
 ## 2. Why
 
-Agents need a capability layer that answers: *what skill for this task, what does it require, which runtime can run it, how is it verified, should it be challenged?* This repo separates agent / skill / tool / orchestrator / protocol / policy / eval / registry.
+Agents fail when they guess *what* capability to use, *when* to activate it, *how* to verify it, and *how* to continue after interruption. The GLM benchmark showed native models already handle basic engineering — what they need is **consistency, persistence, inspectability, and recoverability**, not a bigger checklist. This repo separates model / runtime / operating layer / overlay / capability / execution / state (see `docs/architecture.md`).
 
 ## 3. Choose a skill
 
-Scan `AGENTS.md` trigger table or `registry.json`:
+Scan `registry.json` (machine) or `llms.txt` (LLM map) — the AGENTS.md contract tells the model how to match triggers:
 
 - `coordinate, complex task` → `pixz.core.orchestrator`
 - `plan, roadmap` → `pixz.core.planning`
@@ -34,21 +34,22 @@ Pick your runtime in `docs/install/README.md` for exact path (Claude, OpenClaw, 
 ## 5. Verify
 
 ```bash
-# structural + doc + quick behavioral (layers 1-2)
+# structural + doc + behavioral smoke (layers 1-3)
 python scripts/validate.py
 python scripts/check-cycles.py
 python evals/runner.py
+python evals/behavioral/runner.py   # 23 scenarios + registry invariants
 
 # resolver
-python scripts/resolve.py --install pixz.core.orchestrator --runtime claude
-python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 12 nodes
+python scripts/resolve.py --install pixz.core.orchestrator --runtime claude           # 4 nodes
+python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 14 nodes
 ```
 
-See `docs/evaluation.md` for 4 layers.
+See `docs/evaluation.md` for the 4 layers and what each proves.
 
 ## 6. Use
 
-Follow that skill's `SKILL.md` contract (Purpose, When to use/NOT, Inputs, Methodology, Verification). Emit structured output (`findings`, `assumptions`, `unknowns`, `evidence`, `verification`).
+Enter the protocol: `ORIENT → MODEL → ASSESS → MODE → PLAN → ACT → OBSERVE → VERIFY → DECIDE` (`AGENTS.md#entry-protocol`). Follow the activated skill's `SKILL.md` contract (Purpose, When to use/NOT, Inputs, Methodology, Verification). Keep state in `.pixz/task-state.json` when the task outlives one step; emit typed findings + evidence, not adjectives.
 
 Example single-skill task (minimal):
 ```bash
@@ -57,7 +58,7 @@ ls pnpm-lock.yaml  # environment-awareness prevents hallucination
 pnpm test
 ```
 
-Example orchestrated task: see `examples/orchestrated-task.md` (full DISCOVER→SHIP with challenger + quality-gate).
+Example orchestrated task: see `examples/orchestrated-task.md` (full ORIENT→DECIDE loop at mode deep, with challenger + quality-gate).
 
 ## 7. Limitations (honest)
 
@@ -72,4 +73,4 @@ See `docs/troubleshooting.md`.
 
 - Develop: `docs/development/creating-a-skill.md`
 - Architecture: `docs/architecture.md`, `docs/architecture/routing.md`
-- Concepts: `docs/concepts/` (coming)
+- Research + benchmark: `docs/research/frontier-agent-findings.md`, `docs/benchmark/`

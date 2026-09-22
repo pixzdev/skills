@@ -10,5 +10,7 @@
     "pixz.core.epistemic-challenger"
   ],
   "should_not_select": [],
-  "verifies": "source fidelity and falsification"
+  "verifies": "source fidelity and falsification",
+  "expected_mode": "deep",
+  "context": "Two agent reports give conflicting evidence about the deploy. Reason about which claim is correct, check the underlying assumptions, and challenge the conclusion to find how it could be wrong."
 }

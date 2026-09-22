@@ -1,7 +1,7 @@
 ---
 name: Anti-AI Slop
-description: Detects and challenges generic, decorative, boilerplate or hallucinated artifacts in design, code and docs.
-version: 1.1.0
+description: Diagnostic (not dogmatic) detection of generic, decorative, boilerplate or hallucinated artifacts — judges purpose and value, never surface traits alone.
+version: 2.0.0
 id: pixz.quality.anti-ai-slop
 category: quality
 triggers: [anti slop, generic design, boilerplate, AI slop]
@@ -35,7 +35,10 @@ First-class quality skill that prevents “AI-looking” artifacts: templated la
 - citation dumping, weak source quantity over quality, unsupported claims, fabricated evidence, false certainty
 
 ### Documentation
-- filler, repetition, excessive verbosity without information, generic statements
+- filler, repetition, excessive verbosity without information, generic statements, repetitive documentation across files
+
+### Never "slop" merely because
+An artifact is **not** slop by surface trait alone. Do not flag something because it is: verbose · abstract · animated · componentized · AI-generated · unconventional · long · sophisticated. Judge **purpose and value**: what does it communicate or enable, and does it earn its cost? A long doc that carries unique information is not filler; an abstraction that removes real duplication is not fake complexity; an animation that conveys state is not decoration. When in doubt, the element passes and the doubt is recorded — false positives waste trust faster than missed slop.
 
 ## Methodology
 

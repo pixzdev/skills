@@ -10,5 +10,7 @@
     "pixz.core.quality-gate"
   ],
   "should_not_select": [],
-  "verifies": "irreversible gate"
+  "verifies": "irreversible gate",
+  "expected_mode": "deep",
+  "context": "Production migration is high risk and partially reversible. Assess the safe change and run a release gate with done criteria before shipping."
 }

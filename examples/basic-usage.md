@@ -5,12 +5,12 @@
 ## Task
 > “Tests fail on CI but pass locally — `npm test` works locally, CI uses `pnpm`.”
 
-## Complexity Gate
-Scope: one file, reversible, risk low → `minimal` workflow: UNDERSTAND → EXECUTE → VERIFY (no orchestrator, no challenger).
+## Assess → Mode
+Scope: one file, reversible, risk low → **mode fast**: `ORIENT → ACT → VERIFY → done` (no orchestrator, no challenger, no task-state file). Orchestration overhead > task value here.
 
 ## Steps
 
-### 1. DISCOVER (via context-engineering + environment-awareness)
+### 1. ORIENT (via context-engineering + environment-awareness)
 
 ```bash
 cat package.json          # check packageManager field
@@ -23,7 +23,7 @@ cat AGENTS.md             # notes: use pnpm, not npm
 - Local env used `npm` (hallucinated assumption)
 - CI correctly uses `pnpm`
 
-### 2. EXECUTE (via least privilege)
+### 2. ACT (via least privilege)
 
 ```bash
 pnpm install

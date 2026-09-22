@@ -10,5 +10,7 @@
     "pixz.core.delegation-handoff"
   ],
   "should_not_select": [],
-  "verifies": "handoff contract and iteration cap"
+  "verifies": "handoff contract and iteration cap",
+  "expected_mode": "autonomous",
+  "context": "A long-running multi-agent task that must continue across sessions. Persist state, keep the workflow resumable, and delegate subtasks to subagents with handoff."
 }

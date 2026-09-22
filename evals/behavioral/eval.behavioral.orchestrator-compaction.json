@@ -1,0 +1,16 @@
+{
+  "id": "eval.behavioral.orchestrator-compaction",
+  "skill": "pixz.core.workflow-continuity",
+  "scenario": "A long task has passed through context compaction. Read the task state, restore context, re-establish active skills and continue.",
+  "risk": "medium",
+  "expected_mode": "balanced",
+  "expected_challenge": "low",
+  "should_select": [
+    "pixz.core.workflow-continuity",
+    "pixz.core.context-engineering"
+  ],
+  "should_not_select": [
+    "pixz.core.delegation-handoff"
+  ],
+  "verifies": "compaction survival: state file is the continuity substrate; RESTORE step of the context lifecycle re-injects pinned facts from disk"
+}

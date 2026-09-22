@@ -9,5 +9,6 @@
   "should_not_select": [
     "pixz.ai.rag"
   ],
-  "verifies": "avoids research overhead"
+  "verifies": "avoids research overhead",
+  "expected_mode": "fast"
 }

@@ -1,0 +1,16 @@
+{
+  "id": "eval.behavioral.orchestrator-anti-delegation",
+  "skill": "pixz.core.orchestrator",
+  "scenario": "Fix an off-by-one in a pure utility function that has an existing unit test. No other context.",
+  "risk": "low",
+  "expected_mode": "fast",
+  "expected_challenge": "none",
+  "should_select": [],
+  "should_not_select": [
+    "pixz.core.orchestrator",
+    "pixz.core.delegation-handoff",
+    "pixz.core.epistemic-challenger",
+    "pixz.security.review"
+  ],
+  "verifies": "restraint / anti-delegation: trivial bounded task gets zero subagents and zero ceremony; orchestration overhead > value is a failure"
+}

@@ -1,5 +1,5 @@
 {
-  "version": "1.1.0",
+  "version": "2.0.0",
   "channel": "stable",
   "limits": {
     "max_skill_chain_depth": 15,
@@ -10,25 +10,43 @@
     {
       "id": "pixz.protocol.context",
       "name": "Context Protocol",
-      "description": "What/where/authority/staleness/preservation; acquisition order workflow\u2192repo\u2192tools\u2192docs\u2192research\u2192user.",
-      "path": "docs/architecture.md"
+      "description": "Lifecycle discover→filter→prioritize→load→compress→pin→update→evict→restore; acquisition order task-state→repo→tools/MCP→docs→research→user; sufficiency stops acquisition.",
+      "path": "core/context-engineering/SKILL.md"
     },
     {
-      "id": "pixz.protocol.workflow",
-      "name": "Workflow Propagation",
-      "description": "Parent to child workflow inheritance and structured handoff.",
-      "path": "schemas/workflow.schema.json"
+      "id": "pixz.protocol.task-state",
+      "name": "Task State & Continuity",
+      "description": "One compact state file per task (schemas/task-state.schema.json); checkpoint discipline; deterministic resume protocol; state over phase; survives compaction/restart/handoff/model/runtime change.",
+      "path": "schemas/task-state.schema.json"
+    },
+    {
+      "id": "pixz.protocol.capability-activation",
+      "name": "Capability Activation",
+      "description": "Persistent skill invocation: discover→match→load (progressive)→activate→use→verify→persist→reinvoke; activation state lifecycle; budget rule — every activation earns its context cost.",
+      "path": "core/capability-discovery/SKILL.md"
+    },
+    {
+      "id": "pixz.protocol.source-of-record",
+      "name": "Source-of-Record",
+      "description": "Descriptive records (commits, logs, summaries, reports, docs, metadata) are never authoritative by appearance; system-state claims verify against actual filesystem/git/test output/artifacts/deployed state; verified_against recorded.",
+      "path": "core/verification/SKILL.md"
     },
     {
       "id": "pixz.protocol.argumentation",
       "name": "Argumentation",
-      "description": "Claim lifecycle: rationale, evidence, alternatives, counterarguments, falsification, confidence, status, revision.",
+      "description": "Typed claims with explicit transitions (unknown→hypothesis→tested→supported; assumption→challenged→falsified; claim→evidence→verified); position change attribution.",
       "path": "core/epistemic-reasoning/SKILL.md"
     },
     {
+      "id": "pixz.protocol.handoff-contract",
+      "name": "Handoff Contract",
+      "description": "Delegation economics test; structured dispatch; mandatory structured return (work, findings, evidence, assumptions, unknowns, decisions, tests, verification, remaining work, next action); parent inspection; no 'looks good' returns.",
+      "path": "schemas/handoff.schema.json"
+    },
+    {
       "id": "pixz.protocol.escalation",
-      "name": "Escalation Ladder",
-      "description": "retry \u2192 inspect \u2192 alternate \u2192 research \u2192 specialist \u2192 challenge \u2192 parent \u2192 user",
+      "name": "Failure Recovery & Escalation",
+      "description": "FAIL→CLASSIFY→INSPECT→ISOLATE→HYPOTHESIS→TEST→REPAIR→REGRESSION CHECK→CONTINUE; each retry adds information; ladder retry→inspect→alternate→research→specialist→challenge→parent→user.",
       "path": "core/replanning/SKILL.md"
     }
   ],
@@ -44,7 +62,7 @@
     {
       "id": "pixz.policy.simplicity",
       "name": "Simplicity",
-      "description": "Minimum necessary, not minimum possible; avoid unnecessary abstraction/deps/agents/tools.",
+      "description": "Minimum necessary, not minimum possible; avoid unnecessary abstraction/deps/agents/tools. Anti-overengineering gate: every new subsystem must answer what failure it prevents, what behavior it enables, what measurable improvement, what its cost, and whether simpler suffices.",
       "enforces": [
         "all"
       ]
@@ -52,7 +70,15 @@
     {
       "id": "pixz.policy.change-safety",
       "name": "Change Safety",
-      "description": "Reversible / partially / irreversible tiers; stronger scrutiny for higher risk.",
+      "description": "Static policy (not routed): reversible / partially / irreversible tiers; irreversible/high-impact requires confirmation in every mode including autonomous.",
+      "enforces": [
+        "all"
+      ]
+    },
+    {
+      "id": "pixz.policy.orchestration-budget",
+      "name": "Orchestration Budget",
+      "description": "Every added capability, subagent, research pass or verification round must have expected value > context/coordination cost. Trivial tasks must stay cheap; a mode is an upper tendency, never a minimum ceremony.",
       "enforces": [
         "all"
       ]
@@ -60,7 +86,7 @@
     {
       "id": "pixz.policy.anti-ai-slop",
       "name": "Anti-AI Slop",
-      "description": "Diagnostic criteria, not dogmatic bans, for design/code/research/docs.",
+      "description": "Diagnostic criteria, not dogmatic bans; never classify by surface trait alone — judge purpose and value.",
       "enforces": [
         "design",
         "frontend",
@@ -73,9 +99,9 @@
       "id": "pixz.core.orchestrator",
       "name": "Orchestrator",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Meta-coordination layer that routes work to the right skills, agents and tools.",
+      "description": "PixzFlow's adaptive agent operating system — assess, mode, activate, delegate, decide — with an explicit orchestration budget.",
       "triggers": [
         "orchestrate",
         "coordinate",
@@ -85,17 +111,20 @@
       ],
       "requires": [],
       "aggregates": [
+        "pixz.core.verification"
+      ],
+      "optional": [
         "pixz.core.planning",
         "pixz.core.context-engineering",
         "pixz.core.environment-awareness",
         "pixz.core.capability-discovery",
         "pixz.core.workflow-continuity",
+        "pixz.core.delegation-handoff",
         "pixz.core.epistemic-reasoning",
-        "pixz.core.verification",
-        "pixz.core.quality-gate"
-      ],
-      "optional": [
         "pixz.core.epistemic-challenger",
+        "pixz.core.replanning",
+        "pixz.core.quality-gate",
+        "pixz.core.change-safety",
         "pixz.quality.anti-ai-slop"
       ],
       "conflicts": [],
@@ -124,9 +153,9 @@
       "id": "pixz.core.planning",
       "name": "Planning",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Decomposes objectives into verifiable, sequenced steps with dependencies and exit criteria.",
+      "description": "Minimal, mode-sized execution plans with verifiable steps and defined stop conditions.",
       "triggers": [
         "plan",
         "roadmap",
@@ -166,14 +195,15 @@
       "id": "pixz.core.context-engineering",
       "name": "Context Engineering",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Systematic acquisition, validation, sufficiency-checking and preservation of task context.",
+      "description": "Explicit context lifecycle — discover, filter, prioritize, load, compress, pin, update, evict, restore.",
       "triggers": [
         "context",
         "requirements",
         "what do we know",
-        "gather context"
+        "gather context",
+        "compaction"
       ],
       "requires": [],
       "aggregates": [],
@@ -204,9 +234,9 @@
       "id": "pixz.core.environment-awareness",
       "name": "Environment Awareness",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Inspects actual OS, runtime, framework, package manager, git, filesystem, and tooling before acting.",
+      "description": "Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling during ORIENT.",
       "triggers": [
         "environment",
         "stack detection",
@@ -243,14 +273,15 @@
       "id": "pixz.core.capability-discovery",
       "name": "Capability Discovery",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Discovers relevant skills, agents, tools, MCP servers and libraries before selecting.",
+      "description": "Persistent capability discovery and invocation with progressive loading and tracked activation state.",
       "triggers": [
         "discover",
         "what can I use",
         "available tools",
-        "find skill"
+        "find skill",
+        "activate skill"
       ],
       "requires": [],
       "aggregates": [],
@@ -281,15 +312,17 @@
       "id": "pixz.core.workflow-continuity",
       "name": "Workflow Continuity",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Maintains, persists and propagates workflow state across parent and child agents.",
+      "description": "Persistent task state, checkpointing and resumability across compaction, restart, handoff, model and runtime change.",
       "triggers": [
         "workflow",
         "continue",
+        "resume",
         "handoff",
         "persist state",
-        "workflow state"
+        "task state",
+        "checkpoint"
       ],
       "requires": [
         "pixz.core.context-engineering"
@@ -322,9 +355,9 @@
       "id": "pixz.core.delegation-handoff",
       "name": "Delegation & Handoff",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Structured delegation with explicit inputs, constraints, success criteria and structured returns.",
+      "description": "Bounded delegation with economics test, structured contract, mandatory return, parent inspection.",
       "triggers": [
         "delegate",
         "handoff",
@@ -363,15 +396,16 @@
       "id": "pixz.core.epistemic-reasoning",
       "name": "Epistemic Reasoning",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Disciplined reasoning: separates fact from inference, tracks assumptions, calibrates confidence, avoids confirmation bias.",
+      "description": "Epistemic state engine — typed claims, explicit transitions, calibrated confidence, position integrity.",
       "triggers": [
         "reason",
         "evidence",
         "assumption",
         "confidence",
-        "uncertainty"
+        "uncertainty",
+        "claim"
       ],
       "requires": [
         "pixz.core.context-engineering"
@@ -404,14 +438,15 @@
       "id": "pixz.core.epistemic-challenger",
       "name": "Epistemic Challenger",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Adaptive challenger that stress-tests claims by seeking disconfirming evidence and failure modes.",
+      "description": "Intensity-scaled adversarial challenge with explicit stop rule — no always-challenge, no debate loops.",
       "triggers": [
         "challenge",
         "counterargument",
         "how could this be wrong",
-        "falsify"
+        "falsify",
+        "red team"
       ],
       "requires": [
         "pixz.core.epistemic-reasoning"
@@ -444,14 +479,15 @@
       "id": "pixz.core.verification",
       "name": "Verification",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Evidence-based verification: inspection, regression, consistency and impact analysis before shipping.",
+      "description": "Evidence-based verification as a continuous loop with source-of-record discipline and typed checks.",
       "triggers": [
         "verify",
         "inspect",
         "validate",
-        "check correctness"
+        "check correctness",
+        "source of record"
       ],
       "requires": [
         "pixz.core.epistemic-reasoning"
@@ -484,9 +520,9 @@
       "id": "pixz.core.change-safety",
       "name": "Change Safety",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Evaluates risk, reversibility, scope and authority before mutating state or invoking tools.",
+      "description": "Static pre-mutation policy — reversible/partially/irreversible tiers, authority, scope; irreversible always confirmed.",
       "triggers": [
         "safe change",
         "risk",
@@ -525,14 +561,16 @@
       "id": "pixz.core.replanning",
       "name": "Replanning",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Structured replanning and escalation when verification fails or constraints change.",
+      "description": "Failure recovery ladder and bounded replanning — each retry adds information.",
       "triggers": [
         "replan",
         "pivot",
         "strategy failed",
-        "alternative approach"
+        "alternative approach",
+        "failure",
+        "recovery"
       ],
       "requires": [
         "pixz.core.planning",
@@ -566,9 +604,9 @@
       "id": "pixz.core.quality-gate",
       "name": "Quality Gate",
       "category": "core",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Final ship gate: consolidates verification, risk, stop conditions and residual unknowns.",
+      "description": "The done-decision — consolidates verification, risk and orchestration budget into stop/ship/revise/replan.",
       "triggers": [
         "quality gate",
         "ship check",
@@ -607,9 +645,9 @@
       "id": "pixz.quality.anti-ai-slop",
       "name": "Anti-AI Slop",
       "category": "quality",
-      "version": "1.1.0",
+      "version": "2.0.0",
       "status": "stable",
-      "description": "Detects and challenges generic, decorative, boilerplate or hallucinated artifacts in design, code and docs.",
+      "description": "Diagnostic (not dogmatic) detection of generic, decorative, boilerplate or hallucinated artifacts — judges purpose and value, never surface traits alone.",
       "triggers": [
         "anti slop",
         "generic design",

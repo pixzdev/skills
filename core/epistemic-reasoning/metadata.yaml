@@ -1,34 +1,12 @@
 id: pixz.core.epistemic-reasoning
 name: Epistemic Reasoning
+version: 2.0.0
 category: core
-version: 1.1.0
-status: stable
-description: 'Disciplined reasoning: separates fact from inference, tracks assumptions,
-  calibrates confidence, avoids confirmation bias.'
-triggers:
-- reason
-- evidence
-- assumption
-- confidence
-- uncertainty
+description: Epistemic state engine — typed claims, explicit transitions, calibrated confidence, position integrity.
+triggers: [reason, evidence, assumption, confidence, uncertainty, claim]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 requires:
-- pixz.core.context-engineering
+  - pixz.core.context-engineering
 aggregates: []
 optional: []
 conflicts: []
-compatible_runtimes:
-- claude
-- openclaw
-- opencode
-- hermes
-- codex
-- generic
-inputs:
-- objective
-- constraints
-- context
-outputs:
-- artifact
-- findings
-- verification
-tools: []

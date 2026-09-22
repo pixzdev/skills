@@ -1,7 +1,7 @@
 {
   "id": "eval.challenger.intensity-01",
   "skill_id": "pixz.core.epistemic-challenger",
-  "description": "Challenge intensity scales with risk\u00d7uncertainty\u00d7impact and has exit",
+  "description": "Challenge intensity scales with risk\u00d7uncertainty\u00d7impact\u00d7irreversibility and has an explicit stop rule",
   "category": "method",
   "input": {
     "prompt": "Challenge production security architecture for auth service",
@@ -14,7 +14,7 @@
       "uncertainty",
       "impact",
       "verdict",
-      "exit"
+      "stop rule"
     ],
     "must_not_contain": [],
     "verifies": [
