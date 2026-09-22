@@ -1,7 +1,7 @@
 id: pixz.devops.docker
 name: Docker & Containers
 category: devops
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: Reproducible container construction, layering, supply-chain and runtime
   verification.

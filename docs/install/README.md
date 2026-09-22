@@ -15,7 +15,7 @@
 
 **Legend:** VERIFIED = tested against official docs + install flow; PARTIALLY VERIFIED = spec exists but not integration-smoked in CI; DOCUMENTED ONLY = cited but not tested; UNKNOWN/UNSUPPORTED = no claim.
 
-For this repo (v1.0.1):
+For this repo (v1.1.0):
 - skills.sh: VERIFIED (Vercel Labs docs, `npx skills` CLI)
 - Claude Code: VERIFIED (Anthropic/cld skills docs, `~/.claude/skills` per project/global)
 - OpenClaw: VERIFIED (openclaw docs/tools/skills.md, ClawHub, `skills-sh:` and `git:`)
@@ -104,7 +104,7 @@ This repo bundles 28 skills. Addressing:
 
 ## Version / Channel
 
-- `VERSION` file (`1.0.1`) is repo version; per-skill `metadata.yaml:version` (SemVer) is skill version.
+- `VERSION` file (`1.1.0`) is repo version; per-skill `metadata.yaml:version` (SemVer) is skill version.
 - `latest` = `main` HEAD; `stable` = latest `v*.*.*` tag (resolver `--channel stable`).
 - `pinned` = `pixz.lock` — **DOCUMENTED ONLY** (future). Resolver accepts flag but does not yet write lockfile.
 - For reproducible installs, pin via git SHA: `npx skills add pixzdev/skills#<sha>` or `openclaw skills install git:pixzdev/skills@<sha>`.

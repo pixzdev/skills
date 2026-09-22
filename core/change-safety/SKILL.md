@@ -1,11 +1,11 @@
 ---
 name: Change Safety
 description: Evaluates risk, reversibility, scope and authority before mutating state or invoking tools.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.change-safety
 category: core
-triggers: [safe change, risk, reversible, scope control, authority]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [safe change, risk, reversible, scope control, tool selection]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Change Safety — `pixz.core.change-safety`

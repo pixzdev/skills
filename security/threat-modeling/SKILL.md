@@ -1,11 +1,11 @@
 ---
 name: Threat Modeling
 description: Systematic threat enumeration, impact scoring and mitigation mapping — STRIDE-based.
-version: 1.0.1
+version: 1.1.0
 id: pixz.security.threat-modeling
 category: security
-triggers: [threat model, STRIDE, attack surface, abuse case, DFD]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [threat model, STRIDE, attack surface, abuse case]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Threat Modeling — `pixz.security.threat-modeling`

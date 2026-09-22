@@ -1,11 +1,11 @@
 ---
 name: Epistemic Reasoning
 description: Disciplined reasoning that separates fact from inference, tracks assumptions, and calibrates confidence.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.epistemic-reasoning
 category: core
-triggers: [reason, evidence, assumption, confidence, uncertainty, argumentation]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [reason, evidence, assumption, confidence, uncertainty]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Epistemic Reasoning — `pixz.core.epistemic-reasoning`

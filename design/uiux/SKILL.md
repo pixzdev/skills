@@ -1,11 +1,11 @@
 ---
 name: UI/UX Design
 description: Human-centered interface methodology — flows, hierarchy, affordance and usability verification.
-version: 1.0.1
+version: 1.1.0
 id: pixz.design.uiux
 category: design
-triggers: [ui design, ux review, interaction design, usability, interface]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [ui design, ux review, interaction design, usability]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # UI/UX Design — `pixz.design.uiux`

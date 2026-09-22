@@ -1,11 +1,11 @@
 ---
 name: Environment Awareness
 description: Inspects actual OS, runtime, framework, package manager, git, filesystem and tooling before acting.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.environment-awareness
 category: core
-triggers: [environment, stack detection, runtime, package manager, git state, framework awareness]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [environment, stack detection, runtime, package manager, git state]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Environment Awareness — `pixz.core.environment-awareness`

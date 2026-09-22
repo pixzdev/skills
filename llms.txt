@@ -4,8 +4,8 @@
 
 ## Identity
 - Repo: https://github.com/pixzdev/skills
-- Version: 1.0.1 (VERSION file; registry.json)
-- Entry: AGENTS.md (agent registry) / README.md (human) / registry.json (machine)
+- Version: 1.1.0 (VERSION file; registry.json)
+- Entry: AGENTS.md (agent registry) / README.md (human, includes copy-paste AI Agent Installation Prompt + Super Z / GLM / Z.AI Web Prompt) / registry.json (machine)
 
 ## Install (not clone)
 - Matrix: docs/install/README.md
@@ -28,6 +28,7 @@
 - docs/architecture/routing.md (task→skill routing, under/over, circular safety mitigation)
 - docs/taxonomy.md (7 criteria, merged concepts)
 - docs/versioning.md (latest/stable VERIFIED, pinned future)
+- profiles/ (isolated runtime overlays, NOT skills; super-z = Super Z / GLM / Z.AI Web: FAST/BALANCED/DEEP/AUTONOMOUS modes, default BALANCED, mandatory AskUserQuestion mode selection; SPECIFIED, behaviorally UNVERIFIED; contract: profiles/README.md)
 
 ## Limitations (honest)
 - pinned channel: DOCUMENTED ONLY (no pixz.lock)

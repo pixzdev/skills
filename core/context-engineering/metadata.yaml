@@ -1,7 +1,7 @@
 id: pixz.core.context-engineering
 name: Context Engineering
 category: core
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: Systematic acquisition, validation, sufficiency-checking and preservation
   of task context.

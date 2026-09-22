@@ -1,11 +1,11 @@
 ---
 name: Orchestrator
 description: Meta-coordination layer that routes work to the right skills, agents and tools with accountability and verification.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.orchestrator
 category: core
-triggers: [orchestrate, coordinate, delegate, complex task, multi-step, route work]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [orchestrate, coordinate, delegate, complex task, multi-step]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Orchestrator — `pixz.core.orchestrator`
@@ -13,7 +13,7 @@ compatible_runtimes: [claude, openclaw, opencode, hermes]
 > Meta-coordination that answers WHEN/WHO/WHAT/WHY; skills answer HOW; agents EXECUTE; tools PROVIDE CAPABILITY. Never collapses those layers.
 
 ## Purpose
-Orchestrator owns coordination and accountability across the full loop: `UNDERSTAND → DISCOVER → PLAN → ROUTE → DELEGATE → COORDINATE → INSPECT → CHALLENGE → VERIFY → REPLAN → RE-EXECUTE → IMPROVE → SHIP`. It does not contain every methodology itself — it delegates. It never treats subagent output as truth without verification.
+Orchestrator owns coordination and accountability across the full loop: `UNDERSTAND → DISCOVER → PLAN → EXECUTE → INSPECT → CHALLENGE → VERIFY → REPLAN → IMPROVE → VERIFY → SHIP` (canonical 11 phases; `ROUTE`, `DELEGATE`, `COORDINATE` are substeps of `EXECUTE`, `RE-EXECUTE` is a `REPLAN` iteration — same mapping as `docs/architecture.md`). It does not contain every methodology itself — it delegates. It never treats subagent output as truth without verification.
 
 ## Triggers
 - Task mentions: orchestrate, coordinate, delegate, multi-step, route work, full workflow, complex task
@@ -124,6 +124,7 @@ recommended_next_actions: [ ... ]
 - Claude: `.claude/skills/orchestrator/SKILL.md` + `CLAUDE.md` includes `@AGENTS.md`
 - OpenClaw: `~/.openclaw/skills/orchestrator/SKILL.md`; respects `agents.entries.*.skills` final allowlist
 - OpenCode/Hermes: generic `skills/` import via adapter
+- Super Z / GLM / Z.AI Web: operate under `profiles/super-z/PROFILE.md` (isolated runtime profile — operating modes + compute policy; does not change this skill's semantics)
 
 ---
 *See `docs/architecture.md` + `docs/dependency-model.md`. Methodology stays runtime-agnostic.*

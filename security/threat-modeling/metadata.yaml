@@ -1,7 +1,7 @@
 id: pixz.security.threat-modeling
 name: Threat Modeling
 category: security
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: Systematic threat enumeration, impact scoring and mitigation mapping.
 triggers:

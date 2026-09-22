@@ -1,11 +1,11 @@
 ---
 name: Agent Design
 description: Designs tool-enabled agents with bounded autonomy, verification and escalation.
-version: 1.0.1
+version: 1.1.0
 id: pixz.ai.agent-design
 category: ai
-triggers: [agent design, tool calling, orchestration, autonomous agent, tool use]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [agent design, tool calling, orchestration, autonomous agent]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Agent Design — `pixz.ai.agent-design`

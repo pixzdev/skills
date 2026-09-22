@@ -1,11 +1,11 @@
 ---
 name: React Engineering
 description: React/Next.js methodology — composition, state, boundaries, performance and verification.
-version: 1.0.1
+version: 1.1.0
 id: pixz.frontend.react
 category: frontend
-triggers: [react, next.js, component, hooks, composition]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [react, next.js, component, hooks, react patterns]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # React Engineering — `pixz.frontend.react`

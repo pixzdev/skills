@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.1.0",
   "channel": "stable",
   "limits": {
     "max_skill_chain_depth": 15,
@@ -73,7 +73,7 @@
       "id": "pixz.core.orchestrator",
       "name": "Orchestrator",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Meta-coordination layer that routes work to the right skills, agents and tools.",
       "triggers": [
@@ -124,7 +124,7 @@
       "id": "pixz.core.planning",
       "name": "Planning",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Decomposes objectives into verifiable, sequenced steps with dependencies and exit criteria.",
       "triggers": [
@@ -166,7 +166,7 @@
       "id": "pixz.core.context-engineering",
       "name": "Context Engineering",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Systematic acquisition, validation, sufficiency-checking and preservation of task context.",
       "triggers": [
@@ -204,7 +204,7 @@
       "id": "pixz.core.environment-awareness",
       "name": "Environment Awareness",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Inspects actual OS, runtime, framework, package manager, git, filesystem, and tooling before acting.",
       "triggers": [
@@ -243,7 +243,7 @@
       "id": "pixz.core.capability-discovery",
       "name": "Capability Discovery",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Discovers relevant skills, agents, tools, MCP servers and libraries before selecting.",
       "triggers": [
@@ -281,7 +281,7 @@
       "id": "pixz.core.workflow-continuity",
       "name": "Workflow Continuity",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Maintains, persists and propagates workflow state across parent and child agents.",
       "triggers": [
@@ -322,7 +322,7 @@
       "id": "pixz.core.delegation-handoff",
       "name": "Delegation & Handoff",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Structured delegation with explicit inputs, constraints, success criteria and structured returns.",
       "triggers": [
@@ -363,7 +363,7 @@
       "id": "pixz.core.epistemic-reasoning",
       "name": "Epistemic Reasoning",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Disciplined reasoning: separates fact from inference, tracks assumptions, calibrates confidence, avoids confirmation bias.",
       "triggers": [
@@ -404,7 +404,7 @@
       "id": "pixz.core.epistemic-challenger",
       "name": "Epistemic Challenger",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Adaptive challenger that stress-tests claims by seeking disconfirming evidence and failure modes.",
       "triggers": [
@@ -444,7 +444,7 @@
       "id": "pixz.core.verification",
       "name": "Verification",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Evidence-based verification: inspection, regression, consistency and impact analysis before shipping.",
       "triggers": [
@@ -484,7 +484,7 @@
       "id": "pixz.core.change-safety",
       "name": "Change Safety",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Evaluates risk, reversibility, scope and authority before mutating state or invoking tools.",
       "triggers": [
@@ -525,7 +525,7 @@
       "id": "pixz.core.replanning",
       "name": "Replanning",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Structured replanning and escalation when verification fails or constraints change.",
       "triggers": [
@@ -566,7 +566,7 @@
       "id": "pixz.core.quality-gate",
       "name": "Quality Gate",
       "category": "core",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Final ship gate: consolidates verification, risk, stop conditions and residual unknowns.",
       "triggers": [
@@ -607,7 +607,7 @@
       "id": "pixz.quality.anti-ai-slop",
       "name": "Anti-AI Slop",
       "category": "quality",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Detects and challenges generic, decorative, boilerplate or hallucinated artifacts in design, code and docs.",
       "triggers": [
@@ -647,7 +647,7 @@
       "id": "pixz.engineering.api-design",
       "name": "API Design",
       "category": "engineering",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Methodology for consistent, versioned, secure and observable API contracts.",
       "triggers": [
@@ -690,7 +690,7 @@
       "id": "pixz.engineering.system-design",
       "name": "System Design",
       "category": "engineering",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Structures system tradeoffs, constraints, failure domains and verification for architecture decisions.",
       "triggers": [
@@ -731,7 +731,7 @@
       "id": "pixz.security.review",
       "name": "Security Review",
       "category": "security",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Checklist-driven security review covering auth, authz, input, secrets, deps and architecture.",
       "triggers": [
@@ -773,7 +773,7 @@
       "id": "pixz.security.threat-modeling",
       "name": "Threat Modeling",
       "category": "security",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Systematic threat enumeration, impact scoring and mitigation mapping.",
       "triggers": [
@@ -814,7 +814,7 @@
       "id": "pixz.design.uiux",
       "name": "UI/UX Design",
       "category": "design",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Human-centered interface methodology: flows, hierarchy, affordance and usability verification.",
       "triggers": [
@@ -856,7 +856,7 @@
       "id": "pixz.design.design-system",
       "name": "Design System",
       "category": "design",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Defines and enforces tokens, components, patterns and governance for consistent UIs.",
       "triggers": [
@@ -896,7 +896,7 @@
       "id": "pixz.frontend.react",
       "name": "React Engineering",
       "category": "frontend",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "React/Next.js methodology: composition, state, boundaries, performance and verification.",
       "triggers": [
@@ -937,7 +937,7 @@
       "id": "pixz.frontend.accessibility",
       "name": "Accessibility",
       "category": "frontend",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "WCAG-grounded auditing and remediation for perceivable, operable, understandable and robust UIs.",
       "triggers": [
@@ -978,7 +978,7 @@
       "id": "pixz.motion.gsap",
       "name": "GSAP Motion",
       "category": "motion",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "GSAP timeline and ScrollTrigger methodology with performance and accessibility constraints.",
       "triggers": [
@@ -1018,7 +1018,7 @@
       "id": "pixz.motion.remotion",
       "name": "Remotion",
       "category": "motion",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Declarative video composition with timeline verification and render-pipeline discipline.",
       "triggers": [
@@ -1057,7 +1057,7 @@
       "id": "pixz.devops.docker",
       "name": "Docker & Containers",
       "category": "devops",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Reproducible container construction, layering, supply-chain and runtime verification.",
       "triggers": [
@@ -1097,7 +1097,7 @@
       "id": "pixz.devops.kubernetes",
       "name": "Kubernetes",
       "category": "devops",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Declarative Kubernetes delivery with rollout, health-check and failure-mode discipline.",
       "triggers": [
@@ -1138,7 +1138,7 @@
       "id": "pixz.ai.rag",
       "name": "RAG Systems",
       "category": "ai",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Grounded retrieval-augmented generation: chunking, grounding, citation discipline and eval.",
       "triggers": [
@@ -1180,7 +1180,7 @@
       "id": "pixz.ai.agent-design",
       "name": "Agent Design",
       "category": "ai",
-      "version": "1.0.1",
+      "version": "1.1.0",
       "status": "stable",
       "description": "Designs tool-enabled agents with bounded autonomy, verification and escalation.",
       "triggers": [

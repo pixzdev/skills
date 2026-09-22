@@ -1,11 +1,11 @@
 ---
 name: Replanning
 description: Structured replanning and escalation when verification fails or constraints change.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.replanning
 category: core
-triggers: [replan, pivot, strategy failed, alternative approach, escalation]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [replan, pivot, strategy failed, alternative approach]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Replanning — `pixz.core.replanning`

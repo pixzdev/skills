@@ -1,11 +1,11 @@
 ---
 name: RAG Systems
 description: Grounded retrieval-augmented generation — chunking, grounding, citation discipline and eval.
-version: 1.0.1
+version: 1.1.0
 id: pixz.ai.rag
 category: ai
-triggers: [rag, retrieval, vector, grounding, knowledge base, citations]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [rag, retrieval, vector, grounding, knowledge base]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # RAG Systems — `pixz.ai.rag`

@@ -1,11 +1,11 @@
 ---
 name: Workflow Continuity
 description: Maintains, persists and propagates workflow state across parent and child agents.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.workflow-continuity
 category: core
-triggers: [workflow, continue, handoff, persist state, workflow state, iteration state]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [workflow, continue, handoff, persist state, workflow state]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Workflow Continuity — `pixz.core.workflow-continuity`

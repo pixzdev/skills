@@ -36,6 +36,9 @@ mkdir -p ~/.hermes/skills/orchestrator && cp -r core/orchestrator/* ~/.hermes/sk
 
 # Generic (Codex/Cursor) — PARTIALLY VERIFIED
 mkdir -p .agents/skills/orchestrator && cp -r core/orchestrator/* .agents/skills/orchestrator/
+
+# Full ecosystem — all 28 skills at once (skills.sh)
+npx skills add pixzdev/skills
 ```
 
 **Source checkout (development only):**
@@ -45,7 +48,7 @@ git clone https://github.com/pixzdev/skills.git
 python scripts/validate.py && python scripts/check-cycles.py && python evals/runner.py
 ```
 
-> See `docs/install-as-skill.md` for the copy-paste prompt that tells any agent to *install* (not just clone) and verify.
+> **Copy-paste prompts for agents:** see **AI Agent Installation Prompt** and **Super Z / GLM / Z.AI Web Prompt** below. Full runtime-adaptive version: `docs/prompts/install-skill-agent.md`; short version: `docs/install-as-skill.md`.
 
 ## Supported Runtimes
 
@@ -77,6 +80,74 @@ cat security/review/SKILL.md
 ```
 
 Minimal vs full routing: rename → `UNDERSTAND→EXECUTE→VERIFY` (no orchestrator). Production migration → full loop with challenger + quality-gate. See `docs/architecture/routing.md`.
+
+## AI Agent Installation Prompt
+
+Copy-paste the block below into any AI agent (Claude Code, OpenClaw, OpenCode, Hermes, Cursor, Codex, or any Agent Skills runtime). It is runtime-agnostic by design — the agent detects its own environment and uses the repository's official mechanisms.
+
+```markdown
+You are installing a PIXZ.DEV skill into the CURRENT AI agent runtime — not cloning a repository, not reading documentation.
+
+Repo: https://github.com/pixzdev/skills (machine source of truth: registry.json).
+
+1. IDENTIFY RUNTIME — probe, do not assume:
+   - Paths: ls -la ~/.claude/skills .claude/skills .opencode/skill ~/.config/opencode/skill ~/.hermes/skills .agents/skills ./skills
+   - CLIs: npx skills --help; openclaw --help; opencode --help; hermes --help; claude --version (report whichever succeed)
+   - Report the runtime + evidence. If several are present, prefer the active one and say why. If none is recognized, treat the runtime as generic (.agents/skills, manual copy) and say so.
+2. INSPECT ENVIRONMENT — OS, git state, package manager, and write permission to the intended install path. If something blocks installation, report it before acting.
+3. LOCATE SKILLS — obtain the source once (git clone https://github.com/pixzdev/skills /tmp/pixz is fine). Read docs/install/README.md in the checkout — it is the official, verified install-matrix for each runtime.
+4. DISCOVER INSTALLATION METHOD — for your detected runtime, use its official mechanism from that matrix (skills.sh CLI, openclaw skills install, or the adapter's copy path in adapters/). Use the repository's runtime adapter — do NOT invent a new skill format. Preserve existing user configuration: never overwrite an existing skill of the same name; if one exists, stop and report it.
+5. RESOLVE DEPENDENCIES — if the requested skill declares requires/aggregates, resolve the full set first:
+   python3 /tmp/pixz/scripts/resolve.py --install <skill-id> --runtime <detected>
+   (Add --with-optional only if the user asked for optional skills.) Install the resolved set in the printed order. Default skill if none was requested: pixz.core.orchestrator.
+6. INSTALL — execute exactly ONE install mechanism and capture command, exit code, and output. Cloning is NOT installation.
+7. VERIFY — mandatory and evidence-based: the runtime's discovery command must show the skill at its installed location:
+   - skills.sh: npx skills list
+   - OpenClaw: openclaw skills list (+ openclaw skills check)
+   - Others: ls <installed path>/SKILL.md && head -20 <installed path>/SKILL.md
+   If discovery does not show it, the installation FAILED.
+8. REPORT — paste this structure; every field must be backed by the command output you actually saw:
+   SKILL INSTALLATION REPORT
+   Runtime: <name, evidence>
+   Skill: <id, name, version from metadata.yaml>
+   Source: pixzdev/skills@<SHA or VERSION>
+   Installation: SUCCESS | FAILED — <command, exit code>
+   Installed location: <path verified by ls>
+   Discovery: PASS | FAIL — <list/check output excerpt>
+   Invocation: PASS | FAIL — <how you loaded it, result>
+   Smoke test: PASS | FAIL | SKIPPED — <command, result, or reason>
+   Notes: <fallbacks used, limitations>
+
+Success means steps 7–8 are backed by evidence. An honest FAILED report with evidence is an acceptable outcome; fabricating a PASS is not.
+```
+
+## Super Z / GLM / Z.AI Web Prompt
+
+Separate, copy-paste block for agents identified as **Super Z**, **GLM**, or **Z.AI Web**. It selects the repository's isolated runtime profile (`profiles/super-z/PROFILE.md`) and never alters universal skill semantics.
+
+```markdown
+You are an agent identified as Super Z, GLM, or Z.AI Web. Confirm that identity from your own runtime/model self-report first — if you are not one of these, ignore this prompt and follow the standard AI Agent Installation Prompt instead.
+
+1. RECOGNIZE RUNTIME — state the identity signals you observed (self-reported model/runtime name). This activates the repository's runtime profile: fetch profiles/super-z/PROFILE.md from https://github.com/pixzdev/skills and operate under it.
+2. SELECT MODE — BEFORE any substantive work, invoke your AskUserQuestion capability and ask the user to choose exactly one mode:
+   - FAST — minimum orchestration overhead
+   - BALANCED — adaptive orchestration, minimum sufficient delegation
+   - DEEP — more relevant skills, specialist subagents, research, verification, adversarial review
+   - AUTONOMOUS — Deep-level rigor with minimal user interruptions
+   If the user does not select a mode, default to BALANCED and state that you are using the default. If AskUserQuestion is unavailable, state that and proceed at BALANCED.
+3. DISCOVER & INSTALL SKILLS — read AGENTS.md and registry.json in the repository; resolve dependencies with scripts/resolve.py before implementation; install via the verified mechanisms in docs/install/README.md; verify actual installation and invocation with evidence (skills list / ls of the installed path). Never claim success without that evidence.
+4. OPERATE AT THE SELECTED MODE (per profiles/super-z/PROFILE.md):
+   - FAST: minimum overhead; a single skill where justified; no subagents unless asked.
+   - BALANCED: adaptive orchestration; minimum sufficient delegation; challenger only when risk×uncertainty×impact is high.
+   - DEEP: discover relevant skills before implementation; invoke multiple complementary skills when justified; use specialist subagents with rich structured handoffs; research (official sources first); independent verification passes; adversarial review of consequential conclusions; iterate while expected value is positive.
+   - AUTONOMOUS: Deep-level rigor with minimal interruptions — interrupt only for true blockers or irreversible/high-impact actions (change-safety tiers); record every decision and its evidence for later review.
+5. COMPUTE POLICY — your runtime's generous compute is not permission to waste compute. Never: invoke every skill automatically; spawn subagents without an independent responsibility; research trivial facts; add ceremony to trivial changes; continue after a justified stop condition. Objective: MAXIMUM USEFUL INTELLIGENCE, not MAXIMUM ACTIVITY.
+6. NEVER OVERRIDE — regardless of mode, these remain binding: universal skill semantics; dependency resolution; confirmation for irreversible/high-impact actions; the verification layers; honest OBSERVED/SPECIFIED/INFERRED/UNKNOWN reporting.
+```
+
+## Runtime Profiles
+
+A **profile** is an isolated, runtime-specific operating overlay (POLICY) — **not a skill**, not in `registry.json`, and it **does not change** universal skill semantics. Currently one profile exists: **Super Z / GLM / Z.AI Web** → `profiles/super-z/PROFILE.md` (operating modes FAST/BALANCED/DEEP/AUTONOMOUS, default BALANCED, mandatory `AskUserQuestion` mode selection, compute policy). Status: SPECIFIED; behavioral effect UNVERIFIED. Contract: `profiles/README.md`. Machine-checked by `scripts/validate.py`.
 
 ## Skill Architecture
 
@@ -113,7 +184,7 @@ No cycles (DFS), deterministic topo-sort, depth caps (`max_skill_chain_depth=15`
 |-------|---------|------|
 | 1 Structural | `scripts/validate.py` + `check-cycles.py` | frontmatter, files, IDs, registry consistency, graph, schemas |
 | 2 Documentary | `evals/runner.py` (15 cases) | required sections, install commands, examples (heuristic) |
-| 3 Behavioral | `evals/behavioral/runner.py` (4 scenarios) | routing, orchestration decisions, challenge/verification (smoke) |
+| 3 Behavioral | `evals/behavioral/runner.py` (15 scenarios) | routing, orchestration decisions, challenge/verification (smoke) |
 | 4 Integration | `scripts/integration-smoke.sh` | repo → installer → runtime → discovery → invocation (where CLI available) |
 
 Layer 1–2 never imply 3–4. See `docs/evaluation.md`.
@@ -143,11 +214,12 @@ Contract per skill: Purpose, When to use / NOT, Inputs, Outputs, Dependencies, C
 ```
 AGENTS.md              # agent registry (human)
 registry.json          # machine registry (source of truth, validated)
-VERSION                # repo SemVer (1.0.1)
+VERSION                # repo SemVer (1.1.0)
 llms.txt               # machine map
 schemas/               # skill, registry, workflow, eval
 core/ quality/ engineering/ security/ design/ frontend/ motion/ devops/ ai/  # 28 skills (SKILL.md + metadata.yaml)
-adapters/              # claude, openclaw, opencode, hermes
+adapters/              # claude, openclaw, opencode, hermes (install translation only)
+profiles/              # isolated runtime profiles (super-z) — not skills, no semantics change
 scripts/               # resolve, validate, check-cycles, integration-smoke
 evals/                 # cases, behavioral, runner
 examples/              # basic-usage, orchestrated-task, custom-skill

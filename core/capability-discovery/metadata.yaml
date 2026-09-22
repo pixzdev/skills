@@ -1,7 +1,7 @@
 id: pixz.core.capability-discovery
 name: Capability Discovery
 category: core
-version: 1.0.1
+version: 1.1.0
 status: stable
 description: Discovers relevant skills, agents, tools, MCP servers and libraries before
   selecting.

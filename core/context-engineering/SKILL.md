@@ -1,11 +1,11 @@
 ---
 name: Context Engineering
 description: Systematic acquisition, validation, sufficiency-checking and preservation of task context.
-version: 1.0.1
+version: 1.1.0
 id: pixz.core.context-engineering
 category: core
-triggers: [context, requirements, what do we know, gather context, context sufficiency]
-compatible_runtimes: [claude, openclaw, opencode, hermes]
+triggers: [context, requirements, what do we know, gather context]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
 ---
 
 # Context Engineering — `pixz.core.context-engineering`

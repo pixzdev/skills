@@ -110,14 +110,14 @@ Good (OpenClaw):
 ```
 SKILL INSTALLATION REPORT
 Runtime: OpenClaw (openclaw --help succeeded, ~/.openclaw/skills exists)
-Skill: pixz.core.orchestrator v1.0.1 core/orchestrator
+Skill: pixz.core.orchestrator v1.1.0 core/orchestrator
 Source: pixzdev/skills@068ad5d
 Installation: SUCCESS — `openclaw skills install ./core/orchestrator --as pixz-orchestrator` (exit 0)
 Installed location: ./skills/pixz-orchestrator/SKILL.md (verified ls)
 Discovery: PASS — `openclaw skills list` shows pixz-orchestrator [eligible]
 Invocation: PASS — read installed SKILL.md, description matches orchestrate
 Smoke test: PASS — `python scripts/resolve.py --install pixz.core.orchestrator --runtime openclaw` → 10 nodes
-Version/ref: 1.0.1 / 068ad5d
+Version/ref: 1.1.0 / 068ad5d
 Notes: No --global used (workspace scope)
 ```
 
