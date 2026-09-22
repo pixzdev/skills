@@ -23,12 +23,18 @@ How: `python scripts/validate.py` + `python scripts/check-cycles.py`. Exit non-z
 How: `python evals/runner.py` — 15 cases, keyword/section presence. **Heuristic, not semantic.** Report as `X/15 heuristic` — no fake precision.
 
 ### Layer 3 — Behavioral smoke (heuristic + registry invariants)
-What it checks **now (2.0.0)**:
-- **registry invariants:** (1) evidence floor — orchestrator mandatory closure contains `pixz.core.verification`; (2) trivial-task budget — orchestrator mandatory closure ≤ 4 nodes (v1.1.0: 10); (3) mode consistency — low risk never deep/autonomous, high/critical risk never fast
-- **23 scenarios:** 15 v1 routing scenarios + 8 mechanism scenarios — skill-discovery · skill-persistence · continuation-resume · source-of-record · requirement-change · **anti-delegation** · tool-failure · compaction
-- false-positive activations per scenario (`should_not_select`), expected activations (`should_select`)
+What it checks **now (2.1.0)**:
+- **registry invariants:** (1) evidence floor — orchestrator mandatory closure contains `pixz.core.verification`; (2) trivial-task budget — orchestrator mandatory closure ≤ 4 nodes (v1.1.0: 10; self-learning is *optional*, so the invariant still holds); (3) mode consistency — low risk never deep/autonomous, high/critical risk never fast
+- **33 scenarios:** 15 v1 routing + 8 mechanism + **10 self-learning (E-series)**:
+  E1 first-activation · E2 existing-runtime (no duplicate setup) · E3 skill-upgrade · E4 failed-assumption · E5 improvement-loop · E6 anti-overengineering · E7 regression-after-improvement · E8 persistence-reload · E9 validation-depth · E12 high-risk-escalation (E10 contradictory-evidence and E11 trivial-task map to the existing contradictory-reports / trivial-rename scenarios, extended with setup/failure-condition/verification fields). Each E-scenario defines setup · expected behavior · failure condition · verification — keyword presence is never the only evidence.
+- false-positive activations per scenario (`should_not_select`), expected activations (`should_select`); trivial-rename additionally asserts `pixz.core.self-learning` does NOT activate (self-training must not add ceremony).
 
 How: `python evals/behavioral/runner.py`. **Heuristic keyword routing + static invariants — not model-graded.**
+
+### Layer 3b — Self-learning lifecycle (deterministic, model-free)
+What it checks: the state-machine half of self-learning, in subprocess-isolated tests — first activation (NEW→BASELINED) · duplicate-setup refusal · persisted state reload in a **fresh process** · skill version change (drift→sync→re-adapt) · version-without-content distinction · newly discovered skill · failed adaptation (no-evidence refusal, corrupt-state loud failure) · regression of READY after drift · task-state adaptation pointer.
+
+How: `python evals/lifecycle/run_tests.py`. Deterministic assertions, exit non-zero on fail. **Proves the mechanism at PERSISTENT rung; the behavioral half (a real model actually adapting) remains heuristic/UNVERIFIED — no cross-session model behavior is faked.**
 
 ### Layer 4 — Integration (where feasible)
 repo → installer → runtime → discovery → invocation: clean-env `npx skills list` before/after, `openclaw skills list/check`, manual `cp -r` + `ls` evidence, resolver dry-runs. Where CI lacks a runtime binary: **manual smoke** with required `ls`/`list` evidence; claim level per runtime VERIFIED vs PARTIALLY VERIFIED (`docs/install/README.md`).
@@ -42,6 +48,7 @@ How: `bash scripts/integration-smoke.sh`.
 | registry/metadata/schemas consistent; no cycles; overlay+README contracts hold | that any model behaves differently |
 | skills document required sections | that the documented behavior is correct |
 | routing smoke + invariants hold for the heuristic router | model-graded activation precision/recall |
+| self-learning state machine transitions are correct across fresh processes | that a real model performs the behavioral half |
 | install path works where the CLI exists | behavioral effectiveness of PixzFlow on real tasks |
 
 **Model-graded behavioral measurement (capability activation, persistence, continuation, verification quality, evidence quality, recovery, delegation, restraint, efficiency) is the successor benchmark** — see `docs/benchmark/successor-benchmark.md`. Cells A–H report `UNRUN` until executed; this repo never fabricates results.
@@ -52,15 +59,16 @@ Any 2.0 change must not: make trivial tasks slower (token overhead guard) · cre
 
 ## Scoring & Reporting
 
-- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/15 heuristic` · behavioral `X/23` + invariants · integration PASS/FAIL per runtime with evidence.
+- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/18 heuristic` · behavioral `X/33` + invariants · lifecycle `X/9 deterministic` · integration PASS/FAIL per runtime with evidence.
 - Every eval result carries: `test_id`, `scenario`, `expected`, `actual`, `pass`, `evidence`, `limitations`.
 - Layer 1–2 results must never be presented as Layer 3–4 evidence.
 
 ## Artifacts
 
-- `evals/cases/*.json` — Layer 2 (15)
-- `evals/behavioral/*.json` + `runner.py` — Layer 3 (23 + invariants)
-- `scripts/integration-smoke.sh` — Layer 4
+- `evals/cases/*.json` — Layer 2 (18)
+- `evals/behavioral/*.json` + `runner.py` — Layer 3 (33 + invariants)
+- `evals/lifecycle/run_tests.py` — Layer 3b (9 deterministic self-learning tests)
+- `scripts/integration-smoke.sh` — Layer 4 (includes lifecycle suite + activation probe)
 - `docs/benchmark/GLM-benchmark-findings.md` — v1 empirical record
 - `docs/benchmark/successor-benchmark.md` — model-graded benchmark design (ablation A–H, task classes, metrics)
 - `docs/research/frontier-agent-findings.md` — Phase Zero research with classification labels

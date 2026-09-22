@@ -1,5 +1,20 @@
 # Versioning — PixzFlow
 
+## 2.1.0 Notes (non-breaking, additive)
+
+| Change | Detail |
+|---|---|
+| New skill | `pixz.core.self-learning` v2.1.0 (post-install activation, adaptation baseline, drift handling, improvement loop) |
+| New schema | `schemas/adaptation-state.schema.json` (runtime-level self-learning state); `task-state.schema.json` gains optional `adaptation` pointer |
+| New script | `scripts/activation.py` (probe/init/mark-adapted/sync/mark-installed; exit codes 0/10/1) |
+| New evals | 3 documentary cases (18 total) · 10 behavioral E-series scenarios (33 total) · 9 deterministic lifecycle tests (`evals/lifecycle/`) |
+| Changed skill | `pixz.core.verification` 2.0.0 → 2.1.0 (verification-depth ladder added) |
+| New protocols | `pixz.protocol.self-learning` · `pixz.protocol.verification-depth` (both point at owning SKILL.md — no new truth files) |
+| Policy extension | `pixz.policy.simplicity` absorbs the improvement-economy (anti-proliferation) gate |
+| Orchestrator | `optional` gains `pixz.core.self-learning` — mandatory closure unchanged (4 nodes; budget invariant holds) |
+
+No IDs renamed, no triggers removed, no hard `requires` added to existing skills — minor bump per the breaking-change rules below.
+
 ## 2.0.0 Migration Notes (breaking)
 
 | 1.1.0 | 2.0.0 | Migration |

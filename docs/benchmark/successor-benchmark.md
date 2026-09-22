@@ -22,8 +22,12 @@
 | **F** | PixzFlow **without challenger** | Adversarial check contribution |
 | **G** | PixzFlow **without evidence ledger / source-of-record protocol** | Evidence contribution (T11, now n≥5) |
 | **H** | PixzFlow **with runtime overlay** (e.g. ZAI.md on GLM/Super Z) | Overlay contribution (mode ritual + compute policy) |
+| **I** | PixzFlow 2.1 **without self-learning** (`pixz.core.self-learning` + activation state disabled) | Self-learning contribution baseline for cell B |
+| **J** | PixzFlow 2.1 **with self-learning** (full lifecycle: baseline, adapt, persist, improve) | Self-learning contribution (vs I: activation recall without re-pasted prompts, drift adaptation, lesson reuse) |
+| **K** | Self-learning **without persistent state** (lifecycle runs, nothing written to `.pixz/`) | Persistence contribution within self-learning (session-boundary survival) |
 
 Plus: **B′** = PixzFlow 2.0 with **orchestrator aggregates restored to v1.1.0's 8** (regression guard: does the old bundle ever help?) and **B″** = v1.1.0 full (history anchor).
+Self-learning ablation mapping (mission §16): A = native · B = cell I · C = cell J · D = cell K. All four UNRUN — no fabricated results.
 
 **Decision rule:** a mechanism that shows no significant benefit across ≥ 3 task classes at n≥5 is **deleted** in the next major. No component survives on identity alone.
 
@@ -48,6 +52,10 @@ Plus: **B′** = PixzFlow 2.0 with **orchestrator aggregates restored to v1.1.0'
 | **skill persistence** | capability activated in phase 1, condition fires in phase 3 — reactivation |
 | delegation (beneficial) | independent parallel work — correct delegation |
 | **anti-delegation** | trivial work — **no** subagents (restraint, measured explicitly) |
+| **first activation** | fresh install, no user prompt pasted — agent self-trains: baseline → adapt → verify → persist |
+| **second activation** | ready adaptation exists — probe-and-work, zero duplicate setup |
+| **skill upgrade drift** | installed skill version changes between sessions — delta inspected, only changed capability re-adapted |
+| **post-restart continuity** | session killed; new session must reuse adaptation state without any user re-prompt |
 
 ## Metrics (per run)
 

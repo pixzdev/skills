@@ -101,7 +101,19 @@ Rules:
 - Scope: this install is local to the detected runtime/environment only; it does not affect other machines.
 - If skill declares `requires.env` or `requires.config` (OpenClaw gating), verify those before claiming readiness.
 
-You have succeeded only when steps 5–7 produce **evidence-backed PASS**.
+### 10 — Post-install activation & self-training (PixzFlow 2.1+)
+
+Installation is not the end. If the source repo is available (clone or checkout):
+
+- Probe first: `python3 scripts/activation.py status` — if `STATE=READY` with no drift, **do not duplicate setup**; report `Activation: ALREADY READY`.
+- First activation: `python3 scripts/activation.py init --runtime <detected> --source pixzdev/skills@<sha>` (+ `--dim <capability>=yes|no|unknown` for observed capabilities only — unobserved stays `unknown`, never invented).
+- Adapt working behavior to `AGENTS.md` (entry protocol, modes, evidence rules, verification triggers, delegation constraints, stopping rules).
+- Verify the adaptation at RUNTIME-ACTIVE depth (file existence is not activation; run a real invocation), then `python3 scripts/activation.py mark-adapted --evidence "<what you actually observed>"` — it refuses without evidence.
+- Append to the report: `Activation:` state transitions, adaptation evidence, observed baseline dimensions.
+
+If the source scripts are unavailable (skill installed without the repo), state `Activation: SKIPPED (no source scripts)` and follow `AGENTS.md` as shipped with the skill.
+
+You have succeeded only when steps 5–7 **and 10** produce **evidence-backed PASS**.
 ```
 
 ## Example Reports

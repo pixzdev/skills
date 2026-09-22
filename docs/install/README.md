@@ -25,11 +25,25 @@ For this repo (v1.1.0):
 
 Do not conflate `git clone` with install. Clone gives **source**; install registers it where the runtime discovers it. See `docs/install-as-skill.md` for agent prompt that distinguishes these.
 
+## Post-install activation (2.1+)
+
+Installation is step one of six: `INSTALL → VALIDATE → ACTIVATE → SELF-TRAIN → VERIFY → READY`.
+
+```bash
+python3 scripts/activation.py status                # probe: READY? drift? (exit 0 ready / 10 new|stale)
+python3 scripts/activation.py init --runtime <rt>   # first activation: baseline + digested inventory
+# ... agent adapts its working behavior to AGENTS.md, verifies at RUNTIME-ACTIVE depth ...
+python3 scripts/activation.py mark-adapted --evidence "<observed>"   # refused without evidence
+python3 scripts/activation.py sync                  # after inspecting a skill-version/content delta
+```
+
+State lives in `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.json`); the protocol lives in `AGENTS.md` (read at session start), so later sessions probe once and continue — no re-pasted training prompt, no duplicate setup. Methodology: `core/self-learning/SKILL.md`; deterministic tests: `evals/lifecycle/run_tests.py`.
+
 ## Quick Start per Runtime
 
 ### skills.sh (any agent)
 ```bash
-npx skills add pixzdev/skills --list          # preview 28 skills
+npx skills add pixzdev/skills --list          # preview 29 skills
 npx skills add pixzdev/skills --skill orchestrator   # one skill (folder name)
 npx skills add pixzdev/skills                 # all skills (if CLI supports)
 npx skills list
@@ -96,7 +110,7 @@ mkdir -p skills/orchestrator && cp -r /tmp/pixz/core/orchestrator/* skills/orche
 
 ## Addressing Multi-Skill Repo
 
-This repo bundles 28 skills. Addressing:
+This repo bundles 29 skills. Addressing:
 
 - **skills.sh:** `--skill <folder>` where `<folder>` is the short directory name (`orchestrator`, `planning`, `context-engineering`, etc.) — not the namespaced `pixz.core.orchestrator` ID. The ID is stable for resolver; the CLI uses filesystem path. When in doubt, `npx skills add pixzdev/skills --list` shows available.
 - **OpenClaw git/local:** install whole repo or local folder; use `--as <slug>` to avoid collision (e.g., `pixz-orchestrator`).

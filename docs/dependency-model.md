@@ -35,7 +35,7 @@ Fail conditions are explicit — no silent omission of hard deps. Optional omiss
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
 # → 4 nodes (mandatory only = the evidence-floor chain)
 # python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional
-# → 14 nodes (+ all 12 on-demand capabilities)
+# → 15 nodes (+ all 13 on-demand capabilities)
 ```
 
 **Breakdown mandatory (4):**
@@ -46,7 +46,7 @@ pixz.core.orchestrator
            └── pixz.core.context-engineering (requires)
 ```
 
-**With `--with-optional` (+10 new):** planning, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-challenger, replanning, quality-gate, change-safety, anti-ai-slop → **14**.
+**With `--with-optional` (+11 new):** planning, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-challenger, replanning, quality-gate, change-safety, anti-ai-slop, self-learning → **15**.
 
 **Agent-design:** `pixz.ai.agent-design` → requires `pixz.core.orchestrator` + `pixz.core.change-safety` → 5 nodes (6 with `--with-optional`).
 

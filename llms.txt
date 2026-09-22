@@ -4,8 +4,8 @@
 
 ## Identity
 - Repo: https://github.com/pixzdev/skills
-- Version: 2.0.0 (VERSION file; registry.json)
-- Entry (agents): `AGENTS.md` — canonical operating contract (entry protocol, modes, activation, state, evidence, delegation, verification, stopping)
+- Version: 2.1.0 (VERSION file; registry.json)
+- Entry (agents): `AGENTS.md` — canonical operating contract (entry protocol, modes, activation, self-learning, state, evidence, delegation, verification, stopping)
 - Entry (humans): `README.md` — overview + copy-paste **AI Agent Installation Prompt** + **Super Z / GLM / Z.AI Web Prompt**
 - Machine registry: `registry.json` (source of truth for capabilities)
 - Runtime overlay (Super Z / GLM / Z.AI Web only): `ZAI.md` — mode selection + compute policy; does not change universal semantics
@@ -17,6 +17,10 @@ L0 model-native (irreplaceable) → L1 runtime → L2 PixzFlow operating layer (
 `ORIENT → MODEL → ASSESS → MODE → PLAN → ACT → OBSERVE → VERIFY → DECIDE{done|continue|replan|delegate|research|challenge|escalate|stop}`
 Modes: `fast | balanced | deep | autonomous` (user > overlay > balanced default; upper tendency, never minimum ceremony).
 Assessment bands: low/medium/high/critical over complexity, risk, uncertainty, reversibility, horizon.
+
+## Post-install self-learning (2.1)
+`INSTALL → DETECT → INVENTORY → BASELINE → ADAPT → VERIFY → PERSIST → READY`, then during work `OBSERVE → DIAGNOSE → CHALLENGE → IMPROVE → VERIFY → REGRESS → PERSIST → REUSE ↺`.
+Installation ≠ activation ≠ adaptation ≠ learning ≠ improvement — never conflate. Probe: `python3 scripts/activation.py status` (exit 0 ready · 10 new/stale). State: `.pixz/adaptation-state.json` (schemas/adaptation-state.schema.json). Second activation is a check, not a re-run; skill-version drift re-adapts only the inspected delta. Skill: `pixz.core.self-learning`. Behavioral runtime adaptation only — no model weights change; unsupported capabilities stay UNKNOWN.
 
 ## Capability activation (persistent)
 `DISCOVER → MATCH → LOAD (progressive) → ACTIVATE → USE → VERIFY → PERSIST → REINVOKE → COMPLETE`
@@ -31,16 +35,18 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 - OpenClaw: `openclaw skills install` (VERIFIED)
 - OpenCode: `.opencode/skill/` (VERIFIED)
 - Hermes: `~/.hermes/skills/` (VERIFIED)
-- Resolver: `python scripts/resolve.py --install pixz.core.orchestrator --runtime <rt>` → 4 nodes (14 with `--with-optional`)
+- Resolver: `python scripts/resolve.py --install pixz.core.orchestrator --runtime <rt>` → 4 nodes (15 with `--with-optional`)
+- Post-install: `INSTALL → VALIDATE → ACTIVATE → SELF-TRAIN → VERIFY → READY` (README#post-install-activation)
 
 ## Schemas
-- `schemas/task-state.schema.json` — persistent task state (successor of v1 workflow.schema.json)
+- `schemas/task-state.schema.json` — persistent per-task state (successor of v1 workflow.schema.json; carries an `adaptation` pointer since 2.1)
+- `schemas/adaptation-state.schema.json` — runtime-level self-learning state (baseline, digested inventory, adaptation status, learning ledger)
 - `schemas/handoff.schema.json` — delegation contract (mandatory structured return)
 - `schemas/skill.schema.json`, `schemas/registry.schema.json`, `schemas/eval.schema.json`
 
-## Capability map (28 skills; registry.json is authoritative — this is a projection)
+## Capability map (29 skills; registry.json is authoritative — this is a projection)
 
-### Core (13)
+### Core (14)
 | ID | Path | Triggers |
 |----|------|----------|
 | `pixz.core.orchestrator` | `core/orchestrator/` | orchestrate, coordinate, delegate, complex task, multi-step |
@@ -56,6 +62,7 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 | `pixz.core.change-safety` | `core/change-safety/` | safe change, risk, reversible, scope control |
 | `pixz.core.replanning` | `core/replanning/` | replan, pivot, failure, recovery |
 | `pixz.core.quality-gate` | `core/quality-gate/` | quality gate, ship check, done criteria |
+| `pixz.core.self-learning` | `core/self-learning/` | self-train, self-learn, first activation, post-install, skill version changed, adaptation baseline, improve workflow, learn from failure |
 
 ### Domain (15)
 | ID | Path | Triggers |
@@ -76,18 +83,19 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 | `pixz.ai.rag` | `ai/rag/` | rag, retrieval |
 | `pixz.ai.agent-design` | `ai/agent-design/` | agent design |
 
-Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor). The other 12 core capabilities are on-demand activations.
+Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor; 4-node closure). All other capabilities — including self-learning — are on-demand activations.
 
 ## Protocols & policies (registry.json)
-- Context Protocol (lifecycle + acquisition order) · Task State & Continuity · Capability Activation · Source-of-Record · Argumentation (typed claims + transitions) · Handoff Contract · Failure Recovery & Escalation
-- Policies: Scope Control · Simplicity (incl. anti-overengineering gate) · Change Safety (static) · Orchestration Budget · Anti-AI Slop (diagnostic)
+- Context Protocol (lifecycle + acquisition order) · Task State & Continuity · Capability Activation · Source-of-Record · Argumentation (typed claims + transitions) · Handoff Contract · Failure Recovery & Escalation · **Self-Learning Lifecycle** (post-install DETECT→…→READY + improvement loop; adaptation-state) · **Verification Depth** (EXISTS→PARSES→SCHEMA-COMPLIANT→CORRECT→INTEGRATED→RUNTIME-ACTIVE→PERSISTENT→IMPROVED; never substitute weaker rungs)
+- Policies: Scope Control · Simplicity (incl. anti-overengineering gate + improvement-economy/anti-proliferation gate) · Change Safety (static) · Orchestration Budget · Anti-AI Slop (diagnostic)
 
-## Verification (4 layers, never conflate)
-1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (15, heuristic) · 3 behavioral `evals/behavioral/runner.py` (23 + registry invariants, heuristic) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H; UNRUN until executed).
+## Verification (layers, never conflate)
+1 structural `scripts/validate.py` + `check-cycles.py` · 2 documentary `evals/runner.py` (18, heuristic) · 3 behavioral `evals/behavioral/runner.py` (33 + registry invariants, heuristic) · 3b lifecycle `evals/lifecycle/run_tests.py` (9, deterministic state machine) · 4 integration `scripts/integration-smoke.sh`. Model-graded benchmark: `docs/benchmark/successor-benchmark.md` (cells A–H; UNRUN until executed).
 
 ## Limitations (honest)
 - pinned channel: DOCUMENTED ONLY (no pixz.lock)
-- behavioral eval: heuristic smoke, not model-graded
+- behavioral eval: heuristic smoke, not model-graded; lifecycle layer verifies the state machine only
+- self-learning behavioral effect on real models: UNVERIFIED (successor benchmark UNRUN)
 - ZAI.md overlay: SPECIFIED; behavioral effect UNVERIFIED
 - generic runtime: PARTIALLY VERIFIED
 - needs npx (Node 18+) or manual cp -r

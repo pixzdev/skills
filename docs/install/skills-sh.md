@@ -5,7 +5,7 @@
 **Install a skill from this repo:**
 
 ```bash
-npx skills add pixzdev/skills --list                 # preview 28 skills
+npx skills add pixzdev/skills --list                 # preview 29 skills
 npx skills add pixzdev/skills --skill orchestrator   # one skill (short folder name)
 npx skills add pixzdev/skills --skill planning
 npx skills add pixzdev/skills --skill verification
