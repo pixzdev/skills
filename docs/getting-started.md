@@ -2,7 +2,7 @@
 
 ## 1. What it is
 
-**PixzFlow** is a persistent, adaptive, model-agnostic **operating layer** for capable AI agents: an entry protocol (`AGENTS.md`), operating modes (fast/balanced/deep/autonomous), a persistent task-state + evidence protocol, a skill ecosystem (29 skills with stable IDs and explicit dependencies), and runtime overlays (e.g. `ZAI.md` for Super Z / GLM / Z.AI Web). PIXZ.DEV is the brand.
+**PixzFlow** is a persistent, adaptive, model-agnostic **operating layer** for capable AI agents: an entry protocol (`AGENTS.md`), operating modes (fast/balanced/deep/autonomous), a persistent task-state + evidence protocol, a skill ecosystem (30 skills with stable IDs and explicit dependencies), a vetted free/no-signup MCP + skill universe (`mcp/catalog.json`, `scripts/mcp.py`), and runtime overlays (e.g. `ZAI.md` for Super Z / GLM / Z.AI Web). PIXZ.DEV is the brand.
 
 ## 2. Why
 
@@ -18,6 +18,7 @@ Scan `registry.json` (machine) or `llms.txt` (LLM map) — the AGENTS.md contrac
 - `plan, roadmap` → `pixz.core.planning`
 - `security review, audit` → `pixz.security.review`
 - `gsap, scrolltrigger` → `pixz.motion.gsap`
+- `mcp, mcp server, mcp config, mcpmarket` → `pixz.core.mcp`
 
 ## 4. Install (don't just clone)
 
@@ -40,11 +41,11 @@ Pick your runtime in `docs/install/README.md` for exact path (Claude, OpenClaw, 
 python scripts/validate.py
 python scripts/check-cycles.py
 python evals/runner.py
-python evals/behavioral/runner.py   # 23 scenarios + registry invariants
+python evals/behavioral/runner.py   # 34 scenarios + registry invariants
 
 # resolver
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude           # 4 nodes
-python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 14 nodes
+python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional  # 16 nodes
 ```
 
 See `docs/evaluation.md` for the 4 layers and what each proves.

@@ -73,7 +73,7 @@ A standalone SKILL requires: distinct objective + reusable methodology + indepen
 - Dozens of niche personas (e.g., “Vue expert”, “Svelte expert”) — each must prove methodology; curated set proves pattern.
 
 ## Skill Count Rationale
-29 skills (28 in 2.0.0; +self-learning in 2.1.0): small enough to be coherent, large enough to cover critical paths. Adding a skill must pass the seven criteria above; removing one must not break dependency or leave a methodology gap.
+30 skills (28 in 2.0.0; +self-learning in 2.1.0; +mcp in 2.4.0): small enough to be coherent, large enough to cover critical paths. Adding a skill must pass the seven criteria above; removing one must not break dependency or leave a methodology gap.
 
 ## 2.0.0 Decisions
 
@@ -108,6 +108,26 @@ Deterministic state machine (probe/init/mark-adapted/sync/mark-installed) — th
 
 ### Intentionally NOT created in 2.1
 No "memory" skill (adaptation-state + task-state already cover it) · no self-improvement *agent* type (the loop is methodology, not a role) · no separate validation-depth skill (protocol + verification skill suffice) · no re-training scheduler (probe-at-ORIENT + drift detection suffice) · no lesson database (compact JSON ledger suffices).
+
+## 2.4.0 Decisions (MCP + external capability integration)
+
+### New SKILL — `pixz.core.mcp`
+Passed the seven standalone criteria: distinct objective (vetted integration of MCP servers + external skills) · reusable methodology (trust tiers → vetting gate → live-check-first → idempotent auto-config → budgeted activation → untrusted-output rule → maintenance) · independent invocation (runs alone: "add an MCP server") · clear triggers (`mcp`, `mcp server`, `mcpmarket`, `external tools`, …) · meaningful I/O (catalog entries, check evidence, config artifacts, report) · meaningful failure conditions (wiring blind, just-in-case tooling, untrusted output treated as fact, credential leakage, clobbering user config, auto-enabling imports) · verification method (live `initialize`+`tools/list` evidence in `.pixz/mcp-check.json` + documentary/behavioral evals). Kept distinct from capability-discovery because MCP has a **trust boundary + supply-chain surface** (vetting, untrusted output, idempotent config writes) that capability-discovery's invocation lifecycle does not cover — different failure modes. `optional` on the orchestrator (never an aggregate — the 4-node mandatory closure stays intact; trivial tasks stay cheap).
+
+### New TOOL — `scripts/mcp.py`
+Deterministic half of the protocol: catalog listing, tier mapping, live probes (stdio + streamable-HTTP + legacy SSE JSON-RPC), idempotent per-runtime config writers, status/detect. Stdlib-only like the rest of `scripts/`. Evidence file `.pixz/mcp-check.json` makes liveness observable without a model.
+
+### New PROTOCOL — `pixz.protocol.mcp-integration`
+Points at `core/mcp/SKILL.md` (same pattern as Capability Activation → capability-discovery). No new state schema: MCP activations live in task-state `capabilities[]` (`mcp.<server-id>` entries) and the check evidence file — no parallel substrate.
+
+### New POLICY — `pixz.policy.pixzflow-mandate`
+The complex-task obligation (complex work MUST run under the full protocol; skipping it = contractual failure GAGAL; trivial exempt). A policy, not a skill: it constrains *all* work and has no independent invocation.
+
+### NEW CATALOG — `mcp/catalog.json` (+ `mcp/README.md`)
+Machine source of truth for the integration universe: free + no signup + no API key by policy, trust tiers, per-entry verification sources, `excluded_with_reason` for auth-required entries. It is a **projection of curation decisions, not a second registry** — servers are not `registry.json` skills; the skill is `pixz.core.mcp`.
+
+### Intentionally NOT created in 2.4
+No per-server skills (16 servers as 16 skills would be micro-skill proliferation — the catalog + one skill covers them) · no MCP client skill (the runtime *is* the client) · no secrets-manager skill (policy: user-managed credentials, outside this repo's artifacts) · no automatic skill-merger from mcpmarket.com (imports are quarantined + reviewed + explicitly enabled — never auto) · no behavioral eval that fakes a network handshake (the live check runs at setup time on a networked runtime; evals assert routing + documentary gates only).
 
 ## 2.2.0 Decisions (adoption tooling)
 

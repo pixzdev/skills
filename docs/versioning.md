@@ -1,5 +1,24 @@
 # Versioning — PixzFlow
 
+## 2.4.0 Notes (non-breaking, additive)
+
+| Change | Detail |
+|---|------|
+| New skill | `pixz.core.mcp` v1.0.0 — **MCP & External Capability Integration**: trust tiers (T1/T2/T3) + security vetting gate, free + no-signup-first universe, live-check-first (`initialize` + `tools/list`) before wiring, idempotent runtime-agnostic auto-config, budgeted activation, untrusted-tool-output rule, skill-import quarantine protocol |
+| New catalog | `mcp/catalog.json` (16 vetted servers: 10 remote no-auth + 6 local official stdio; 4 skill sources incl. mcpmarket.com free/official + skills.sh; `excluded_with_reason` for auth-required entries) + `mcp/README.md` (human guide) |
+| New script | `scripts/mcp.py` (stdlib-only): `list` · `tier` · `check` (live probe → evidence `.pixz/mcp-check.json`) · `add`/`remove` (idempotent, non-destructive; per-runtime config shapes; codex snippet) · `status` · `detect` |
+| New protocol | `pixz.protocol.mcp-integration` (points at `core/mcp/SKILL.md`) |
+| New policy | `pixz.policy.pixzflow-mandate` — **complex tasks MUST run under the full PixzFlow protocol; a complex task completed without it is a contractual failure (GAGAL)**, not accepted as complete until retrofitted with evidence; trivial work exempt. Canonical text: `AGENTS.md#pixzflow-mandate-complex-task-obligation` |
+| Setup tiers | **Minimal / Medium / Full** — the agent MUST ask before setup (README install prompt step 1; `ZAI.md` pre-work questions; default Minimal, stated). Tiers set installation footprint (skills + MCP set), never the mandate |
+| Orchestrator | `optional` += `pixz.core.mcp` (mandatory closure stays 4 nodes; `--with-optional` 15 → 16); contractual failure condition for mandate violations (2.1.0 → 2.2.0) |
+| Limits | `max_skill_chain_depth` 15 → 20 (headroom: the full `--with-optional` orchestrator closure is now 16 nodes; the cap still bounds runaway chains) |
+| ZAI.md | re-specified for 2.4.0: mandatory pre-work questions now cover **setup tier** (probe first, never re-ask READY) + operating mode; mandate carry-over (universal semantics — never overridden by tier/mode); stale "PixzFlow 2.0" reference fixed |
+| MCP auto-config prompt | `docs/prompts/mcp-autocfg-agent.md` (standalone) + embedded as step 10 of the README install prompt |
+| Evals | documentary 19 → **21** (`eval.mcp.vetting-gate`, `eval.mcp.autocfg`) · behavioral 33 → **34** (`eval.behavioral.mcp-add-free-server`) · `trivial-rename` `should_not_select` += `pixz.core.mcp` |
+| Version fix | stale "PixzFlow 2.0" references in living docs fixed → 2.4 (ZAI.md header, `docs/architecture.md`, `docs/evaluation.md` incl. "now (2.1.0)" → "now (2.4.0)"); historical records (benchmark docs, final report) intentionally unchanged |
+
+No IDs renamed, no triggers removed, no hard `requires` added — minor bump.
+
 ## 2.3.0 Notes (non-breaking, additive)
 
 | Change | Detail |

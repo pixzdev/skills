@@ -1,0 +1,474 @@
+{
+  "version": "1.0.0",
+  "kind": "pixz.mcp-catalog",
+  "note": "Machine source of truth for vetted MCP servers and external skill sources. Universe policy: FREE + NO SIGNUP + NO API KEY. Docs-verification is NOT liveness proof — run `python3 scripts/mcp.py check <id>|--all` at setup time; the result in .pixz/mcp-check.json is the liveness evidence.",
+  "policy": {
+    "free": true,
+    "no_signup": true,
+    "no_api_key": true,
+    "auth_required_entries": "excluded (see excluded_with_reason); user-approved + user-managed credentials only",
+    "trust_tiers": {
+      "T1": "vendor-official server or MCP reference-server collection — live check + catalog listing",
+      "T2": "community-operated but documented, listed here with a named source — live check + catalog listing + tool-surface review",
+      "T3": "anything else — full security review + explicit user approval before wiring"
+    }
+  },
+  "sources": [
+    {
+      "id": "mcpmarket",
+      "name": "MCP Market",
+      "url": "https://mcpmarket.com",
+      "used_for": ["server directory", "agent-skills marketplace (free/official sections)"],
+      "note": "Directory of MCP servers, clients and agent skills. Discovery source, not a trust source — entries still pass the VET gate."
+    },
+    {
+      "id": "official-docs",
+      "name": "Vendor documentation",
+      "url": "per-entry (verification.source)",
+      "used_for": ["endpoint verification", "auth-free claims"],
+      "note": "Each T1 entry cites the vendor page where the endpoint + no-key claim was read."
+    },
+    {
+      "id": "awesome-lists",
+      "name": "Curated community lists",
+      "url": "https://github.com/mukul-dutt/awesome-mcp-list · https://github.com/sylviangth/awesome-remote-mcp-servers",
+      "used_for": ["T2 discovery"],
+      "note": "Community lists with public-repo requirement — used only as discovery input."
+    },
+    {
+      "id": "skills-sh",
+      "name": "skills.sh",
+      "url": "https://skills.sh",
+      "used_for": ["agent skills via `npx skills add`"],
+      "note": "Official skill-install CLI used by PixzFlow itself (`npx skills add pixzdev/skills`)."
+    }
+  ],
+  "skill_sources": [
+    {
+      "id": "mcpmarket-skills",
+      "name": "MCP Market — Agent Skills",
+      "url": "https://mcpmarket.com/tools/skills",
+      "free_no_signup": "official + free sections only; premium/paid listings excluded from the default universe",
+      "import": "manual — see core/mcp/SKILL.md#skill-import-protocol-external-agent-skills (quarantine → security review → install → discover → enable)"
+    },
+    {
+      "id": "skills-sh",
+      "name": "skills.sh",
+      "url": "https://skills.sh",
+      "free_no_signup": "free",
+      "import": "npx skills add <owner>/<repo> [--skill <name>] [--agent <runtime>]"
+    },
+    {
+      "id": "wondel-skills",
+      "name": "Wondel Skills (via MCP)",
+      "url": "https://skills.wondel.ai/mcp",
+      "free_no_signup": "no install, no account, no auth",
+      "import": "MCP server id wondel-skills; serves SKILL.md content in-session (load_skill)"
+    },
+    {
+      "id": "ai-skills-search",
+      "name": "AI Skills Search (via MCP)",
+      "url": "https://bytesagain.com/api/mcp/sse",
+      "free_no_signup": "free, no auth",
+      "import": "MCP server id ai-skills-search; search 60,000+ agent skills across 7 languages"
+    }
+  ],
+  "tiers": {
+    "minimal": {
+      "description": "PixzFlow contract + orchestrator closure; no MCP (native tools only).",
+      "skills": "orchestrator closure (4 nodes)",
+      "servers": []
+    },
+    "medium": {
+      "description": "Orchestrator + all optional skills; curated free remote+local set that covers docs, repo Q&A and web fetch.",
+      "skills": "orchestrator --with-optional (16 nodes)",
+      "servers": ["context7", "deepwiki", "gitmcp", "microsoft-learn", "fetch", "sequential-thinking"]
+    },
+    "full": {
+      "description": "Everything: all skills, full vetted catalog, skill-hub discovery, adapters + overlays.",
+      "skills": "all registry skills (30)",
+      "servers": "all"
+    }
+  },
+  "servers": [
+    {
+      "id": "context7",
+      "name": "Context7",
+      "vendor": "Upstash",
+      "category": "docs",
+      "transport": "remote-streamable-http",
+      "url": "https://mcp.context7.com/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["resolve-library-id", "query-docs"],
+      "data_flow": "library name + query text sent to Upstash",
+      "verification": {
+        "level": "official-docs",
+        "source": "https://github.com/Upstash/context7 (README: 'configure manually, use the Context7 server URL https://mcp.context7.com/mcp'; anonymous public access unchanged, free API key only raises rate limits)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Up-to-date, version-specific library docs. The most-installed docs MCP. Free without key; free key raises rate limits."
+    },
+    {
+      "id": "deepwiki",
+      "name": "DeepWiki",
+      "vendor": "Cognition (Devin)",
+      "category": "code",
+      "transport": "remote-streamable-http",
+      "url": "https://mcp.deepwiki.com/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["read_wiki_structure", "read_wiki_contents", "ask_question"],
+      "data_flow": "repo name + question sent to Cognition",
+      "verification": {
+        "level": "official-docs",
+        "source": "https://mcp.deepwiki.com (live server banner: 'Connect to https://mcp.deepwiki.com/mcp'; private repos use a separate authenticated endpoint)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Ask questions about any public GitHub repo, answered from AI-generated codebase wikis."
+    },
+    {
+      "id": "gitmcp",
+      "name": "GitMCP (per-repo)",
+      "vendor": "idosal",
+      "category": "code",
+      "transport": "remote-streamable-http",
+      "url": null,
+      "url_template": "https://gitmcp.io/{owner}/{repo}/mcp",
+      "url_params": {
+        "owner": "git remote owner (auto-filled by scripts/mcp.py from `git remote get-url origin`)",
+        "repo": "git remote repo name"
+      },
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["repo_context", "llms_txt", "readme", "file_lookup"],
+      "data_flow": "repo path + requested files sent to gitmcp.io (public repos only)",
+      "verification": {
+        "level": "official-docs",
+        "source": "https://gitmcp.io ('Simply change the domain from github.com to gitmcp.io'; works with any public GitHub repository; no setup)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Instant docs/code context for the repo you are standing in. URL is per-repo — scripts/mcp.py fills the template from git."
+    },
+    {
+      "id": "microsoft-learn",
+      "name": "Microsoft Learn",
+      "vendor": "Microsoft",
+      "category": "docs",
+      "transport": "remote-streamable-http",
+      "url": "https://learn.microsoft.com/api/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["search_documentation", "get_documentation"],
+      "data_flow": "query text sent to Microsoft",
+      "verification": {
+        "level": "official-docs",
+        "source": "https://developer.microsoft.com/blog/improve-your-agentic-developer-tools-by-grounding-in-microsoft-learn ('one endpoint, nothing to install, no authentication required', 2026-05-29)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Current Microsoft/Azure documentation. Some older client builds may offer an OAuth path; the endpoint itself needs no auth per the vendor."
+    },
+    {
+      "id": "cloudflare-docs",
+      "name": "Cloudflare Docs",
+      "vendor": "Cloudflare",
+      "category": "docs",
+      "transport": "remote-sse",
+      "url": "https://docs.mcp.cloudflare.com/sse",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": ["search_docs", "fetch_docs"],
+      "data_flow": "query text sent to Cloudflare",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://www.remote-mcp.com/servers/cloudflare-docs ('Server URL: https://docs.mcp.cloudflare.com/sse · Authentication: OAuth-based (no API keys required)')",
+        "checked": "2026-09-22"
+      },
+      "notes": "Semantic search over Cloudflare product docs. No API key; if the client offers OAuth, read-only use works without it — re-check live at setup."
+    },
+    {
+      "id": "astro-docs",
+      "name": "Astro Docs",
+      "vendor": "Astro",
+      "category": "docs",
+      "transport": "remote-streamable-http",
+      "url": "https://mcp.docs.astro.build/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["search_docs", "ask_question"],
+      "data_flow": "query text sent to Astro (Kapa-backed)",
+      "verification": {
+        "level": "official-docs",
+        "source": "https://deepwiki.com/withastro/docs-mcp (server card: URL https://mcp.docs.astro.build/mcp, transport http) + https://apigene.ai/mcp/official/astro",
+        "checked": "2026-09-22"
+      },
+      "notes": "Grounded answers about Astro APIs, integrations and configuration."
+    },
+    {
+      "id": "wondel-skills",
+      "name": "Wondel Skills",
+      "vendor": "Wondel (community)",
+      "category": "skills",
+      "transport": "remote-streamable-http",
+      "url": "https://skills.wondel.ai/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": ["recommend_skills", "load_skill"],
+      "data_flow": "task description sent to Wondel",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/mukul-dutt/awesome-mcp-list ('remote read-only MCP server over 50 book-based agent skills… No install, no account, no auth. Streamable HTTP: https://skills.wondel.ai/mcp')",
+        "checked": "2026-09-22"
+      },
+      "notes": "Routes a task to a framework and serves the real SKILL.md in-session. Output is prompt code — apply the untrusted-output rule."
+    },
+    {
+      "id": "ai-skills-search",
+      "name": "AI Skills Search",
+      "vendor": "bytesagain (community)",
+      "category": "skills",
+      "transport": "remote-sse",
+      "url": "https://bytesagain.com/api/mcp/sse",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": ["search_skills"],
+      "data_flow": "search query sent to bytesagain.com",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/bytesagain/ai-skills (README: 'Search 60,000+ AI agent skills via MCP SSE or REST API. 7 languages. Free, no auth. Endpoint: https://bytesagain.com/api/mcp/sse')",
+        "checked": "2026-09-22"
+      },
+      "notes": "Search 60k+ agent skills. Discovery only — imports still go through the quarantine review."
+    },
+    {
+      "id": "developer-toolkit",
+      "name": "Developer Toolkit",
+      "vendor": "mjaskolski (community)",
+      "category": "docs",
+      "transport": "remote-streamable-http",
+      "url": "https://developertoolkit.ai/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": ["search_guides", "fetch_guide"],
+      "data_flow": "search query sent to developertoolkit.ai",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/mukul-dutt/awesome-mcp-list ('remote read-only MCP endpoint over 950+ AI-development guides (Cursor, Claude Code, Codex)… No account, no API key. Streamable HTTP: https://developertoolkit.ai/mcp')",
+        "checked": "2026-09-22"
+      },
+      "notes": "Read-only search over 950+ AI-development guides."
+    },
+    {
+      "id": "usefulai",
+      "name": "Useful AI Utilities",
+      "vendor": "Useful AI (community)",
+      "category": "utilities",
+      "transport": "remote-streamable-http",
+      "url": "https://api.usefulai.fun/mcp",
+      "command": null,
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": ["unit_conversion", "text_processing", "data_parsing", "encoding", "math", "cryptography"],
+      "data_flow": "input values sent to usefulai.fun",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/sylviangth/awesome-remote-mcp-servers ('340+ autonomously-built utility tools… No authentication required. Use the server URL directly: https://api.usefulai.fun/mcp')",
+        "checked": "2026-09-22"
+      },
+      "notes": "340+ utility tools. Broad surface — activate only for tasks that actually need a specific utility."
+    },
+    {
+      "id": "fetch",
+      "name": "Fetch (reference)",
+      "vendor": "modelcontextprotocol (official reference servers)",
+      "category": "web",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-fetch"],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["fetch_url (markdown)"],
+      "data_flow": "requested URL fetched locally by the server process (content returns to the client)",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/modelcontextprotocol/servers (official reference-server collection, npm @modelcontextprotocol/server-fetch)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Web page → markdown. First `npx` run downloads the package (needs network at setup time)."
+    },
+    {
+      "id": "filesystem",
+      "name": "Filesystem (reference)",
+      "vendor": "modelcontextprotocol (official reference servers)",
+      "category": "local",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "{allowed_dir}"],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["read", "write", "list", "move", "search (scoped to allowed dirs)"],
+      "data_flow": "none (local process)",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/modelcontextprotocol/servers (npm @modelcontextprotocol/server-filesystem)",
+        "checked": "2026-09-22"
+      },
+      "notes": "ALWAYS scope args to the project directory ({allowed_dir} = the repo root). An unscoped filesystem server is an irreversible-capability — change-safety tier applies."
+    },
+    {
+      "id": "time",
+      "name": "Time (reference)",
+      "vendor": "modelcontextprotocol (official reference servers)",
+      "category": "utilities",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-time"],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["current_time", "timezones"],
+      "data_flow": "none",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/modelcontextprotocol/servers (npm @modelcontextprotocol/server-time)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Current time/timezone conversions."
+    },
+    {
+      "id": "memory",
+      "name": "Memory (reference)",
+      "vendor": "modelcontextprotocol (official reference servers)",
+      "category": "local",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["knowledge-graph entities, relations, queries"],
+      "data_flow": "none (local graph.json)",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/modelcontextprotocol/servers (npm @modelcontextprotocol/server-memory)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Persistent knowledge-graph memory for the session project."
+    },
+    {
+      "id": "sequential-thinking",
+      "name": "Sequential Thinking (reference)",
+      "vendor": "modelcontextprotocol (official reference servers)",
+      "category": "reasoning",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["structured step-by-step reasoning branches"],
+      "data_flow": "none",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/modelcontextprotocol/servers (npm @modelcontextprotocol/server-sequential-thinking)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Structured reasoning scratchpad; useful in Deep/Autonomous mode for long derivations."
+    },
+    {
+      "id": "playwright",
+      "name": "Playwright",
+      "vendor": "Microsoft (Playwright team)",
+      "category": "browser",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": ["navigate", "click", "fill", "screenshot", "evaluate", "network"],
+      "data_flow": "visited pages + DOM content; pages are rendered locally",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/microsoft/playwright-mcp (npm @playwright/mcp)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Real browser automation. Capable of actions on any page the user is logged into — treat every navigation/interaction as a mutation (change-safety), and never enter credentials on the user's behalf without explicit instruction."
+    }
+  ],
+  "excluded_with_reason": [
+    {
+      "name": "Hugging Face MCP",
+      "url": "https://huggingface.co/mcp",
+      "reason": "OAuth/token required for most tools (free account = signup)"
+    },
+    {
+      "name": "GitHub MCP",
+      "url": "https://api.githubcopilot.com/mcp",
+      "reason": "personal access token / OAuth required (signup)"
+    },
+    {
+      "name": "Tavily / Exa / Firecrawl / Brave / Perplexity search MCPs",
+      "url": "various",
+      "reason": "API key required (signup)"
+    },
+    {
+      "name": "Slack / Notion / Gmail / Linear / Supabase / Shopify / Stripe …",
+      "url": "various",
+      "reason": "OAuth to a SaaS account (signup)"
+    },
+    {
+      "name": "You.com MCP",
+      "url": "https://api.you.com/mcp",
+      "reason": "'keyless free profile' still implies an account/profile — excluded to keep the universe strict"
+    },
+    {
+      "name": "mcpmarket.com premium/paid skills",
+      "url": "https://mcpmarket.com/tools/skills",
+      "reason": "paid listings (e.g. $19) violate the free universe; only free/official sections are in-scope"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "id": "eval.behavioral.mcp-add-free-server",
+  "skill": "pixz.core.mcp",
+  "scenario": "add a free no-key mcp server to this project for up-to-date library docs",
+  "expected_routing": "pixz.core.mcp activated (vet -> live-check -> idempotent auto-config); no full orchestrator ceremony for a low-risk reversible config change",
+  "expected_challenge": "none",
+  "risk": "low",
+  "should_select": [
+    "pixz.core.mcp"
+  ],
+  "should_not_select": [
+    "pixz.core.epistemic-challenger",
+    "pixz.security.review"
+  ],
+  "verifies": "MCP integration routes to pixz.core.mcp; live-check-first and budget rule keep it cheap",
+  "expected_mode": "fast",
+  "setup": "Fresh project, PixzFlow installed and READY, no MCP configured yet.",
+  "expected_behavior": "The agent activates pixz.core.mcp, picks the fewest vetted server(s) from mcp/catalog.json that cover the docs need, live-checks them (initialize + tools/list, evidence in .pixz/mcp-check.json) BEFORE wiring, and wires idempotently via scripts/mcp.py add — reporting any check failure honestly instead of wiring blind.",
+  "failure_condition": "Wiring a server without a live check; adding just-in-case servers that do not cover the stated need; treating docs tool output as verified fact without the source-of-record cross-check.",
+  "verification": "should_select holds for pixz.core.mcp; risk=low keeps expected_mode fast/balanced (no challenger, no security ceremony); failure_condition named per the mandate (wiring blind = verification-depth violation)."
+}

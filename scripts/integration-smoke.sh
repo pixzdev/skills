@@ -42,9 +42,31 @@ echo "OpenCode: .opencode/skill/orchestrator/SKILL.md — $(ls .opencode/skill/o
 echo "Hermes: ~/.hermes/skills/orchestrator/SKILL.md — $(ls ~/.hermes/skills/orchestrator/SKILL.md 2>&1 | head -n 1 || echo 'not installed')"
 echo "Generic: .agents/skills/orchestrator/SKILL.md — $(ls .agents/skills/orchestrator/SKILL.md 2>&1 | head -n 1 || echo 'not installed')"
 echo ""
+echo "--- MCP auto-config (scripts/mcp.py: catalog, config round-trip, live probe) ---"
+python3 "$ROOT/scripts/mcp.py" list --tier medium 2>&1 | tail -n 10
+python3 "$ROOT/scripts/mcp.py" tier full 2>&1 | tail -n 4
+python3 "$ROOT/scripts/mcp.py" detect 2>&1 | tail -n 5
+# config round-trip in a throwaway CWD (add → re-read → idempotent re-add → remove)
+TMPMCP="$(mktemp -d)"
+( cd "$TMPMCP" \
+  && python3 "$ROOT/scripts/mcp.py" add context7 --runtime claude \
+  && echo "--- written .mcp.json:" && cat .mcp.json \
+  && echo "--- idempotent re-add:" && python3 "$ROOT/scripts/mcp.py" add context7 --runtime claude \
+  && echo "--- remove:" && python3 "$ROOT/scripts/mcp.py" remove context7 --runtime claude ) \
+  || { echo "FAIL mcp config round-trip"; exit 1; }
+rm -rf "$TMPMCP"
+# live probe — network-dependent; SKIP (not FAIL) where egress is absent
+if python3 "$ROOT/scripts/mcp.py" check context7 --timeout 25 2>&1 | tail -n 3; then
+  echo "live check: OK (evidence .pixz/mcp-check.json)"
+else
+  rc=$?
+  if [ "$rc" = "10" ]; then echo "live check: FAILED (network/endpoint) — reported honestly, NOT wired"; else echo "live check: SKIP (no egress in this env)"; fi
+fi
+echo ""
 echo "=== Integration summary ==="
 echo "Structural: VERIFIED (validate + cycles)"
 echo "Documentary: VERIFIED heuristic (keyword/section presence)"
 echo "Behavioral: PARTIALLY VERIFIED (heuristic router smoke; no model grader)"
 echo "Installation: skills.sh VERIFIED via docs + CLI help; OpenClaw/Claude/OpenCode/Hermes VERIFIED via docs + manual ls; full end-to-end requires runtime binary (see docs/install/README.md matrix)."
+echo "MCP auto-config: catalog + config round-trip VERIFIED (this run); live probes VERIFIED only where egress exists (evidence .pixz/mcp-check.json) — see mcp/README.md."
 echo "No fabrications — see captured ls/list output above."

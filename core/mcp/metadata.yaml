@@ -1,0 +1,13 @@
+id: pixz.core.mcp
+name: MCP Integration
+version: 1.0.0
+category: core
+description: Vetted, free + no-signup-first integration of MCP servers and external agent skills. Trust tiers + security vetting gate, live-check-first (initialize + tools/list) before wiring, idempotent runtime-agnostic auto-config (scripts/mcp.py), budgeted activation, tool output treated as untrusted data.
+triggers: [mcp, model context protocol, mcp server, mcp config, mcpmarket, external tools]
+compatible_runtimes: [claude, openclaw, opencode, hermes, codex, generic]
+requires: []
+aggregates: []
+optional:
+  - pixz.core.verification
+  - pixz.core.change-safety
+conflicts: []

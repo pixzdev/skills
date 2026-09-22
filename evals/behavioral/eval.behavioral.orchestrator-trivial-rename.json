@@ -12,7 +12,8 @@
     "orchestrator",
     "security.review",
     "epistemic-challenger",
-    "pixz.core.self-learning"
+    "pixz.core.self-learning",
+    "pixz.core.mcp"
   ],
   "verifies": "complexity-aware avoids over-orchestration",
   "expected_mode": "fast",

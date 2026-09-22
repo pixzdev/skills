@@ -20,7 +20,7 @@
 - Writes via `npx skills` may land in `.claude/skills/` — copy to `.opencode/skill/` if needed (cross-compatible verified).
 
 **`python scripts/resolve.py` fails `LIMIT_EXCEEDED`**
-- Check `registry.json#limits` (`max_skill_chain_depth=15`). With 2.0.0's slimmer graph the orchestrator resolves to 4 mandatory nodes (14 with `--with-optional`), well under the cap.
+- Check `registry.json#limits` (`max_skill_chain_depth=20` since 2.4.0). The orchestrator resolves to 4 mandatory nodes (16 with `--with-optional`), well under the cap; the cap exists to bound runaway chains, not normal resolution.
 
 ## Workflow / routing / activation
 

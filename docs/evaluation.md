@@ -1,4 +1,4 @@
-# Evaluation — PixzFlow 2.0
+# Evaluation — PixzFlow 2.4
 
 > A passing structural check must never be presented as behavioral proof. A heuristic smoke must never be presented as a benchmark.
 
@@ -20,12 +20,12 @@ How: `python scripts/validate.py` + `python scripts/check-cycles.py`. Exit non-z
 - required sections in each SKILL.md (Purpose, Triggers/When, Methodology, Verification, Structured output — per category)
 - install commands present where relevant; examples present; metadata complete
 
-How: `python evals/runner.py` — 19 cases, keyword/section presence. **Heuristic, not semantic.** Report as `X/19 heuristic` — no fake precision.
+How: `python evals/runner.py` — 21 cases, keyword/section presence. **Heuristic, not semantic.** Report as `X/21 heuristic` — no fake precision.
 
 ### Layer 3 — Behavioral smoke (heuristic + registry invariants)
-What it checks **now (2.1.0)**:
+What it checks **now (2.4.0)**:
 - **registry invariants:** (1) evidence floor — orchestrator mandatory closure contains `pixz.core.verification`; (2) trivial-task budget — orchestrator mandatory closure ≤ 4 nodes (v1.1.0: 10; self-learning is *optional*, so the invariant still holds); (3) mode consistency — low risk never deep/autonomous, high/critical risk never fast
-- **33 scenarios:** 15 v1 routing + 8 mechanism + **10 self-learning (E-series)**:
+- **34 scenarios:** 15 v1 routing + 8 mechanism + **10 self-learning (E-series)** + **1 MCP routing (2.4)**:
   E1 first-activation · E2 existing-runtime (no duplicate setup) · E3 skill-upgrade · E4 failed-assumption · E5 improvement-loop · E6 anti-overengineering · E7 regression-after-improvement · E8 persistence-reload · E9 validation-depth · E12 high-risk-escalation (E10 contradictory-evidence and E11 trivial-task map to the existing contradictory-reports / trivial-rename scenarios, extended with setup/failure-condition/verification fields). Each E-scenario defines setup · expected behavior · failure condition · verification — keyword presence is never the only evidence.
 - false-positive activations per scenario (`should_not_select`), expected activations (`should_select`); trivial-rename additionally asserts `pixz.core.self-learning` does NOT activate (self-training must not add ceremony).
 
@@ -59,14 +59,14 @@ Any 2.0 change must not: make trivial tasks slower (token overhead guard) · cre
 
 ## Scoring & Reporting
 
-- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/19 heuristic` · behavioral `X/33` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime with evidence.
+- No invented numeric quality score. Per layer: structural PASS/FAIL · documentary `X/21 heuristic` · behavioral `X/34` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime with evidence.
 - Every eval result carries: `test_id`, `scenario`, `expected`, `actual`, `pass`, `evidence`, `limitations`.
 - Layer 1–2 results must never be presented as Layer 3–4 evidence.
 
 ## Artifacts
 
 - `evals/cases/*.json` — Layer 2 (19)
-- `evals/behavioral/*.json` + `runner.py` — Layer 3 (33 + invariants)
+- `evals/behavioral/*.json` + `runner.py` — Layer 3 (34 + invariants)
 - `evals/lifecycle/run_tests.py` — Layer 3b (14 deterministic self-learning tests)
 - `scripts/integration-smoke.sh` — Layer 4 (includes lifecycle suite + activation probe)
 - `docs/benchmark/GLM-benchmark-findings.md` — v1 empirical record

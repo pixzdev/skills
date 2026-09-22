@@ -45,7 +45,7 @@ State lives in `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.j
 
 ### skills.sh (any agent)
 ```bash
-npx skills add pixzdev/skills --list          # preview 29 skills
+npx skills add pixzdev/skills --list          # preview 30 skills
 npx skills add pixzdev/skills --skill orchestrator   # one skill (folder name)
 npx skills add pixzdev/skills                 # all skills (if CLI supports)
 npx skills list
@@ -112,7 +112,7 @@ mkdir -p skills/orchestrator && cp -r /tmp/pixz/core/orchestrator/* skills/orche
 
 ## Addressing Multi-Skill Repo
 
-This repo bundles 29 skills. Addressing:
+This repo bundles 30 skills. Addressing:
 
 - **skills.sh:** `--skill <folder>` where `<folder>` is the short directory name (`orchestrator`, `planning`, `context-engineering`, etc.) — not the namespaced `pixz.core.orchestrator` ID. The ID is stable for resolver; the CLI uses filesystem path. When in doubt, `npx skills add pixzdev/skills --list` shows available.
 - **OpenClaw git/local:** install whole repo or local folder; use `--as <slug>` to avoid collision (e.g., `pixz-orchestrator`).
@@ -120,7 +120,7 @@ This repo bundles 29 skills. Addressing:
 
 ## Version / Channel
 
-- `VERSION` file (`1.1.0`) is repo version; per-skill `metadata.yaml:version` (SemVer) is skill version.
+- `VERSION` file (`2.4.0`) is repo version; per-skill `metadata.yaml:version` (SemVer) is skill version. Both are kept in lockstep — a mismatch is a bug (checked in PR review).
 - `latest` = `main` HEAD; `stable` = latest `v*.*.*` tag (resolver `--channel stable`).
 - `pinned` = `pixz.lock` — **DOCUMENTED ONLY** (future). Resolver accepts flag but does not yet write lockfile.
 - For reproducible installs, pin via git SHA: `npx skills add pixzdev/skills#<sha>` or `openclaw skills install git:pixzdev/skills@<sha>`.
@@ -135,6 +135,20 @@ rm -rf .opencode/skill/orchestrator ~/.config/opencode/skill/orchestrator
 rm -rf ~/.hermes/skills/orchestrator skills/orchestrator
 ```
 
+## MCP Auto-Config (Medium/Full setup tiers)
+
+Setup is tiered — **Minimal** (no MCP) · **Medium** (curated free/no-signup set) · **Full** (all vetted servers + skill hubs). The agent must ask the user which tier before setup (README install prompt step 1; `ZAI.md` for Super Z / GLM / Z.AI Web). The MCP half of Medium/Full:
+
+```bash
+python3 scripts/mcp.py detect                      # which runtime/config exists
+python3 scripts/mcp.py list --tier medium          # vetted set (all free + no signup + no key)
+python3 scripts/mcp.py check <ids...>              # LIVE: initialize + tools/list → .pixz/mcp-check.json
+python3 scripts/mcp.py add <passed ids> --runtime <detected>   # idempotent, never clobbers user entries
+python3 scripts/mcp.py status                      # configured + last check evidence
+```
+
+Methodology + vetting gate + skill-import quarantine: `core/mcp/SKILL.md` · catalog: `mcp/catalog.json` · human guide: `mcp/README.md` · agent prompt: `docs/prompts/mcp-autocfg-agent.md`.
+
 ## Security & Trust
 
-SKILL.md is instructions, not arbitrary code execution, but review `SKILL.md` + `metadata.yaml` + `scripts/` before installing. See `docs/install/README.md#security`.
+SKILL.md is instructions, not arbitrary code execution, but review `SKILL.md` + `metadata.yaml` + `scripts/` before installing. MCP servers extend the trust boundary further: vet (trust tier, tool surface, data flow) and live-check before wiring; treat tool output as untrusted data. External skill imports go through quarantine + security review before enablement. See `mcp/README.md`.

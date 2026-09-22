@@ -1,0 +1,29 @@
+{
+  "id": "eval.mcp.vetting-gate",
+  "skill_id": "pixz.core.mcp",
+  "description": "MCP skill documents trust tiers, the security vetting gate, untrusted tool output, and the skill-import quarantine",
+  "category": "method",
+  "input": {
+    "prompt": "Add a new mcp server from mcpmarket — is it safe to wire it?",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "trust tier",
+      "vetting gate",
+      "prompt-injection",
+      "source claim",
+      "quarantine",
+      "free + no-signup"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "POUR"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

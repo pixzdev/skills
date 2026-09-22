@@ -1,6 +1,6 @@
 # ZAI.md — PixzFlow Runtime Overlay: Super Z / GLM / Z.AI Web
 
-> **Class:** Runtime-specific operating overlay (Level 2.5). **NOT** the primary workflow. **Status:** SPECIFIED (2026-09-22, PixzFlow 2.0). **Behavioral effect:** UNVERIFIED — no behavioral evaluation demonstrates an agent reading this file operates differently or better. Do not claim otherwise.
+> **Class:** Runtime-specific operating overlay (Level 2.5). **NOT** the primary workflow. **Status:** SPECIFIED (2026-09-22, PixzFlow 2.4; re-specified for 2.4.0 — setup-tier question + mandate carry-over). **Behavioral effect:** UNVERIFIED — no behavioral evaluation demonstrates an agent reading this file operates differently or better. Do not claim otherwise.
 
 ## Applies to (identification)
 
@@ -21,9 +21,20 @@ This overlay only parameterizes:
 1. the **operating mode** default and selection ritual, and
 2. the runtime's **compute and user-interaction policy**.
 
-## Mandatory mode selection (before substantive work)
+## Mandatory pre-work questions (before substantive work)
 
-Before beginning substantive work, the agent **MUST** invoke its available **`AskUserQuestion`** capability (or the runtime's equivalent structured question tool) and ask:
+Before beginning substantive work, the agent **MUST** invoke its available **`AskUserQuestion`** capability (or the runtime's equivalent structured question tool) and ask — **in this order**:
+
+**Question 1 — Setup tier (only if PixzFlow is not already `ready` in this runtime).** Probe first (`python3 scripts/activation.py status`); if `ready` with no drift, skip this question — do not re-ask setup of an adapted runtime. Otherwise ask:
+
+> **Which PixzFlow setup tier should I install?**
+> 1. **Minimal** — orchestrator closure (4 skills) + contract wiring + one probe; **no MCP** (native tools only)
+> 2. **Medium** — orchestrator + all optional skills (16) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
+> 3. **Full** — all skills (30) + full vetted MCP catalog (16 servers, remote + local) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
+
+Tier semantics, per-server lists, and the free + no-signup policy: `README.md#setup-tiers-ask-first` and `mcp/catalog.json`. Setup is executed per `pixz.core.mcp` (vet → live-check → idempotent auto-config via `scripts/mcp.py`) — never wired blind.
+
+**Question 2 — Operating mode:**
 
 > **How should PixzFlow operate?**
 > 1. **Fast** — minimum orchestration overhead
@@ -31,9 +42,10 @@ Before beginning substantive work, the agent **MUST** invoke its available **`As
 > 3. **Deep** — more relevant skills, specialist subagents, research, verification, adversarial review
 > 4. **Autonomous** — Deep-level rigor with minimal user interruptions
 
-- **Default:** if the user does not select a mode (no answer, declined, or tool unavailable), the agent **defaults to Balanced** and states the default it is using.
-- **Degradation:** if no `AskUserQuestion`-equivalent capability exists, the agent states that in one line, proceeds at Balanced, and does not block the task.
-- The user may change mode at any time; the agent restates the new mode and adjusts behavior.
+- **Defaults:** if the user does not select a tier (no answer, declined, or tool unavailable), the agent **defaults to Minimal** and states the default; if the user does not select a mode, the agent **defaults to Balanced** and states the default it is using.
+- **Degradation:** if no `AskUserQuestion`-equivalent capability exists, the agent states that in one line, proceeds at Minimal + Balanced, and does not block the task.
+- The user may change tier (upgrade/downgrade) or mode at any time; the agent restates the new tier/mode and adjusts behavior. A tier upgrade is an incremental setup (probe first — never duplicate what is already `ready`).
+- **Mandate carry-over (universal semantics):** the **PixzFlow Mandate** in `AGENTS.md` applies in every mode and every tier — complex work runs under the full protocol even in Fast, and a complex task completed without the protocol is a **contractual failure (GAGAL)**. Tiers change *footprint*, never *obligation*.
 
 ## Mode semantics (behavioral differences, not labels)
 
@@ -65,7 +77,9 @@ Super Z / GLM / Z.AI Web runtimes may provide unusually generous context, subage
 
 ## Universal operations this overlay never overrides
 
+- The **PixzFlow Mandate** — complex work always runs under the full protocol, in every tier and every mode (contractual failure / GAGAL when skipped);
 - Capability discovery/activation protocol and dependency resolution via `registry.json` + `scripts/resolve.py`;
+- MCP & external capability integration discipline (`pixz.core.mcp`) — free + no-signup-first universe (`mcp/catalog.json`), vetting gate, live-check before wiring, untrusted tool output;
 - Change-safety tiers — irreversible/high-impact actions require confirmation even in Autonomous;
 - Verification triggers (before irreversible action, after significant mutation, before claims/handoff/completion);
 - Source-of-record discipline (actual artifacts over descriptive records);
@@ -79,6 +93,6 @@ This file is a repository-level document — not a skill, not in `registry.json`
 
 ## Verification of this overlay
 
-- **SPECIFIED:** the requirements above, per the 2026-09-22 mission specification.
+- **SPECIFIED:** the requirements above, per the 2026-09-22 mission specification, re-specified for 2.4.0 (setup-tier question + mandate carry-over).
 - **VERIFIED (structural):** presence + required content machine-checked by `scripts/validate.py`.
 - **UNVERIFIED (behavioral):** no evaluation demonstrates that an agent reading this file operates differently or better. Behavioral validation belongs to the successor benchmark (`docs/benchmark/successor-benchmark.md`), cell: runtime-overlay effect.
