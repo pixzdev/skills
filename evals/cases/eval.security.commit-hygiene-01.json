@@ -1,0 +1,30 @@
+{
+  "id": "eval.security.commit-hygiene-01",
+  "skill_id": "pixz.security.commit-hygiene",
+  "description": "Commit Hygiene skill blocks secrets in the staged diff, reviews manifest/lockfile changes, and matches message to diff",
+  "category": "method",
+  "input": {
+    "prompt": "Before I push, check the staged changes for secrets and unintended dependency changes",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "BLOCK",
+      "lockfile",
+      "rotate",
+      "staged diff"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "secret blocking without echoing values",
+      "dependency drift review",
+      "stray artifact detection",
+      "message-diff consistency"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

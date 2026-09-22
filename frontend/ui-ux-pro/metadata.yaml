@@ -1,0 +1,35 @@
+id: pixz.frontend.ui-ux-pro
+name: UI/UX Pro
+category: frontend
+version: 1.0.0
+status: stable
+description: UI/UX design intelligence for frontend builds — product-type-driven style direction, contrast-verified color systems, modular type scales, spacing/radius/shadow tokens, iconography rules, chart-type selection, and an a11y-first UX priority checklist. Project-adaptive: reuses the project's existing design language before recommending anything new. Use when designing or building web UI.
+triggers:
+- ui design
+- color palette
+- typography
+- landing page design
+- dashboard design
+- design tokens
+requires: []
+aggregates: []
+optional:
+- pixz.design.project-adapt
+- pixz.quality.anti-ai-slop
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

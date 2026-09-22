@@ -18,7 +18,7 @@ MODEL     intelligence            (L0 — native, cannot be replaced)
 RUNTIME   execution               (L1 — tools, MCP, sandbox, subagents)
 PIXZFLOW  operating discipline    (L2 — AGENTS.md, modes, state, evidence, policies, mandate)
 OVERLAYS  one-runtime parameters  (L2.5 — ZAI.md for Super Z / GLM / Z.AI Web)
-SKILLS    specialized capability  (L3 — 30 skills, stable IDs, dependency-aware)
+SKILLS    specialized capability  (L3 — 35 skills, stable IDs, dependency-aware)
 EXTERNAL  vetted external tools   (L3.5 — MCP servers + imported skills, mcp/catalog.json)
 AGENTS    parallel specialization (L4 — contract-bound subagent roles)
 STATE     continuity              (L5 — task-state + adaptation-state + evidence)
@@ -29,12 +29,12 @@ STATE     continuity              (L5 — task-state + adaptation-state + eviden
 | `AGENTS.md` | Canonical operating contract (agent entry point, incl. the **PixzFlow Mandate**) |
 | `registry.json` | Machine source of truth — skills, protocols, policies, limits |
 | `llms.txt` | LLM map (projection of the registry) |
-| `mcp/catalog.json` | Vetted MCP server + skill-source catalog (free + no-signup-only; 21 servers, 4 skill sources) |
+| `mcp/catalog.json` | Vetted MCP server + skill-source catalog (free + no-signup-only; 23 servers, 4 skill sources) |
 | `schemas/` | `task-state` · `adaptation-state` · `handoff` · `skill` · `registry` · `eval` |
-| `scripts/` | `validate.py` · `check-cycles.py` · `resolve.py` · `activation.py` (incl. `verify-installed`) · `doctor.py` · `assess.py` · `sitrep.py` · `hooks.py` · `mcp.py` (auto-config) · `integration-smoke.sh` |
+| `scripts/` | `validate.py` · `check-cycles.py` · `resolve.py` · `activation.py` (incl. `verify-installed`) · `doctor.py` · `assess.py` · `sitrep.py` · `hooks.py` · `mcp.py` (auto-config + usage) · `vet-skill.py` (quarantine scanner) · `integration-smoke.sh` |
 | `evals/` | documentary (21) + behavioral (34) + lifecycle (14) |
 | `adapters/` | Thin runtime translators (claude, openclaw, opencode, hermes) |
-| `core/` + domains | 15 core + 15 domain skills (`pixz.<domain>.<name>` IDs) |
+| `core/` + domains | 16 core + 19 domain skills (`pixz.<domain>.<name>` IDs) |
 
 ## Why it exists
 
@@ -106,7 +106,10 @@ Supporting tooling (all stdlib-only):
 | `scripts/assess.py` | adoption score 0–100 = sum of named evidence-backed checks (each PASS/FAIL; UNVERIFIED scores 0). **Auto-runs after `mark-adapted`.** Not a quality metric |
 | `scripts/sitrep.py` | one-block orientation report (adaptation + task + learning) for ORIENT/compaction/handoff |
 | `scripts/hooks.py` | runtime contract wiring (`check`/`install`, idempotent; Claude `CLAUDE.md → @AGENTS.md`, native runtimes no-op) |
+| `scripts/vet-skill.py` | quarantine scanner for external skill bundles: injection/exfiltration/secret blockers (exit 1), consistency + budget warnings (exit 10), frontmatter structure, script inventory |
+| `mcp.py usage` | per-server MCP usage report: task-state activations × live-check evidence × catalog → keep/verify/vet/suspend/check/idle |
 | `activation.py verify-installed` | integrity: installed copies vs source digests (tamper/corruption detection) |
+| `pixz.lock` + `resolve.py --channel pinned` | pinned version channel: the lockfile is a version snapshot; pinned resolves verify against it, drift = hard fail |
 
 ## Persistent state
 
@@ -119,7 +122,7 @@ Entries are summaries + references — never transcripts, never hidden chain-of-
 
 ## Capability system
 
-30 skills, stable `pixz.<domain>.<name>` IDs, dependency-aware (`requires` / `aggregates` / `optional` / `conflicts`). 15 core: orchestrator, planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-reasoning, epistemic-challenger, verification, change-safety, replanning, quality-gate, **self-learning**, **mcp**. 15 domain: quality, engineering, security, design, frontend, motion, devops, ai.
+35 skills, stable `pixz.<domain>.<name>` IDs, dependency-aware (`requires` / `aggregates` / `optional` / `conflicts`). 16 core: orchestrator, planning, context-engineering, environment-awareness, capability-discovery, workflow-continuity, delegation-handoff, epistemic-reasoning, epistemic-challenger, verification, change-safety, replanning, quality-gate, **self-learning**, **mcp**, **repro**. 19 domain: quality, engineering, security, design, frontend, motion, devops, ai.
 
 **Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills answer HOW. If you want more practical multi-step methodology, activate the orchestrator; load `core/orchestrator/references/operating-methodology.md` when the work is complex.
 
@@ -127,7 +130,7 @@ Entries are summaries + references — never transcripts, never hidden chain-of-
 DISCOVER (metadata only) → MATCH → LOAD (progressive) → ACTIVATE → USE → VERIFY → PERSIST → REINVOKE → COMPLETE
 ```
 
-Budget rule: every activation earns its context cost. The orchestrator's mandatory closure is 4 nodes (the evidence floor: orchestrator → verification → epistemic-reasoning → context-engineering); everything else activates on demand. Resolver: `python scripts/resolve.py --install pixz.core.orchestrator --runtime claude` → 4 nodes (16 with `--with-optional`).
+Budget rule: every activation earns its context cost. The orchestrator's mandatory closure is 4 nodes (the evidence floor: orchestrator → verification → epistemic-reasoning → context-engineering); everything else activates on demand. Resolver: `python scripts/resolve.py --install pixz.core.orchestrator --runtime claude` → 4 nodes (17 with `--with-optional`). Pinned installs: `--channel pinned --lock pixz.lock` — the repo ships a `pixz.lock` version snapshot; any version drift is a hard fail (`LOCK_MISMATCH`).
 
 ## Evidence + verification
 
@@ -149,8 +152,8 @@ Never: `file exists = valid` · `command succeeded = correct` · `test passed = 
 | Layer | Harness | Proves |
 |---|---|---|
 | 1 Structural | `scripts/validate.py` + `check-cycles.py` | registry/metadata/schemas consistent; contracts hold |
-| 2 Documentary | `evals/runner.py` (21, heuristic) | skills document required methodology |
-| 3 Behavioral | `evals/behavioral/runner.py` (34 + invariants, heuristic) | routing/activation smoke, evidence floor, trivial-task budget, mode consistency |
+| 2 Documentary | `evals/runner.py` (26, heuristic) | skills document required methodology |
+| 3 Behavioral | `evals/behavioral/runner.py` (36 + invariants, heuristic) | routing/activation smoke, evidence floor, trivial-task budget, mode consistency |
 | 3b Lifecycle | `evals/lifecycle/run_tests.py` (14, deterministic) | self-learning state machine + 2.2 tooling: activation, reload, drift, failed adaptation, regression, doctor, integrity, sitrep, assessment, hooks |
 | 4 Integration | `scripts/integration-smoke.sh` | installer → discovery → invocation where runtimes exist |
 
@@ -171,14 +174,15 @@ An overlay parameterizes one runtime without changing universal semantics. Curre
 PixzFlow integrates **MCP servers** and **external agent skills** with the same discipline it applies to everything else: vetted sources, evidence before trust, budgeted activation.
 
 - **Universe policy:** the default integration universe is **free + no signup + no API key**. Anything that requires an account or a key is excluded by default and only enters on explicit user request with user-managed credentials.
-- **Catalog:** `mcp/catalog.json` — 21 vetted servers (10 remote no-auth, 11 local stdio) + 4 skill sources. Every entry records `trust_tier` (T1 vendor-official / T2 catalog-verified / T3 unvetted), capabilities, data flow, and the **source where the endpoint + no-key claim was read** (`official-docs` / `official-package` / `community-listed`). Docs-verification is **not** liveness proof — `scripts/mcp.py check` runs a real `initialize` + `tools/list` handshake at setup time and writes the evidence to `.pixz/mcp-check.json`.
+- **Catalog:** `mcp/catalog.json` — 23 vetted servers (10 remote no-auth, 13 local stdio) + 4 skill sources. Every entry records `trust_tier` (T1 vendor-official / T2 catalog-verified / T3 unvetted), capabilities, data flow, and the **source where the endpoint + no-key claim was read** (`official-docs` / `official-package` / `community-listed`). Docs-verification is **not** liveness proof — `scripts/mcp.py check` runs a real `initialize` + `tools/list` handshake at setup time and writes the evidence to `.pixz/mcp-check.json`.
 - **Remote (no auth):** Context7 (current library docs) · DeepWiki (ask about any public GitHub repo) · GitMCP (instant docs/code context for *your* repo — URL auto-filled from `git remote`) · Microsoft Learn · Cloudflare Docs · Astro Docs · Wondel Skills (skills via MCP) · AI Skills Search (60k+ skills) · Developer Toolkit (950+ guides) · Useful AI utilities.
 - **Local stdio (official reference servers, no auth):** fetch · filesystem (always scoped) · time · memory · sequential-thinking · playwright (browser automation).
 - **Design set (local, no auth, no Figma — all Figma routes need an account → excluded by policy):** shadcn-ui (shadcn/ui v4 real components + blocks) · magic-ui (official, animated components) · better-icons (200k+ icons, 150+ collections, syncs into the project icons file) · excalidraw (draw → screenshot → iterate → commit `.excalidraw`) · shadcnspace (blocks registry, free tier keyless). `scripts/mcp.py list --category design`.
+- **Motion & devtools set (local, no auth):** chrome-devtools (**official** Chrome DevTools team — browser input/navigation, console with sourcemaps, network, **performance traces**, emulation) · animation-inspector (detects CSS/GSAP/Framer Motion/Lottie/scroll/cursor animation systems in a live page, captures frames, extracts animation code; core tools keyless). The RUNTIME-ACTIVE evidence tools for `pixz.motion.framer-motion`, `pixz.motion.gsap`, and `pixz.frontend.ui-ux-pro`. `scripts/mcp.py list --category motion` · `--category devtools`.
 - **Discovery directories:** [mcpmarket.com](https://mcpmarket.com) (server directory + agent-skills marketplace — free/official sections only) · [skills.sh](https://skills.sh) · curated community lists. Directories are **discovery sources, not trust sources** — every import passes the vetting gate.
-- **Skill import = prompt-code import.** External SKILL.md bundles go through quarantine → security review (prompt-injection, exfiltration, secret harvesting) → install → discovery verification → explicit enablement. Never auto-enabled.
+- **Skill import = prompt-code import.** External SKILL.md bundles go through quarantine → security review (prompt-injection, exfiltration, secret harvesting — `scripts/vet-skill.py` is the first mechanical pass; exit 1 blocks) → install → discovery verification → explicit enablement. Never auto-enabled.
 - **Runtime-agnostic auto-config:** `scripts/mcp.py` detects the runtime, live-checks each server, and writes the config **idempotently and non-destructively** (`.mcp.json` for Claude/Cursor/generic · `.cursor/mcp.json` · `opencode.json` · printed TOML snippet for Codex) — never overwriting user-modified entries, never writing credentials.
-- **Budget:** a server is an external capability under the capability-activation protocol — recorded in task-state with a reason; unused servers are suspended at task end. Tool output is **untrusted data** (`SOURCE CLAIM`, never `FACT`) — the injection defense is a first-class rule.
+- **Budget:** a server is an external capability under the capability-activation protocol — recorded in task-state with a reason; unused servers are suspended at task end (per-server usage report: `scripts/mcp.py usage`). Tool output is **untrusted data** (`SOURCE CLAIM`, never `FACT`) — the injection defense is a first-class rule.
 
 Methodology: `pixz.core.mcp` (`core/mcp/SKILL.md`) · protocol `pixz.protocol.mcp-integration` · human guide `mcp/README.md`.
 
@@ -189,8 +193,8 @@ Before any setup, the agent **MUST ask** which tier the user wants (ask via the 
 | Tier | Skills | MCP (all free + no-signup) | Extras |
 |---|---|---|---|
 | **Minimal** | orchestrator closure (4 nodes) | none — native tools only | contract wiring + one readiness probe |
-| **Medium** | orchestrator + all optional (16 nodes) | curated set: context7 · deepwiki · gitmcp(self) · microsoft-learn · fetch · sequential-thinking — each live-checked before wiring | full self-learning lifecycle (doctor → init → adapt → verify → mark-adapted) |
-| **Full** | all skills (30) | full vetted catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) | adapters + overlay activation + full validation/eval layers + integrity check |
+| **Medium** | orchestrator + all optional (17 nodes) | curated set: context7 · deepwiki · gitmcp(self) · microsoft-learn · fetch · sequential-thinking — each live-checked before wiring | full self-learning lifecycle (doctor → init → adapt → verify → mark-adapted) |
+| **Full** | all skills (35) | full vetted catalog (23 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) | adapters + overlay activation + full validation/eval layers + integrity check |
 
 Probe before asking (`scripts/activation.py status`): a runtime already `ready` does not get re-setup, and an upgrade is incremental. `python3 scripts/mcp.py tier <minimal|medium|full>` prints the exact server list.
 
@@ -205,7 +209,7 @@ INSTALL → VALIDATE → ACTIVATE → SELF-TRAIN → VERIFY → READY
 ```bash
 # skills.sh — any agent with `npx skills` (VERIFIED)
 npx skills add pixzdev/skills --skill orchestrator        # one capability
-npx skills add pixzdev/skills                              # full ecosystem (30 skills)
+npx skills add pixzdev/skills                              # full ecosystem (35 skills)
 
 # Claude Code (VERIFIED)
 npx skills add pixzdev/skills --skill orchestrator --agent claude-code
@@ -259,8 +263,8 @@ No self-training prompt needs to be pasted again: the trigger lives in `AGENTS.m
 
 ```
 AGENTS.md · ZAI.md · llms.txt · registry.json · VERSION
-core/<skill>/SKILL.md + metadata.yaml     # 15 core capabilities (incl. mcp)
-<domain>/<skill>/…                        # 15 domain capabilities
+core/<skill>/SKILL.md + metadata.yaml     # 16 core capabilities (incl. mcp)
+<domain>/<skill>/…                        # 19 domain capabilities
 mcp/                                      # catalog.json (vetted free/no-signup MCP servers + skill sources) + README
 schemas/                                  # task-state, adaptation-state, handoff, skill, registry, eval
 scripts/                                  # validate, check-cycles, resolve, activation, mcp (auto-config), integration-smoke
@@ -271,7 +275,7 @@ docs/                                     # architecture, evaluation, taxonomy, 
 
 ## Evaluation
 
-See `docs/evaluation.md`. Per-layer results, never cross-layer inflation: structural PASS/FAIL · documentary `X/21 heuristic` · behavioral `X/34` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime. The behavioral E-series covers: first activation · existing runtime (no duplicate setup) · skill upgrade · failed assumption · self-improvement · anti-overengineering · regression · persistence · validation depth · contradictory evidence · trivial-task budget · high-risk escalation · MCP routing (free server add + no-ceremony guard).
+See `docs/evaluation.md`. Per-layer results, never cross-layer inflation: structural PASS/FAIL · documentary `X/26 heuristic` · behavioral `X/36` + invariants · lifecycle `X/14 deterministic` · integration PASS/FAIL per runtime. The behavioral E-series covers: first activation · existing runtime (no duplicate setup) · skill upgrade · failed assumption · self-improvement · anti-overengineering · regression · persistence · validation depth · contradictory evidence · trivial-task budget · high-risk escalation · MCP routing (free server add + no-ceremony guard).
 
 ## Benchmarks
 
@@ -327,8 +331,8 @@ Repo: https://github.com/pixzdev/skills (machine source of truth: registry.json)
 1. ASK SETUP TIER — MANDATORY, before any setup: invoke your AskUserQuestion capability (or the runtime's equivalent structured question tool) and ask:
    "Which PixzFlow setup tier should I install?"
    1. Minimal — orchestrator closure (4 skills) + contract wiring + one probe; NO MCP (native tools only)
-   2. Medium — orchestrator + all optional skills (16) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
-   3. Full — all skills (30) + full vetted MCP catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
+   2. Medium — orchestrator + all optional skills (17) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
+   3. Full — all skills (35) + full vetted MCP catalog (23 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
    Tiers set installation footprint only — never the mandate, change-safety, or verification. If the user does not answer (or the tool is unavailable), DEFAULT TO MINIMAL and state the default. For Super Z / GLM / Z.AI Web runtimes, ZAI.md governs this question (together with the operating-mode question).
 2. INSPECT ENVIRONMENT — probe, do not assume:
    - Paths: ls -la ~/.claude/skills .claude/skills .opencode/skill ~/.config/opencode/skill ~/.hermes/skills .agents/skills ./skills
@@ -338,8 +342,8 @@ Repo: https://github.com/pixzdev/skills (machine source of truth: registry.json)
 4. INSPECT COMPATIBILITY — for your detected runtime, confirm the official mechanism from that matrix (skills.sh CLI, openclaw skills install, or the adapter's copy path in adapters/). Use the repository's runtime adapter — do NOT invent a new skill format. Preserve existing user configuration: never overwrite an existing skill of the same name; if one exists, stop and report it.
 5. RESOLVE DEPENDENCIES per the selected tier:
    - Minimal: python3 /tmp/pixz/scripts/resolve.py --install pixz.core.orchestrator --runtime <detected>   (4 nodes)
-   - Medium:  same command + --with-optional   (16 nodes)
-   - Full:    every skill in registry.json (30)
+   - Medium:  same command + --with-optional   (17 nodes)
+   - Full:    every skill in registry.json (35)
    (Add --with-optional only per the tier above — never ad hoc.)
 6. INSTALL — execute exactly ONE install mechanism per capability in resolved order and capture command, exit code, and output. Cloning is NOT installation.
 7. VERIFY INSTALLATION — mandatory and evidence-based: the runtime's discovery command must show each capability at its installed location:
@@ -399,8 +403,8 @@ You are an agent identified as Super Z, GLM, or Z.AI Web. Confirm that identity 
 2. PRE-WORK QUESTIONS — BEFORE any substantive work, invoke your AskUserQuestion capability and ask, in this order:
    a) SETUP TIER (only if the runtime is not already READY — probe with `scripts/activation.py status` first; never re-ask an adapted runtime):
       - Minimal — orchestrator closure (4 skills) + contract wiring + one probe; no MCP
-      - Medium — orchestrator + all optional skills (16) + curated free/no-signup MCP set, live-checked before wiring; full self-learning lifecycle
-      - Full — all skills (30) + full vetted MCP catalog (21 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays
+      - Medium — orchestrator + all optional skills (17) + curated free/no-signup MCP set, live-checked before wiring; full self-learning lifecycle
+      - Full — all skills (35) + full vetted MCP catalog (23 servers) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays
       Default to Minimal and state it if the user does not answer.
    b) OPERATING MODE — choose exactly one:
       - Fast — minimum orchestration overhead

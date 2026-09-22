@@ -1,6 +1,6 @@
 # ZAI.md — PixzFlow Runtime Overlay: Super Z / GLM / Z.AI Web
 
-> **Class:** Runtime-specific operating overlay (Level 2.5). **NOT** the primary workflow. **Status:** SPECIFIED (2026-09-22, PixzFlow 2.4; re-specified for 2.4.0 — setup-tier question + mandate carry-over). **Behavioral effect:** UNVERIFIED — no behavioral evaluation demonstrates an agent reading this file operates differently or better. Do not claim otherwise.
+> **Class:** Runtime-specific operating overlay (Level 2.5). **NOT** the primary workflow. **Status:** SPECIFIED (2026-09-22, PixzFlow 2.5; re-specified for 2.4.0 — setup-tier question + mandate carry-over). **Behavioral effect:** UNVERIFIED — no behavioral evaluation demonstrates an agent reading this file operates differently or better. Do not claim otherwise.
 
 ## Applies to (identification)
 
@@ -29,8 +29,8 @@ Before beginning substantive work, the agent **MUST** invoke its available **`As
 
 > **Which PixzFlow setup tier should I install?**
 > 1. **Minimal** — orchestrator closure (4 skills) + contract wiring + one probe; **no MCP** (native tools only)
-> 2. **Medium** — orchestrator + all optional skills (16) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
-> 3. **Full** — all skills (30) + full vetted MCP catalog (21 servers, remote + local) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
+> 2. **Medium** — orchestrator + all optional skills (17) + curated free/no-signup MCP set (context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking), live-checked before wiring; full self-learning lifecycle
+> 3. **Full** — all skills (35) + full vetted MCP catalog (23 servers, remote + local) + skill-hub discovery (mcpmarket.com free/official, skills.sh) + adapters + overlays + full validation/eval layers
 
 Tier semantics, per-server lists, and the free + no-signup policy: `README.md#setup-tiers-ask-first` and `mcp/catalog.json`. Setup is executed per `pixz.core.mcp` (vet → live-check → idempotent auto-config via `scripts/mcp.py`) — never wired blind.
 

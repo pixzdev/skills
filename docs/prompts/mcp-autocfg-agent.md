@@ -8,7 +8,7 @@
 You are configuring Model Context Protocol (MCP) servers for the CURRENT AI agent runtime, using the PixzFlow vetted catalog. This is a setup task with hard safety rules:
 
 UNIVERSE RULES
-- FREE + NO SIGNUP + NO API KEY only. The vetted universe is mcp/catalog.json (21 servers: 10 remote no-auth + 11 local stdio — 6 official reference servers + 5 design servers; plus 4 skill sources incl. mcpmarket.com free/official and skills.sh).
+- FREE + NO SIGNUP + NO API KEY only. The vetted universe is mcp/catalog.json (23 servers: 10 remote no-auth + 13 local stdio — 6 official reference servers + 5 design servers + 1 official devtools (chrome-devtools) + 1 motion (animation-inspector); plus 4 skill sources incl. mcpmarket.com free/official and skills.sh).
 - Directories (mcpmarket.com, skills.sh, awesome lists) are DISCOVERY sources, not trust sources.
 - No invented endpoints. No credentials in config files, chat, or logs. No wiring without a live check. No auto-enabling of imported skills.
 

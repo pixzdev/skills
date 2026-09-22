@@ -1,0 +1,30 @@
+{
+  "id": "eval.design.dna-01",
+  "skill_id": "pixz.design.project-adapt",
+  "description": "Project Adapt skill extracts an evidence-backed design DNA, persists it, constrains generation, and detects drift",
+  "category": "method",
+  "input": {
+    "prompt": "New screens must match the existing app's design; check recent UI for drift",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "design-dna.json",
+      "INVENTORY",
+      "evidence",
+      "DRIFT"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "typed extraction with evidence",
+      "persisted DNA contract",
+      "off-DNA needs approval",
+      "per-surface drift report"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}

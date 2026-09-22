@@ -45,7 +45,7 @@ State lives in `.pixz/adaptation-state.json` (`schemas/adaptation-state.schema.j
 
 ### skills.sh (any agent)
 ```bash
-npx skills add pixzdev/skills --list          # preview 30 skills
+npx skills add pixzdev/skills --list          # preview 35 skills
 npx skills add pixzdev/skills --skill orchestrator   # one skill (folder name)
 npx skills add pixzdev/skills                 # all skills (if CLI supports)
 npx skills list
@@ -112,7 +112,7 @@ mkdir -p skills/orchestrator && cp -r /tmp/pixz/core/orchestrator/* skills/orche
 
 ## Addressing Multi-Skill Repo
 
-This repo bundles 30 skills. Addressing:
+This repo bundles 35 skills. Addressing:
 
 - **skills.sh:** `--skill <folder>` where `<folder>` is the short directory name (`orchestrator`, `planning`, `context-engineering`, etc.) — not the namespaced `pixz.core.orchestrator` ID. The ID is stable for resolver; the CLI uses filesystem path. When in doubt, `npx skills add pixzdev/skills --list` shows available.
 - **OpenClaw git/local:** install whole repo or local folder; use `--as <slug>` to avoid collision (e.g., `pixz-orchestrator`).
@@ -120,7 +120,7 @@ This repo bundles 30 skills. Addressing:
 
 ## Version / Channel
 
-- `VERSION` file (`2.4.0`) is repo version; per-skill `metadata.yaml:version` (SemVer) is skill version. Both are kept in lockstep — a mismatch is a bug (checked in PR review).
+- `VERSION` file (`2.5.0`) is repo version; per-skill `metadata.yaml:version` (SemVer) is skill version. Both are kept in lockstep — a mismatch is a bug (checked in PR review).
 - `latest` = `main` HEAD; `stable` = latest `v*.*.*` tag (resolver `--channel stable`).
 - `pinned` = `pixz.lock` — **DOCUMENTED ONLY** (future). Resolver accepts flag but does not yet write lockfile.
 - For reproducible installs, pin via git SHA: `npx skills add pixzdev/skills#<sha>` or `openclaw skills install git:pixzdev/skills@<sha>`.

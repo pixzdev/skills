@@ -1,0 +1,34 @@
+id: pixz.design.project-adapt
+name: Project Adapt — Design DNA
+category: design
+version: 1.0.0
+status: stable
+description: Extract a typed, evidence-backed design DNA from an existing project (palette, typography, spacing, radii, shadows, motion, density) and enforce it for all new UI; drift detection against the DNA and a per-surface report. Use when designing inside an existing product or when new UI looks off against the rest.
+triggers:
+- design dna
+- match project style
+- design drift
+- project design system
+- consistent design
+requires: []
+aggregates: []
+optional:
+- pixz.frontend.ui-ux-pro
+- pixz.design.design-system
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

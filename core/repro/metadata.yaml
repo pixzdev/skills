@@ -1,0 +1,33 @@
+id: pixz.core.repro
+name: Repro — Minimal Repro Constructor
+category: core
+version: 1.0.0
+status: stable
+description: Reduce a failing test, flaky behavior, or bug report to the smallest reliably reproducing case before attempting a fix — classify, minimize, freeze, then fix and verify against the frozen repro. Fixes made without a repro are rejected unless the repro is proven impossible. Use when debugging bugs, flaky tests, or regressions.
+triggers:
+- repro
+- minimal repro
+- flaky test
+- bisect
+- reduce test case
+requires: []
+aggregates: []
+optional:
+- pixz.core.verification
+conflicts: []
+compatible_runtimes:
+- claude
+- openclaw
+- opencode
+- hermes
+- codex
+- generic
+inputs:
+- objective
+- constraints
+- context
+outputs:
+- artifact
+- findings
+- verification
+tools: []

@@ -58,7 +58,20 @@ For UI/design work that has **no Figma** (Figma routes all need an account → e
 | `excalidraw` | `mcp-excalidraw-server` | live diagram canvas: draw → screenshot → iterate → export `.excalidraw` into the repo | Node 20+; `share` uploads off-machine — user approval required |
 | `shadcnspace` | `shadcnspace-mcp@latest` | shadcn blocks/components registry with real props + variants | free blocks need **no token**; Pro = out of the free universe |
 
-**Design set + Design DNA (planned skill):** the design MCPs supply *component truth* (real props/variants, not hallucinated markup) while a project-adaptive design skill supplies *project constraint* (the project's own palette/spacing/type scale). Together: "UI that looks like it belongs in THIS project, built from real components." `python3 scripts/mcp.py list --category design` lists the set.
+**Design set + Design DNA:** the design MCPs supply *component truth* (real props/variants, not hallucinated markup) while `pixz.design.project-adapt` (Design DNA) supplies *project constraint* (the project's own palette/spacing/type scale extracted to `.pixz/design-dna.json`), and `pixz.frontend.ui-ux-pro` applies the design-intelligence decisions (contrast-verified, a11y-first). Together: "UI that looks like it belongs in THIS project, built from real components." `python3 scripts/mcp.py list --category design` lists the set.
+
+### Motion & devtools (local stdio, no auth) — the "motion set"
+
+For animation and runtime-verification work (pairs with `pixz.motion.framer-motion`, `pixz.motion.gsap`, `pixz.frontend.ui-ux-pro`):
+
+| id | Package | What it does | Notes |
+|---|---|---|---|
+| `chrome-devtools` | `chrome-devtools-mcp@latest` | official Chrome DevTools surface: input/navigation, screenshots, console (sourcemaps), network, **performance traces**, emulation, memory | **T1 official** (Chrome DevTools team, Apache-2.0); `--slim --headless` for a lean core; exposes browser content to the MCP client — treat visited pages as untrusted data |
+| `animation-inspector` | `mcp-animation-inspector` | discovers animation systems in a live page (CSS keyframes/transitions, GSAP + ScrollTrigger, Framer Motion, Lottie, WebGL/Three.js, Lenis/Locomotive, custom cursors, View Transitions), captures frames, extracts animation code | core tools keyless (Playwright, local); only `describe_animations` (vision) needs a user-managed `ANTHROPIC_API_KEY` — skipped when absent |
+
+`python3 scripts/mcp.py list --category motion` · `python3 scripts/mcp.py list --category devtools`
+
+**Watchlist (not in the universe yet):** `gsap-mcp` (bl00dclot, MIT) — 18 GSAP codegen tools, but install is clone + build + local `node dist/index.js` (no npx one-liner) → fails the zero-friction auto-config criterion; revisit if upstream ships an npm package. **Framer Motion / Motion (motion.dev) MCP** — none published at check date (2026-09-22); Motion docs via `context7`, runtime verification via this motion set.
 
 ### Excluded by policy (need a signup/key)
 
@@ -70,7 +83,7 @@ Hugging Face · GitHub · Tavily/Exa/Firecrawl/Brave/Perplexity · Slack/Notion/
 |---|---|
 | **Minimal** | none — native tools only |
 | **Medium** | `context7 · deepwiki · gitmcp(self) · microsoft-learn · fetch · sequential-thinking` — each live-checked before wiring |
-| **Full** | all 21 vetted servers + skill-hub discovery (mcpmarket.com free/official sections, skills.sh) |
+| **Full** | all 23 vetted servers + skill-hub discovery (mcpmarket.com free/official sections, skills.sh) |
 
 `python3 scripts/mcp.py tier <name>` prints the exact list.
 
@@ -82,6 +95,7 @@ python3 scripts/mcp.py list --tier medium          # the tier's vetted set
 python3 scripts/mcp.py check context7 deepwiki     # LIVE: initialize + tools/list (evidence → .pixz/mcp-check.json)
 python3 scripts/mcp.py add context7 deepwiki fetch --runtime claude   # idempotent, non-destructive
 python3 scripts/mcp.py status                      # configured + last check evidence
+python3 scripts/mcp.py usage                    # per-server usage: task-state activations vs check evidence vs catalog
 python3 scripts/mcp.py remove gitmcp --runtime claude
 ```
 

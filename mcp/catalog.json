@@ -1,16 +1,16 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "kind": "pixz.mcp-catalog",
-  "note": "Machine source of truth for vetted MCP servers and external skill sources. Universe policy: FREE + NO SIGNUP + NO API KEY. Docs-verification is NOT liveness proof — run `python3 scripts/mcp.py check <id>|--all` at setup time; the result in .pixz/mcp-check.json is the liveness evidence.",
+  "note": "Machine source of truth for vetted MCP servers and external skill sources. Universe policy: FREE + NO SIGNUP + NO API KEY. Docs-verification is NOT liveness proof \u2014 run `python3 scripts/mcp.py check <id>|--all` at setup time; the result in .pixz/mcp-check.json is the liveness evidence.",
   "policy": {
     "free": true,
     "no_signup": true,
     "no_api_key": true,
     "auth_required_entries": "excluded (see excluded_with_reason); user-approved + user-managed credentials only",
     "trust_tiers": {
-      "T1": "vendor-official server or MCP reference-server collection — live check + catalog listing",
-      "T2": "community-operated but documented, listed here with a named source — live check + catalog listing + tool-surface review",
-      "T3": "anything else — full security review + explicit user approval before wiring"
+      "T1": "vendor-official server or MCP reference-server collection \u2014 live check + catalog listing",
+      "T2": "community-operated but documented, listed here with a named source \u2014 live check + catalog listing + tool-surface review",
+      "T3": "anything else \u2014 full security review + explicit user approval before wiring"
     }
   },
   "sources": [
@@ -22,7 +22,7 @@
         "server directory",
         "agent-skills marketplace (free/official sections)"
       ],
-      "note": "Directory of MCP servers, clients and agent skills. Discovery source, not a trust source — entries still pass the VET gate."
+      "note": "Directory of MCP servers, clients and agent skills. Discovery source, not a trust source \u2014 entries still pass the VET gate."
     },
     {
       "id": "official-docs",
@@ -37,11 +37,11 @@
     {
       "id": "awesome-lists",
       "name": "Curated community lists",
-      "url": "https://github.com/mukul-dutt/awesome-mcp-list · https://github.com/sylviangth/awesome-remote-mcp-servers",
+      "url": "https://github.com/mukul-dutt/awesome-mcp-list \u00b7 https://github.com/sylviangth/awesome-remote-mcp-servers",
       "used_for": [
         "T2 discovery"
       ],
-      "note": "Community lists with public-repo requirement — used only as discovery input."
+      "note": "Community lists with public-repo requirement \u2014 used only as discovery input."
     },
     {
       "id": "skills-sh",
@@ -56,10 +56,10 @@
   "skill_sources": [
     {
       "id": "mcpmarket-skills",
-      "name": "MCP Market — Agent Skills",
+      "name": "MCP Market \u2014 Agent Skills",
       "url": "https://mcpmarket.com/tools/skills",
       "free_no_signup": "official + free sections only; premium/paid listings excluded from the default universe",
-      "import": "manual — see core/mcp/SKILL.md#skill-import-protocol-external-agent-skills (quarantine → security review → install → discover → enable)"
+      "import": "manual \u2014 see core/mcp/SKILL.md#skill-import-protocol-external-agent-skills (quarantine \u2192 security review \u2192 install \u2192 discover \u2192 enable)"
     },
     {
       "id": "skills-sh",
@@ -91,7 +91,7 @@
     },
     "medium": {
       "description": "Orchestrator + all optional skills; curated free remote+local set that covers docs, repo Q&A and web fetch.",
-      "skills": "orchestrator --with-optional (16 nodes)",
+      "skills": "orchestrator --with-optional (17 nodes)",
       "servers": [
         "context7",
         "deepwiki",
@@ -103,7 +103,7 @@
     },
     "full": {
       "description": "Everything: all skills, full vetted catalog, skill-hub discovery, adapters + overlays.",
-      "skills": "all registry skills (30)",
+      "skills": "all registry skills (35)",
       "servers": "all"
     }
   },
@@ -186,7 +186,7 @@
         "source": "https://gitmcp.io ('Simply change the domain from github.com to gitmcp.io'; works with any public GitHub repository; no setup)",
         "checked": "2026-09-22"
       },
-      "notes": "Instant docs/code context for the repo you are standing in. URL is per-repo — scripts/mcp.py fills the template from git."
+      "notes": "Instant docs/code context for the repo you are standing in. URL is per-repo \u2014 scripts/mcp.py fills the template from git."
     },
     {
       "id": "microsoft-learn",
@@ -231,10 +231,10 @@
       "data_flow": "query text sent to Cloudflare",
       "verification": {
         "level": "community-listed",
-        "source": "https://www.remote-mcp.com/servers/cloudflare-docs ('Server URL: https://docs.mcp.cloudflare.com/sse · Authentication: OAuth-based (no API keys required)')",
+        "source": "https://www.remote-mcp.com/servers/cloudflare-docs ('Server URL: https://docs.mcp.cloudflare.com/sse \u00b7 Authentication: OAuth-based (no API keys required)')",
         "checked": "2026-09-22"
       },
-      "notes": "Semantic search over Cloudflare product docs. No API key; if the client offers OAuth, read-only use works without it — re-check live at setup."
+      "notes": "Semantic search over Cloudflare product docs. No API key; if the client offers OAuth, read-only use works without it \u2014 re-check live at setup."
     },
     {
       "id": "astro-docs",
@@ -279,10 +279,10 @@
       "data_flow": "task description sent to Wondel",
       "verification": {
         "level": "community-listed",
-        "source": "https://github.com/mukul-dutt/awesome-mcp-list ('remote read-only MCP server over 50 book-based agent skills… No install, no account, no auth. Streamable HTTP: https://skills.wondel.ai/mcp')",
+        "source": "https://github.com/mukul-dutt/awesome-mcp-list ('remote read-only MCP server over 50 book-based agent skills\u2026 No install, no account, no auth. Streamable HTTP: https://skills.wondel.ai/mcp')",
         "checked": "2026-09-22"
       },
-      "notes": "Routes a task to a framework and serves the real SKILL.md in-session. Output is prompt code — apply the untrusted-output rule."
+      "notes": "Routes a task to a framework and serves the real SKILL.md in-session. Output is prompt code \u2014 apply the untrusted-output rule."
     },
     {
       "id": "ai-skills-search",
@@ -305,7 +305,7 @@
         "source": "https://github.com/bytesagain/ai-skills (README: 'Search 60,000+ AI agent skills via MCP SSE or REST API. 7 languages. Free, no auth. Endpoint: https://bytesagain.com/api/mcp/sse')",
         "checked": "2026-09-22"
       },
-      "notes": "Search 60k+ agent skills. Discovery only — imports still go through the quarantine review."
+      "notes": "Search 60k+ agent skills. Discovery only \u2014 imports still go through the quarantine review."
     },
     {
       "id": "developer-toolkit",
@@ -326,7 +326,7 @@
       "data_flow": "search query sent to developertoolkit.ai",
       "verification": {
         "level": "community-listed",
-        "source": "https://github.com/mukul-dutt/awesome-mcp-list ('remote read-only MCP endpoint over 950+ AI-development guides (Cursor, Claude Code, Codex)… No account, no API key. Streamable HTTP: https://developertoolkit.ai/mcp')",
+        "source": "https://github.com/mukul-dutt/awesome-mcp-list ('remote read-only MCP endpoint over 950+ AI-development guides (Cursor, Claude Code, Codex)\u2026 No account, no API key. Streamable HTTP: https://developertoolkit.ai/mcp')",
         "checked": "2026-09-22"
       },
       "notes": "Read-only search over 950+ AI-development guides."
@@ -354,10 +354,10 @@
       "data_flow": "input values sent to usefulai.fun",
       "verification": {
         "level": "community-listed",
-        "source": "https://github.com/sylviangth/awesome-remote-mcp-servers ('340+ autonomously-built utility tools… No authentication required. Use the server URL directly: https://api.usefulai.fun/mcp')",
+        "source": "https://github.com/sylviangth/awesome-remote-mcp-servers ('340+ autonomously-built utility tools\u2026 No authentication required. Use the server URL directly: https://api.usefulai.fun/mcp')",
         "checked": "2026-09-22"
       },
-      "notes": "340+ utility tools. Broad surface — activate only for tasks that actually need a specific utility."
+      "notes": "340+ utility tools. Broad surface \u2014 activate only for tasks that actually need a specific utility."
     },
     {
       "id": "fetch",
@@ -384,7 +384,7 @@
         "source": "https://github.com/modelcontextprotocol/servers (official reference-server collection, npm @modelcontextprotocol/server-fetch)",
         "checked": "2026-09-22"
       },
-      "notes": "Web page → markdown. First `npx` run downloads the package (needs network at setup time)."
+      "notes": "Web page \u2192 markdown. First `npx` run downloads the package (needs network at setup time)."
     },
     {
       "id": "filesystem",
@@ -416,7 +416,7 @@
         "source": "https://github.com/modelcontextprotocol/servers (npm @modelcontextprotocol/server-filesystem)",
         "checked": "2026-09-22"
       },
-      "notes": "ALWAYS scope args to the project directory ({allowed_dir} = the repo root). An unscoped filesystem server is an irreversible-capability — change-safety tier applies."
+      "notes": "ALWAYS scope args to the project directory ({allowed_dir} = the repo root). An unscoped filesystem server is an irreversible-capability \u2014 change-safety tier applies."
     },
     {
       "id": "time",
@@ -530,7 +530,7 @@
         "source": "https://github.com/microsoft/playwright-mcp (npm @playwright/mcp)",
         "checked": "2026-09-22"
       },
-      "notes": "Real browser automation. Capable of actions on any page the user is logged into — treat every navigation/interaction as a mutation (change-safety), and never enter credentials on the user's behalf without explicit instruction."
+      "notes": "Real browser automation. Capable of actions on any page the user is logged into \u2014 treat every navigation/interaction as a mutation (change-safety), and never enter credentials on the user's behalf without explicit instruction."
     },
     {
       "id": "shadcn-ui",
@@ -684,6 +684,73 @@
         "checked": "2026-09-22"
       },
       "notes": "Live registry of shadcn blocks/components with real props + variants. Free blocks install with NO token; Pro blocks/pages need a license token (out of the free universe - user-managed only if the user requests)."
+    },
+    {
+      "id": "chrome-devtools",
+      "name": "Chrome DevTools MCP",
+      "vendor": "Chrome DevTools team (Google)",
+      "category": "devtools",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "chrome-devtools-mcp@latest"
+      ],
+      "auth": "none",
+      "free": true,
+      "signup": "none",
+      "tier": "T1",
+      "capabilities": [
+        "navigate",
+        "click/fill/hover",
+        "screenshot",
+        "evaluate JS",
+        "console logs (with sourcemaps)",
+        "network requests",
+        "performance traces",
+        "device/network emulation",
+        "memory snapshots"
+      ],
+      "data_flow": "none external \u2014 drives a local Chrome instance (own profile); pages visited are local renders",
+      "verification": {
+        "level": "official-package",
+        "source": "https://github.com/ChromeDevTools/chrome-devtools-mcp (official Chrome DevTools team, Apache-2.0; README: `npx -y chrome-devtools-mcp@latest`; 29 tools incl. input/navigation/performance/network/console/emulation/memory; flags --slim --headless, --autoConnect)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Official browser + devtools surface \u2014 the strongest RUNTIME-ACTIVE evidence tool in the set: performance traces, network, console, screenshots. Upstream security note: it exposes browser content to the MCP client \u2014 treat visited pages as untrusted data. Flags: --slim (core tools), --headless, --autoConnect (attach to running Chrome). Pairs with pixz.frontend.ui-ux-pro and pixz.motion.framer-motion verification."
+    },
+    {
+      "id": "animation-inspector",
+      "name": "Animation Inspector",
+      "vendor": "Ak0096 (community)",
+      "category": "motion",
+      "transport": "stdio",
+      "url": null,
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-animation-inspector"
+      ],
+      "auth": "none (core tools); optional `describe_animations` vision tool needs a user-managed ANTHROPIC_API_KEY",
+      "free": true,
+      "signup": "none",
+      "tier": "T2",
+      "capabilities": [
+        "inspect_animation",
+        "discover_animations",
+        "capture_frames",
+        "extract_animation_code",
+        "get_page_structure",
+        "describe_animations (optional \u2014 ANTHROPIC_API_KEY)"
+      ],
+      "data_flow": "none external for core tools (local Playwright); `describe_animations` sends captured frames to Anthropic only if the user provides a key",
+      "verification": {
+        "level": "community-listed",
+        "source": "https://github.com/Ak0096/mcp-animation-inspector (MIT; README: `npx mcp-animation-inspector`; Playwright-based; detects CSS keyframes/transitions, GSAP timelines + ScrollTrigger, Framer Motion (data-framer-*), Lottie, WebGL/Three.js, Lenis/Locomotive, custom cursors, View Transitions/Barba/Swup)",
+        "checked": "2026-09-22"
+      },
+      "notes": "Animation verification for RUNTIME-ACTIVE evidence: discovers which animation systems a live page uses, captures frames at scroll positions, extracts the animation code. Core detection/capture is keyless; only the vision description tool needs a key (skipped when absent). Pairs with pixz.motion.framer-motion / pixz.motion.gsap."
     }
   ],
   "excluded_with_reason": [
@@ -703,14 +770,14 @@
       "reason": "API key required (signup)"
     },
     {
-      "name": "Slack / Notion / Gmail / Linear / Supabase / Shopify / Stripe …",
+      "name": "Slack / Notion / Gmail / Linear / Supabase / Shopify / Stripe \u2026",
       "url": "various",
       "reason": "OAuth to a SaaS account (signup)"
     },
     {
       "name": "You.com MCP",
       "url": "https://api.you.com/mcp",
-      "reason": "'keyless free profile' still implies an account/profile — excluded to keep the universe strict"
+      "reason": "'keyless free profile' still implies an account/profile \u2014 excluded to keep the universe strict"
     },
     {
       "name": "mcpmarket.com premium/paid skills",
@@ -731,6 +798,16 @@
       "name": "Magic (21st.dev) / v0 / Framer MCPs",
       "url": "various",
       "reason": "API key required (signup)"
+    },
+    {
+      "name": "gsap-mcp (bl00dclot)",
+      "url": "https://github.com/bl00dclot/gsap-mcp",
+      "reason": "18 static GSAP codegen tools (tween/timeline/easing/preset; ScrollTrigger/SplitText/MorphSVG/DrawSVG/Flip; analyze/debug/performance), MIT \u2014 but install is clone + `npm install && npm run build` + local `node dist/index.js`; no npx one-liner or published package at check date. Fails the zero-friction auto-config criterion (scripts/mcp.py needs a reproducible one-liner). Revisit if upstream ships an npm package. GSAP knowledge is covered by pixz.motion.gsap + context7."
+    },
+    {
+      "name": "Framer Motion / Motion (motion.dev) MCP",
+      "url": "n/a",
+      "reason": "no official or credible community MCP published at check date (2026-09-22) \u2014 nothing to vet. Motion docs are reachable via context7; runtime verification via animation-inspector + chrome-devtools."
     }
   ]
 }

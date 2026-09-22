@@ -4,7 +4,7 @@
 
 ## Identity
 - Repo: https://github.com/pixzdev/skills
-- Version: 2.4.0 (VERSION file; registry.json)
+- Version: 2.5.0 (VERSION file; registry.json)
 - Entry (agents): `AGENTS.md` — canonical operating contract (entry protocol, modes, activation, self-learning, state, evidence, delegation, verification, stopping)
 - Entry (humans): `README.md` — overview + copy-paste **AI Agent Installation Prompt** + **Super Z / GLM / Z.AI Web Prompt**
 - Machine registry: `registry.json` (source of truth for capabilities)
@@ -22,7 +22,7 @@ Assessment bands: low/medium/high/critical over complexity, risk, uncertainty, r
 Complex work MUST run under the full PixzFlow protocol (assessment + plan + activation + task-state + typed evidence + verification at claim-matching depth). Complex = high/critical complexity or risk · irreversible/high-impact · security/consequential surface · multi-component or external integration · long horizon · continuation. A complex task done WITHOUT the protocol is a **contractual failure (GAGAL)** — not accepted as complete until retrofitted with evidence. Trivial reversible work is exempt (zero ceremony). Task-state audit field: `mandate: {complex, protocol_followed, evidence}`.
 
 ## Setup tiers (ask before setup)
-The agent MUST ask which tier before setup (default Minimal, state it; never re-ask an already-READY runtime — probe first): **Minimal** (orchestrator closure 4 skills, no MCP) · **Medium** (16 skills + curated free/no-signup MCP set, live-checked: context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking) · **Full** (all 30 skills + full vetted MCP catalog + skill-hub discovery + adapters + overlays). Tiers set footprint, never the mandate.
+The agent MUST ask which tier before setup (default Minimal, state it; never re-ask an already-READY runtime — probe first): **Minimal** (orchestrator closure 4 skills, no MCP) · **Medium** (17 skills + curated free/no-signup MCP set, live-checked: context7, deepwiki, gitmcp-self, microsoft-learn, fetch, sequential-thinking) · **Full** (all 35 skills + full vetted MCP catalog + skill-hub discovery + adapters + overlays). Tiers set footprint, never the mandate.
 
 ## MCP & external skills (free + no-signup-first)
 - Universe: `mcp/catalog.json` — 21 vetted servers (10 remote no-auth: context7 · deepwiki · gitmcp · microsoft-learn · cloudflare-docs · astro-docs · wondel-skills · ai-skills-search · developer-toolkit · usefulai; 6 local stdio reference servers: fetch · filesystem · time · memory · sequential-thinking · playwright; 5 design stdio: shadcn-ui · magic-ui · better-icons · excalidraw · shadcnspace) + 4 skill sources (mcpmarket.com free/official, skills.sh, wondel, bytesagain). All free + no signup + no API key; auth-required excluded by policy (incl. all Figma routes — account needed).
@@ -59,11 +59,11 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 - `schemas/handoff.schema.json` — delegation contract (mandatory structured return)
 - `schemas/skill.schema.json`, `schemas/registry.schema.json`, `schemas/eval.schema.json`
 
-## Capability map (30 skills; registry.json is authoritative — this is a projection)
+## Capability map (35 skills; registry.json is authoritative — this is a projection)
 
 **Main skill:** `pixz.core.orchestrator` is the practical operating skill. Specialist skills answer HOW. If you want more practical multi-step methodology, activate orchestrator and load `core/orchestrator/references/operating-methodology.md` when the work is complex.
 
-### Core (15)
+### Core (16)
 | ID | Path | Triggers |
 |----|------|----------|
 | `pixz.core.orchestrator` | `core/orchestrator/` | orchestrate, coordinate, delegate, complex task, multi-step |
@@ -81,8 +81,9 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 | `pixz.core.quality-gate` | `core/quality-gate/` | quality gate, ship check, done criteria |
 | `pixz.core.self-learning` | `core/self-learning/` | self-train, self-learn, first activation, post-install, skill version changed, adaptation baseline, improve workflow, learn from failure |
 | `pixz.core.mcp` | `core/mcp/` | mcp, model context protocol, mcp server, mcp config, mcpmarket, external tools |
+| `pixz.core.repro` | `core/repro/` | repro, minimal repro, flaky test, bisect, reduce test case |
 
-### Domain (15)
+### Domain (19)
 | ID | Path | Triggers |
 |----|------|----------|
 | `pixz.quality.anti-ai-slop` | `quality/anti-ai-slop/` | anti slop, generic design, boilerplate |
@@ -90,18 +91,22 @@ State lives in task-state `capabilities[]` (compact digest, never full skill tex
 | `pixz.engineering.system-design` | `engineering/system-design/` | system design |
 | `pixz.security.review` | `security/review/` | security review, audit |
 | `pixz.security.threat-modeling` | `security/threat-modeling/` | threat model, STRIDE |
+| `pixz.security.commit-hygiene` | `security/commit-hygiene/` | pre-commit, secret scan, commit hygiene, dependency review, supply chain |
 | `pixz.design.uiux` | `design/uiux/` | ui design, ux review |
 | `pixz.design.design-system` | `design/design-system/` | design system, tokens |
+| `pixz.design.project-adapt` | `design/project-adapt/` | design dna, match project style, design drift, project design system, consistent design |
 | `pixz.frontend.react` | `frontend/react/` | react, next.js |
 | `pixz.frontend.accessibility` | `frontend/accessibility/` | a11y, wcag |
+| `pixz.frontend.ui-ux-pro` | `frontend/ui-ux-pro/` | ui design, color palette, typography, landing page design, dashboard design, design tokens |
 | `pixz.motion.gsap` | `motion/gsap/` | gsap, scrolltrigger |
+| `pixz.motion.framer-motion` | `motion/framer-motion/` | framer motion, motion animation, useScroll, AnimatePresence, spring animation, layout animation |
 | `pixz.motion.remotion` | `motion/remotion/` | remotion |
 | `pixz.devops.docker` | `devops/docker/` | docker |
 | `pixz.devops.kubernetes` | `devops/kubernetes/` | k8s, helm |
 | `pixz.ai.rag` | `ai/rag/` | rag, retrieval |
 | `pixz.ai.agent-design` | `ai/agent-design/` | agent design |
 
-Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor; 4-node closure; 16 nodes with `--with-optional`). All other capabilities — including self-learning and mcp — are on-demand activations.
+Orchestrator aggregate (mandatory): `pixz.core.verification` (evidence floor; 4-node closure; 17 nodes with `--with-optional`). All other capabilities — including self-learning and mcp — are on-demand activations.
 
 ## Protocols & policies (registry.json)
 - Context Protocol (lifecycle + acquisition order) · Task State & Continuity · Capability Activation · Source-of-Record · Argumentation (typed claims + transitions) · Handoff Contract · Failure Recovery & Escalation · **Self-Learning Lifecycle** (post-install DETECT→…→READY + improvement loop; adaptation-state) · **Verification Depth** (EXISTS→PARSES→SCHEMA-COMPLIANT→CORRECT→INTEGRATED→RUNTIME-ACTIVE→PERSISTENT→IMPROVED; never substitute weaker rungs) · **MCP & External Capability Integration** (free+no-signup-first, trust tiers, vetting gate, live-check-first, idempotent auto-config, untrusted tool output)

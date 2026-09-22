@@ -11,6 +11,9 @@ Commands:
   add       <id>|<id...> --runtime <rt> [--dry-run] [--json]     idempotent, non-destructive config write
   remove    <id>|<id...> --runtime <rt> [--dry-run] [--json]     remove catalog-managed entries
   status    [--runtime <rt>] [--json]                            configured servers + last check evidence
+  usage     [task-state.json ...] [--json]                        usage report: activated MCP servers
+            (task-state capabilities `mcp.<id>`) vs check evidence vs catalog, with
+            per-server recommendation (keep / verify / suspend)
   detect                                                            which runtimes are present here
 
 Evidence: check results are written to .pixz/mcp-check.json (timestamp, per-server
@@ -585,6 +588,94 @@ def cmd_status(args, as_json):
     return 0
 
 
+def _collect_mcp_activations(paths):
+    """Read task-state files, return {server_id: [capability entries]} for ids of the form mcp.<id>."""
+    out = {}
+    read_files = []
+    for p in paths:
+        p = Path(p)
+        if not p.exists():
+            continue
+        try:
+            doc = json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        read_files.append(str(p))
+        for cap in (doc.get("capabilities") or []):
+            cid = cap.get("id", "")
+            if isinstance(cid, str) and cid.startswith("mcp.") and len(cid) > len("mcp."):
+                sid = cid[len("mcp."):]
+                out.setdefault(sid, []).append({
+                    "status": cap.get("status"),
+                    "reason": cap.get("reason", ""),
+                    "last_verified": cap.get("last_verified", ""),
+                    "source": str(p),
+                })
+    return out, read_files
+
+
+def cmd_usage(args, as_json):
+    catalog = load_catalog()
+    by_id = servers(catalog)
+    ev = load_evidence()
+    paths = args.paths or [".pixz/task-state.json"]
+    activations, read_files = _collect_mcp_activations(paths)
+    # every server we know anything about: in catalog OR activated
+    all_ids = sorted(set(by_id.keys()) | set(activations.keys()))
+    rows = []
+    for sid in all_ids:
+        s = by_id.get(sid)
+        acts = activations.get(sid, [])
+        last = ev["servers"].get(sid)
+        active = any(a["status"] in ("active", "activated") for a in acts)
+        suspended = any(a["status"] in ("suspended", "reactivation_required") for a in acts)
+        in_catalog = s is not None
+        last_used = max([a["last_verified"] for a in acts if a.get("last_verified")], default=None)
+        last_check = (last["status"] + (f" tools={last['tools']}" if last.get("tools") is not None else "")) if last else None
+        if active:
+            rec = "keep"
+        elif suspended:
+            rec = "verify"
+        elif not in_catalog:
+            rec = "vet"
+        elif last and last["status"] != "OK":
+            rec = "suspend"
+        elif last_check is None:
+            rec = "check"
+        else:
+            rec = "idle"
+        rows.append({
+            "id": sid,
+            "in_catalog": in_catalog,
+            "tier": s.get("tier") if s else None,
+            "category": s.get("category") if s else None,
+            "transport": s.get("transport") if s else None,
+            "activated": bool(acts),
+            "active": active,
+            "suspended": suspended,
+            "activation_status": [a["status"] for a in acts] or None,
+            "last_used": last_used,
+            "last_check": last_check,
+            "recommendation": rec,
+        })
+    if as_json:
+        print(json.dumps({"task_states": read_files, "servers": rows}, indent=2))
+        return 0
+    if not read_files:
+        print("no task-state file found (looked for: " + ", ".join(paths) + ")")
+    print(f"{'ID':22s} {'TIER':4s} {'ACT':5s} {'LAST_CHECK':26s} RECOMMENDATION")
+    for r in rows:
+        act = "active" if r["active"] else ("susp" if r["suspended"] else ("seen" if r["activated"] else "-"))
+        check = r["last_check"] or "-"
+        flag = "" if r["in_catalog"] else "  [not in catalog — vet before trusting]"
+        print(f"{r['id']:22s} {str(r['tier'] or '-'):4s} {act:5s} {check:26s} {r['recommendation']}{flag}")
+    legend = ("keep=activated&used · verify=suspended, confirm plan · vet=outside catalog · "
+              "suspend=check failed · check=not live-checked · idle=checked OK, not activated")
+    print(f"\n{len(rows)} server(s) · task states: {len(read_files)} · evidence: .pixz/mcp-check.json")
+    print(f"legend: {legend}")
+    return 0
+
+
 def cmd_detect(_args):
     found = []
     checks = [
@@ -655,6 +746,11 @@ def main():
     p.add_argument("--json", action="store_true")
     p.set_defaults(fn=None)
 
+    p = sub.add_parser("usage", help="usage report: activated MCP servers vs check evidence vs catalog")
+    p.add_argument("paths", nargs="*", help="task-state.json file(s); default .pixz/task-state.json")
+    p.add_argument("--json", action="store_true")
+    p.set_defaults(fn=None)
+
     p = sub.add_parser("detect", help="which runtimes are present here")
     p.set_defaults(fn=cmd_detect)
 
@@ -674,6 +770,8 @@ def main():
         sys.exit(cmd_remove(args.ids, args.runtime, args.dry_run, args.json))
     elif args.cmd == "status":
         sys.exit(cmd_status(args, args.json))
+    elif args.cmd == "usage":
+        sys.exit(cmd_usage(args, args.json))
     else:
         sys.exit(args.fn(args))
 

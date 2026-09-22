@@ -27,7 +27,7 @@ install <skill-id> [--with-optional]
 
 Fail conditions are explicit — no silent omission of hard deps. Optional omission is explicit and inspectable.
 
-## Example — Verified Output (v2.4.0)
+## Example — Verified Output (v2.5.0)
 
 > **2.0.0 change:** the orchestrator's mandatory aggregates dropped from 8 to **1** (`pixz.core.verification`, the evidence floor). The other 12 capabilities are `optional` — activated **at runtime** by the capability-activation protocol, not force-installed. Evidence: GLM benchmark (B≈B1, C≈A, 1.48× trivial-task overhead) — see `docs/benchmark/GLM-benchmark-findings.md`.
 
@@ -35,7 +35,7 @@ Fail conditions are explicit — no silent omission of hard deps. Optional omiss
 python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --channel stable
 # → 4 nodes (mandatory only = the evidence-floor chain)
 # python scripts/resolve.py --install pixz.core.orchestrator --runtime claude --with-optional
-# → 16 nodes (+ all 14 on-demand capabilities)
+# → 17 nodes (+ all 18 on-demand capabilities)
 ```
 
 **Breakdown mandatory (4):**

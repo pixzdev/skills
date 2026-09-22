@@ -1,0 +1,31 @@
+{
+  "id": "eval.motion.framer-motion-01",
+  "skill_id": "pixz.motion.framer-motion",
+  "description": "Framer Motion skill enforces transform/opacity-only, AnimatePresence exits, reduced motion, and browser-verified evidence",
+  "category": "method",
+  "input": {
+    "prompt": "Animate the React landing page with Framer Motion: staggered entrance, hover springs, exit on close, scroll parallax",
+    "runtime": "generic"
+  },
+  "expect": {
+    "should_trigger": true,
+    "must_contain": [
+      "useScroll",
+      "AnimatePresence",
+      "prefers-reduced-motion",
+      "LazyMotion",
+      "RUNTIME-ACTIVE"
+    ],
+    "must_not_contain": [],
+    "verifies": [
+      "transform/opacity-only animation",
+      "exit animation correctness",
+      "reduced-motion respect",
+      "browser-verified motion evidence"
+    ]
+  },
+  "scoring": {
+    "weight": 1.0,
+    "threshold": 0.7
+  }
+}
